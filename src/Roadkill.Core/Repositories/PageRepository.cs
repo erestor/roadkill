@@ -20,6 +20,7 @@ namespace Roadkill.Core.Repositories
 
         Task<IEnumerable<PageContent>> AllPageContents();
 
+        // the raw tags for every page, still comma delimited.
         Task<IEnumerable<string>> AllTags();
 
         Task DeletePage(Page page);
@@ -35,9 +36,9 @@ namespace Roadkill.Core.Repositories
 
         Task<IEnumerable<Page>> FindPagesContainingTag(string tag);
 
-        IEnumerable<PageContent> FindPageContentsByPageId(int pageId);
+        Task<IEnumerable<PageContent>> FindPageContentsByPageId(int pageId);
 
-        IEnumerable<PageContent> FindPageContentsEditedBy(string username);
+        Task<IEnumerable<PageContent>> FindPageContentsEditedBy(string username);
 
         Task<PageContent> GetLatestPageContent(int pageId);
 
@@ -133,19 +134,35 @@ namespace Roadkill.Core.Repositories
             }
         }
 
-        public Task<IEnumerable<PageContent>> AllPageContents()
+        public async Task<IEnumerable<PageContent>> AllPageContents()
         {
-            throw new NotImplementedException();
+            using (IQuerySession session = _store.QuerySession())
+            {
+                return await session
+                    .Query<PageContent>()
+                    .ToListAsync();
+            }
         }
 
-        public Task<IEnumerable<string>> AllTags()
+        public async Task<IEnumerable<string>> AllTags()
         {
-            throw new NotImplementedException();
+            using (IQuerySession session = _store.QuerySession())
+            {
+                return await session
+                    .Query<Page>()
+                    .Select(x => x.Tags)
+                    .ToListAsync();
+            }
         }
 
-        public Task DeletePage(Page page)
+        public async Task DeletePage(Page page)
         {
-            throw new NotImplementedException();
+            using (IDocumentSession session = _store.LightweightSession())
+            {
+                session.Delete<Page>(page.Id);
+                session.DeleteWhere<PageContent>(x => x.Page.Id == page.Id);
+                await session.SaveChangesAsync();
+            }
         }
 
         public Task<Task> DeletePageContent(PageContent pageContent)
@@ -156,6 +173,7 @@ namespace Roadkill.Core.Repositories
         public async Task DeleteAllPages()
         {
             _store.Advanced.Clean.DeleteDocumentsFor(typeof(Page));
+            _store.Advanced.Clean.DeleteDocumentsFor(typeof(PageContent));
             await Task.CompletedTask;
         }
 
@@ -174,12 +192,18 @@ namespace Roadkill.Core.Repositories
             throw new NotImplementedException();
         }
 
-        public IEnumerable<PageContent> FindPageContentsByPageId(int pageId)
+        public async Task<IEnumerable<PageContent>> FindPageContentsByPageId(int pageId)
         {
-            throw new NotImplementedException();
+            using (IQuerySession session = _store.QuerySession())
+            {
+                return await session
+                    .Query<PageContent>()
+                    .Where(x => x.Page.Id == pageId)
+                    .ToListAsync();
+            }
         }
 
-        public IEnumerable<PageContent> FindPageContentsEditedBy(string username)
+        public async Task<IEnumerable<PageContent>> FindPageContentsEditedBy(string username)
         {
             throw new NotImplementedException();
         }
@@ -195,9 +219,14 @@ namespace Roadkill.Core.Repositories
             }
         }
 
-        public Task<Page> GetPageById(int id)
+        public async Task<Page> GetPageById(int id)
         {
-            throw new NotImplementedException();
+            using (IQuerySession session = _store.QuerySession())
+            {
+                return await session
+                    .Query<Page>()
+                    .FirstOrDefaultAsync(x => x.Id == id);
+            }
         }
 
         public Task<Page> GetPageByTitle(string title)

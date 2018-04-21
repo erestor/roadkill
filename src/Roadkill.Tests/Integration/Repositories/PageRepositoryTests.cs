@@ -70,8 +70,25 @@ namespace Roadkill.Tests.Integration.Repositories
             Assert.Equal(expectedJson, actualJson);
         }
 
+        private List<Page> CreateTenPages(PageRepository repository, List<Page> pages = null)
+        {
+            if (pages == null)
+                pages = _fixture.CreateMany<Page>(10).ToList();
+
+            pages.ForEach(async page =>
+            {
+                PageContent content = await repository.AddNewPage(page, _fixture.Create<string>(), "edited by", DateTime.UtcNow);
+            });
+            return pages;
+        }
+
+        private void SleepForABit()
+        {
+            Thread.Sleep(500);// find a better way of doing this with Marten
+        }
+
         [Fact]
-        public async Task AddNewPage()
+        public async void AddNewPage()
         {
             // given
             PageRepository repository = CreateRepository();
@@ -90,7 +107,7 @@ namespace Roadkill.Tests.Integration.Repositories
         }
 
         [Fact]
-        public async Task AddNewPageContentVersion_should_increment_version_for_existing_page()
+        public async void AddNewPageContentVersion_should_increment_version_for_existing_page()
         {
             // given
             PageRepository repository = CreateRepository();
@@ -113,7 +130,7 @@ namespace Roadkill.Tests.Integration.Repositories
         }
 
         [Fact]
-        public async Task AddNewPageContentVersion_should_addnewpage_when_no_content_exists()
+        public async void AddNewPageContentVersion_should_addnewpage_when_no_content_exists()
         {
             // given
             PageRepository repository = CreateRepository();
@@ -134,18 +151,12 @@ namespace Roadkill.Tests.Integration.Repositories
         }
 
         [Fact]
-        public async Task AllPages_should_return_all_pages()
+        public async void AllPages()
         {
             // given
             PageRepository repository = CreateRepository();
-
-            List<Page> pages = _fixture.CreateMany<Page>(10).ToList();
-            pages.ForEach(async page =>
-            {
-                PageContent dummyContent = _fixture.Create<PageContent>();
-                await repository.AddNewPage(page, dummyContent.EditedBy, dummyContent.EditedBy, dummyContent.EditedOn);
-            });
-            Thread.Sleep(1000);
+            List<Page> pages = CreateTenPages(repository);
+            SleepForABit();
 
             // when
             var actualPages = await repository.AllPages();
@@ -154,25 +165,65 @@ namespace Roadkill.Tests.Integration.Repositories
             Assert.Equal(pages.Count, actualPages.Count());
         }
 
-        //public Task<IEnumerable<PageContent>> AllPageContents()
-        //{
-        //    throw new NotImplementedException();
-        //}
+        [Fact]
+        public async void AllPageContents()
+        {
+            // given
+            PageRepository repository = CreateRepository();
+            List<Page> pages = CreateTenPages(repository);
+            SleepForABit();
 
-        //public Task<IEnumerable<string>> AllTags()
-        //{
-        //    throw new NotImplementedException();
-        //}
+            // when
+            var actualPageContents = await repository.AllPageContents();
 
-        //public Task DeletePage(Page page)
-        //{
-        //    throw new NotImplementedException();
-        //}
+            // then
+            Assert.Equal(pages.Count, actualPageContents.Count());
+            Assert.NotEmpty(actualPageContents.Last().Text);
+        }
 
-        //public Task<Task> DeletePageContent(PageContent pageContent)
-        //{
-        //    throw new NotImplementedException();
-        //}
+        [Fact]
+        public async void AllTags_should_return_raw_tags_for_all_pages()
+        {
+            // given
+            PageRepository repository = CreateRepository();
+            List<Page> pages = _fixture.CreateMany<Page>(10).ToList();
+            pages.ForEach(p => p.Tags = "tag1, tag2, tag3");
+            CreateTenPages(repository, pages);
+            SleepForABit();
+
+            // when
+            IEnumerable<string> actualTags = await repository.AllTags();
+
+            // then
+            Assert.Equal(pages.Count, actualTags.Count());
+            Assert.Equal("tag1, tag2, tag3", actualTags.First());
+        }
+
+        [Fact]
+        public async void DeletePage_should_delete_page_and_contents()
+        {
+            // given
+            PageRepository repository = CreateRepository();
+            CreateTenPages(repository);
+
+            var pageToDelete = _fixture.Create<Page>();
+            await repository.AddNewPage(pageToDelete, _fixture.Create<string>(), "edited by", DateTime.UtcNow);
+
+            // when
+            await repository.DeletePage(pageToDelete);
+
+            // then
+            var deletedPage = await repository.GetPageById(pageToDelete.Id);
+            Assert.Null(deletedPage);
+
+            var pageContents = await repository.FindPageContentsByPageId(pageToDelete.Id);
+            Assert.Empty(pageContents);
+        }
+
+        public async void DeletePageContent(PageContent pageContent)
+        {
+            throw new NotImplementedException();
+        }
 
         //public Task DeleteAllPages()
         //{
@@ -210,7 +261,7 @@ namespace Roadkill.Tests.Integration.Repositories
         //}
 
         //public Task<Page> GetPageById(int id)
-        //{
+        //
         //    throw new NotImplementedException();
         //}
 

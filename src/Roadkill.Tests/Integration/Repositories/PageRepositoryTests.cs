@@ -240,6 +240,8 @@ namespace Roadkill.Tests.Integration.Repositories
         //    throw new NotImplementedException();
         //}
 
+        // 4
+
         //public Task<IEnumerable<Page>> FindPagesContainingTag(string tag)
         //{
         //    throw new NotImplementedException();
@@ -260,6 +262,8 @@ namespace Roadkill.Tests.Integration.Repositories
         //    throw new NotImplementedException();
         //}
 
+        // 4
+
         //public Task<Page> GetPageById(int id)
         //
         //    throw new NotImplementedException();
@@ -279,6 +283,8 @@ namespace Roadkill.Tests.Integration.Repositories
         //{
         //    throw new NotImplementedException();
         //}
+
+        // 4
 
         //public Task<Page> SaveOrUpdatePage(Page page)
         //{

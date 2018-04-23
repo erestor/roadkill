@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27428.2037
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roadkill.Tests", "src\Roadkill.Tests\Roadkill.Tests.csproj", "{2463E6E0-06FF-4D41-846A-4E06F31ABB75}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Roadkill.Tests", "src\Roadkill.Tests\Roadkill.Tests.csproj", "{2463E6E0-06FF-4D41-846A-4E06F31ABB75}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roadkill.Api", "src\Roadkill.Api\Roadkill.Api.csproj", "{CDE9B310-A949-415C-BCE5-FE5113E37146}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Roadkill.Api", "src\Roadkill.Api\Roadkill.Api.csproj", "{CDE9B310-A949-415C-BCE5-FE5113E37146}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roadkill.ApiClient", "src\Roadkill.ApiClient\Roadkill.ApiClient.csproj", "{22B0743D-69C2-47B1-8CEF-159D26FE2CAF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Roadkill.ApiClient", "src\Roadkill.ApiClient\Roadkill.ApiClient.csproj", "{22B0743D-69C2-47B1-8CEF-159D26FE2CAF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roadkill.Core", "src\Roadkill.Core\Roadkill.Core.csproj", "{18BB8C5E-2319-4033-9E54-465F5E8BC61E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Roadkill.Core", "src\Roadkill.Core\Roadkill.Core.csproj", "{18BB8C5E-2319-4033-9E54-465F5E8BC61E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roadkill.Text", "src\Roadkill.Text\Roadkill.Text.csproj", "{0E75066A-3C0F-41B5-9928-B36D53A5AAD5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{18BB8C5E-2319-4033-9E54-465F5E8BC61E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{18BB8C5E-2319-4033-9E54-465F5E8BC61E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{18BB8C5E-2319-4033-9E54-465F5E8BC61E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E75066A-3C0F-41B5-9928-B36D53A5AAD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E75066A-3C0F-41B5-9928-B36D53A5AAD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E75066A-3C0F-41B5-9928-B36D53A5AAD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E75066A-3C0F-41B5-9928-B36D53A5AAD5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

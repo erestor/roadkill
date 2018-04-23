@@ -5,6 +5,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Unit\Text\CustomTokens\badxml-file.json" />
+    <None Remove="Unit\Text\CustomTokens\customvariables.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Unit\Text\CustomTokens\badxml-file.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Unit\Text\CustomTokens\customvariables.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Marten" Version="2.7.1" />
     <PackageReference Include="Scrutor" Version="2.2.2" />
     <PackageReference Include="AutoFixture" Version="4.2.0" />
@@ -19,6 +33,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Roadkill.Core\Roadkill.Core.csproj" />
+    <ProjectReference Include="..\Roadkill.Text\Roadkill.Text.csproj" />
   </ItemGroup>
 
 </Project>

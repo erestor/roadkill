@@ -1,8 +1,8 @@
 ﻿using System;
-using Roadkill.Core.Text.Parsers.Images;
-using Roadkill.Core.Text.Parsers.Links;
+using Roadkill.Text.Text.Parsers.Images;
+using Roadkill.Text.Text.Parsers.Links;
 
-namespace Roadkill.Core.Text.Parsers
+namespace Roadkill.Text.Text.Parsers
 {
 	/// <summary>
 	/// Represents a class that can convert a markup syntax into HTML. The markups syntax 

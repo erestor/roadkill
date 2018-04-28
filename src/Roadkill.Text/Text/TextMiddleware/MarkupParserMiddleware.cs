@@ -1,7 +1,7 @@
-﻿using Roadkill.Core.Text.Menu;
-using Roadkill.Core.Text.Parsers;
+﻿using Roadkill.Text.Text.Menu;
+using Roadkill.Text.Text.Parsers;
 
-namespace Roadkill.Core.Text.TextMiddleware
+namespace Roadkill.Text.Text.TextMiddleware
 {
     public class MarkupParserMiddleware : Middleware
     {

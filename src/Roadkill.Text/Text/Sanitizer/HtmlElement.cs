@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Xml.Serialization;
 
-namespace Roadkill.Core.Text.Sanitizer
+namespace Roadkill.Text.Text.Sanitizer
 {
 	public class HtmlElement
 	{

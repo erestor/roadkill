@@ -1,8 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using Roadkill.Core.Configuration;
 using Roadkill.Core.Repositories;
 
-namespace Roadkill.Core.Text.Parsers.Markdig
+namespace Roadkill.Text.Text.Parsers.Markdig
 {
     public interface IMarkdigParserFactory
     {

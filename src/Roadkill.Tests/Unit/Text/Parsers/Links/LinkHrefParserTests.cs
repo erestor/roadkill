@@ -4,10 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Moq;
 using Xunit;
-using Roadkill.Core.Configuration;
 using Roadkill.Core.Models;
 using Roadkill.Core.Repositories;
-using Roadkill.Core.Text.Parsers.Links;
+using Roadkill.Text;
+using Roadkill.Text.Text.Parsers.Links;
 
 namespace Roadkill.Tests.Unit.Text.Parsers.Links
 {
@@ -102,7 +102,7 @@ namespace Roadkill.Tests.Unit.Text.Parsers.Links
             HtmlLinkTag actualTag = _linkHrefParser.Parse(linkTag);
 
             // Assert
-            Assert.Equal("/Attachments/my/folder/image1.jpg", actualTag.Href);
+            Assert.Equal("/attachments/my/folder/image1.jpg", actualTag.Href);
         }
 
         [Fact]

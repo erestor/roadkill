@@ -1,12 +1,12 @@
 using System;
 using Moq;
-using Roadkill.Core.Configuration;
-using Roadkill.Core.Text.CustomTokens;
+using Roadkill.Text;
+using Roadkill.Text.Text.CustomTokens;
+using Roadkill.Text.Text.Menu;
+using Roadkill.Text.Text.Plugins;
+using Roadkill.Text.Text.Sanitizer;
+using Roadkill.Text.Text.TextMiddleware;
 using Xunit;
-using Roadkill.Core.Text.Menu;
-using Roadkill.Core.Text.Plugins;
-using Roadkill.Core.Text.Sanitizer;
-using Roadkill.Core.Text.TextMiddleware;
 
 namespace Roadkill.Tests.Unit.Text.TextMiddleware
 {

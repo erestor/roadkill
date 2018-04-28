@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
-using Roadkill.Core.Configuration;
 using Roadkill.Core.Models;
 using Roadkill.Core.Repositories;
 
-namespace Roadkill.Core.Text.Parsers.Links
+namespace Roadkill.Text.Text.Parsers.Links
 {
     /// <summary>
     /// Parses:
@@ -108,6 +107,9 @@ namespace Roadkill.Core.Text.Parsers.Links
 
             // Get the full path to the attachment
             string attachmentsPath = _applicationSettings.AttachmentsUrlPath;
+            if (attachmentsPath.EndsWith("/"))
+                attachmentsPath = attachmentsPath.Remove(attachmentsPath.Length - 1);
+
             htmlLinkTag.Href = ConvertToAbsolutePath(attachmentsPath) + href;
         }
 

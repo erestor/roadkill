@@ -1,6 +1,6 @@
+using Roadkill.Text.Text.Parsers.Links;
+using Roadkill.Text.Text.Parsers.Markdig;
 using Xunit;
-using Roadkill.Core.Text.Parsers.Links;
-using Roadkill.Core.Text.Parsers.Markdig;
 
 namespace Roadkill.Tests.Unit.Text.Parsers.Links
 {

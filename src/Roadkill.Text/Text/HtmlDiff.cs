@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Roadkill.Core.Text
+namespace Roadkill.Text.Text
 {
 	/// <summary>
 	/// Performs a diff on two HTML sources.

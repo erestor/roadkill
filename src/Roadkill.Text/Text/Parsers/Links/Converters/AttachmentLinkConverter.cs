@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Routing;
-using Roadkill.Core.Configuration;
 
-namespace Roadkill.Core.Text.Parsers.Links.Converters
+namespace Roadkill.Text.Text.Parsers.Links.Converters
 {
     public class AttachmentLinkConverter : IHtmlLinkTagConverter
     {
@@ -50,6 +48,9 @@ namespace Roadkill.Core.Text.Parsers.Links.Converters
 
             // Get the full path to the attachment
             string attachmentsPath = _applicationSettings.AttachmentsUrlPath;
+            if (attachmentsPath.EndsWith("/"))
+                attachmentsPath = attachmentsPath.Remove(attachmentsPath.Length - 1);
+
             htmlLinkTag.Href = _urlHelper.Content(attachmentsPath) + href;
 
             return htmlLinkTag;

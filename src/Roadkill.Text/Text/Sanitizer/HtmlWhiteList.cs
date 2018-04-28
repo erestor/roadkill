@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
-using Roadkill.Core.Configuration;
-using Roadkill.Core.Logging;
 
-namespace Roadkill.Core.Text.Sanitizer
+namespace Roadkill.Text.Text.Sanitizer
 {
 	public class HtmlWhiteList
 	{

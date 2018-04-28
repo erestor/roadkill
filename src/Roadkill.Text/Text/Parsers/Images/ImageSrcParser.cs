@@ -1,10 +1,8 @@
 using System;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Routing;
-using Roadkill.Core.Configuration;
 
-namespace Roadkill.Core.Text.Parsers.Images
+namespace Roadkill.Text.Text.Parsers.Images
 {
     public class ImageSrcParser
     {
@@ -35,6 +33,9 @@ namespace Roadkill.Core.Text.Parsers.Images
             src = _imgFileRegex.Replace(src, "");
 
             string attachmentsPath = _applicationSettings.AttachmentsUrlPath;
+            if (attachmentsPath.EndsWith("/"))
+                attachmentsPath = attachmentsPath.Remove(attachmentsPath.Length - 1);
+
             string slash = src.StartsWith("/") ? "" : "/";
             string relativeUrl = attachmentsPath + slash + src;
             htmlImageTag.Src = _urlHelper.Content(relativeUrl); // convert to absolute path

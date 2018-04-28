@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Roadkill.Core.Text.Menu;
+using Roadkill.Text.Text.Menu;
 
-namespace Roadkill.Core.Text.TextMiddleware
+namespace Roadkill.Text.Text.TextMiddleware
 {
     public class TextMiddlewareBuilder
     {

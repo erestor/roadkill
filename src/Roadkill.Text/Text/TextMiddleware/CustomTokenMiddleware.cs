@@ -1,7 +1,7 @@
-﻿using Roadkill.Core.Text.CustomTokens;
-using Roadkill.Core.Text.Menu;
+﻿using Roadkill.Text.Text.CustomTokens;
+using Roadkill.Text.Text.Menu;
 
-namespace Roadkill.Core.Text.TextMiddleware
+namespace Roadkill.Text.Text.TextMiddleware
 {
     public class CustomTokenMiddleware : Middleware
     {

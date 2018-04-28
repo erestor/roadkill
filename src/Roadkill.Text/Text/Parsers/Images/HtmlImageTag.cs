@@ -1,4 +1,4 @@
-﻿namespace Roadkill.Core.Text.Parsers.Images
+﻿namespace Roadkill.Text.Text.Parsers.Images
 {
 	/// <summary>
 	/// Holds information when an image is processed, giving the caller the ability to translate the outputted HTML.

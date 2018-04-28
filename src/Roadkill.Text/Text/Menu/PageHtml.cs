@@ -1,4 +1,4 @@
-﻿namespace Roadkill.Core.Text.Menu
+﻿namespace Roadkill.Text.Text.Menu
 {
 	/// <summary>
 	/// Encapsulates the HTML returned by the markup converter, to display on the page.

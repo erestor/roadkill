@@ -1,7 +1,7 @@
+using Roadkill.Text.Text.Menu;
+using Roadkill.Text.Text.Parsers.Markdig;
+using Roadkill.Text.Text.TextMiddleware;
 using Xunit;
-using Roadkill.Core.Text.Menu;
-using Roadkill.Core.Text.Parsers.Markdig;
-using Roadkill.Core.Text.TextMiddleware;
 
 namespace Roadkill.Tests.Unit.Text.TextMiddleware
 {

@@ -1,6 +1,6 @@
-﻿using System.IO;
-using Roadkill.Core.Configuration;
-using Roadkill.Core.Text.CustomTokens;
+using System.IO;
+using Roadkill.Text;
+using Roadkill.Text.Text.CustomTokens;
 using Xunit;
 
 namespace Roadkill.Tests.Unit.Text.CustomTokens

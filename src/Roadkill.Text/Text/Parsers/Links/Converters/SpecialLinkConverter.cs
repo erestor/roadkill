@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Routing;
 
-namespace Roadkill.Core.Text.Parsers.Links.Converters
+namespace Roadkill.Text.Text.Parsers.Links.Converters
 {
     public class SpecialLinkConverter : IHtmlLinkTagConverter
     {

@@ -2,11 +2,10 @@ using System;
 using System.IO;
 using Xunit;
 using Roadkill.Core;
-using Roadkill.Core.Configuration;
-using Roadkill.Core.Text;
-using Roadkill.Core.Text.CustomTokens;
-using Roadkill.Core.Text.Menu;
-using Roadkill.Core.Text.TextMiddleware;
+using Roadkill.Text;
+using Roadkill.Text.Text.CustomTokens;
+using Roadkill.Text.Text.Menu;
+using Roadkill.Text.Text.TextMiddleware;
 
 namespace Roadkill.Tests.Unit.Text.TextMiddleware
 {

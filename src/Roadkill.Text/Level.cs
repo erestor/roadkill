@@ -1,4 +1,4 @@
-﻿namespace Roadkill.Core.Logging
+﻿namespace Roadkill.Text
 {
 	/// <summary>
 	/// The severity of a log message.

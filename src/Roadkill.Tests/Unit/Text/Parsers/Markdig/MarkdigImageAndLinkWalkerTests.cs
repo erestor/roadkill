@@ -3,8 +3,8 @@ using System.Text;
 using Markdig;
 using Markdig.Renderers;
 using Markdig.Syntax;
+using Roadkill.Text.Text.Parsers.Markdig;
 using Xunit;
-using Roadkill.Core.Text.Parsers.Markdig;
 
 namespace Roadkill.Tests.Unit.Text.Parsers.Markdig
 {

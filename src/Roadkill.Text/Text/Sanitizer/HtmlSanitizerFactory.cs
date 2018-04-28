@@ -1,8 +1,7 @@
 ﻿using System.Linq;
 using Ganss.XSS;
-using Roadkill.Core.Configuration;
 
-namespace Roadkill.Core.Text.Sanitizer
+namespace Roadkill.Text.Text.Sanitizer
 {
 	public class HtmlSanitizerFactory : IHtmlSanitizerFactory
 	{

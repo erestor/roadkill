@@ -1,4 +1,4 @@
-namespace Roadkill.Core.Text.Parsers.Links.Converters
+namespace Roadkill.Text.Text.Parsers.Links.Converters
 {
 	public interface IHtmlLinkTagConverter
 	{

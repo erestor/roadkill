@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using Roadkill.Text;
+using Roadkill.Text.Text.Parsers.Links;
+using Roadkill.Text.Text.Parsers.Links.Converters;
 using Xunit;
-using Roadkill.Core.Configuration;
-using Roadkill.Core.Text.Parsers.Links;
-using Roadkill.Core.Text.Parsers.Links.Converters;
 
 namespace Roadkill.Tests.Unit.Text.Parsers.Links.Converters
 {
@@ -63,15 +63,15 @@ namespace Roadkill.Tests.Unit.Text.Parsers.Links.Converters
             // Arrange
             _urlHelperMock.Setup(x => x.Content(It.IsAny<string>())).Returns<string>(s => s);
 
-            _applicationSettings.AttachmentsRoutePath = "myattachments";
-            var originalTag = new HtmlLinkTag(href, href, "text", "");
+            _applicationSettings.AttachmentsUrlPath = "/myattachments/";
+            var expectedTag = new HtmlLinkTag(href, href, "text", "");
 
             // Act
-            var actualTag = _converter.Convert(originalTag);
+            var actualTag = _converter.Convert(expectedTag);
 
             // Assert
-            Assert.Equal(actualTag.OriginalHref, originalTag.OriginalHref);
-            Assert.Equal(actualTag.Href, expectedHref);
+            Assert.Equal(expectedTag.OriginalHref, actualTag.OriginalHref);
+            Assert.Equal(expectedHref, actualTag.Href);
 
             Times timesCalled = (calledUrlHelper) ? Times.Once() : Times.Never();
             _urlHelperMock.Verify(x => x.Content(It.IsAny<string>()), timesCalled);

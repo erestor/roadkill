@@ -1,8 +1,8 @@
 using Ganss.XSS;
 using Moq;
-using Roadkill.Core.Text.Menu;
-using Roadkill.Core.Text.Sanitizer;
-using Roadkill.Core.Text.TextMiddleware;
+using Roadkill.Text.Text.Menu;
+using Roadkill.Text.Text.Sanitizer;
+using Roadkill.Text.Text.TextMiddleware;
 using Xunit;
 
 namespace Roadkill.Tests.Unit.Text.TextMiddleware

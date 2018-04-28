@@ -1,7 +1,6 @@
 ﻿using System;
-using System.IO;
 
-namespace Roadkill.Core.Logging
+namespace Roadkill.Text
 {
     /// <summary>
     /// Manages logging in Roadkill.

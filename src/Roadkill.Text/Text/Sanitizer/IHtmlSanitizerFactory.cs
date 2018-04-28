@@ -1,6 +1,6 @@
 ﻿using Ganss.XSS;
 
-namespace Roadkill.Core.Text.Sanitizer
+namespace Roadkill.Text.Text.Sanitizer
 {
 	public interface IHtmlSanitizerFactory
 	{

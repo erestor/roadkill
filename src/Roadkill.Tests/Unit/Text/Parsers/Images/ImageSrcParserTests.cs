@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using Roadkill.Core.Configuration;
-using Roadkill.Core.Text.Parsers.Images;
+using Roadkill.Text;
+using Roadkill.Text.Text.Parsers.Images;
 using Xunit;
 
 namespace Roadkill.Tests.Unit.Text.Parsers.Images
@@ -43,7 +43,7 @@ namespace Roadkill.Tests.Unit.Text.Parsers.Images
             // Arrange
             _urlHelper.Setup(x => x.Content(It.IsAny<string>())).Returns<string>(s => s);
 
-            _applicationSettings.AttachmentsRoutePath = "attuchments";
+            _applicationSettings.AttachmentsUrlPath = "/attuchments/";
             HtmlImageTag htmlImageTag = new HtmlImageTag(path, path, "alt", "title");
 
             // Act

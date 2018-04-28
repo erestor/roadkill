@@ -1,10 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
-using Roadkill.Core.Configuration;
 using Roadkill.Core.Repositories;
-using Roadkill.Core.Text.Parsers.Images;
-using Roadkill.Core.Text.Parsers.Links;
+using Roadkill.Text.Text.Parsers.Images;
+using Roadkill.Text.Text.Parsers.Links;
 
-namespace Roadkill.Core.Text.Parsers.Markdig
+namespace Roadkill.Text.Text.Parsers.Markdig
 {
     public class MarkdigParserFactory : IMarkdigParserFactory
     {

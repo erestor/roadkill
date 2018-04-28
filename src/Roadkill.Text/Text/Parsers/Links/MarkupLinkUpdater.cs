@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace Roadkill.Core.Text.Parsers.Links
+namespace Roadkill.Text.Text.Parsers.Links
 {
 	/// <summary>
 	/// Responsible for converting internal links (page names) to their real MVC path,

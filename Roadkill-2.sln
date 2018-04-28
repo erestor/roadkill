@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roadkill.Text", "src\Roadki
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roadkill.Localisation", "src\Roadkill.Localisation\Roadkill.Localisation.csproj", "{777138FF-9925-44D5-9C3A-F4CDD66D9D98}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{A1396D86-0213-47A8-A930-CED61F9AF0D8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,6 +50,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2463E6E0-06FF-4D41-846A-4E06F31ABB75} = {A1396D86-0213-47A8-A930-CED61F9AF0D8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6C50A326-5289-4FDB-9AE2-7266B9D76650}

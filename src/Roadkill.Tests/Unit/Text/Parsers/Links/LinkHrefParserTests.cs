@@ -7,7 +7,7 @@ using Xunit;
 using Roadkill.Core.Models;
 using Roadkill.Core.Repositories;
 using Roadkill.Text;
-using Roadkill.Text.Text.Parsers.Links;
+using Roadkill.Text.Parsers.Links;
 
 namespace Roadkill.Tests.Unit.Text.Parsers.Links
 {

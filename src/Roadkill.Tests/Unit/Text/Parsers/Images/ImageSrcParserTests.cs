@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Roadkill.Text;
-using Roadkill.Text.Text.Parsers.Images;
+using Roadkill.Text.Parsers.Images;
 using Xunit;
 
 namespace Roadkill.Tests.Unit.Text.Parsers.Images

@@ -2,11 +2,10 @@ using System;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Roadkill.Text;
-using Roadkill.Text.Text;
-using Roadkill.Text.Text.CustomTokens;
-using Roadkill.Text.Text.Plugins;
-using Roadkill.Text.Text.Sanitizer;
-using Roadkill.Text.Text.TextMiddleware;
+using Roadkill.Text.CustomTokens;
+using Roadkill.Text.Plugins;
+using Roadkill.Text.Sanitizer;
+using Roadkill.Text.TextMiddleware;
 using Xunit;
 
 namespace Roadkill.Tests.Unit.Text.TextMiddleware

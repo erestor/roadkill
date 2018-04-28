@@ -1,6 +1,6 @@
-using Roadkill.Text.Text;
-using Roadkill.Text.Text.Parsers.Markdig;
-using Roadkill.Text.Text.TextMiddleware;
+using Roadkill.Text;
+using Roadkill.Text.Parsers.Markdig;
+using Roadkill.Text.TextMiddleware;
 using Xunit;
 
 namespace Roadkill.Tests.Unit.Text.TextMiddleware

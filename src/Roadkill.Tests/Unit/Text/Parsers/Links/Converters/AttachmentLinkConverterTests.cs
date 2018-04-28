@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Roadkill.Text;
-using Roadkill.Text.Text.Parsers.Links;
-using Roadkill.Text.Text.Parsers.Links.Converters;
+using Roadkill.Text.Parsers.Links;
+using Roadkill.Text.Parsers.Links.Converters;
 using Xunit;
 
 namespace Roadkill.Tests.Unit.Text.Parsers.Links.Converters

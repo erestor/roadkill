@@ -2,7 +2,7 @@ using System.IO;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Roadkill.Text;
-using Roadkill.Text.Text.CustomTokens;
+using Roadkill.Text.CustomTokens;
 using Xunit;
 
 namespace Roadkill.Tests.Unit.Text.CustomTokens

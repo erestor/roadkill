@@ -1,6 +1,4 @@
-﻿using Roadkill.Text.Text.Menu;
-
-namespace Roadkill.Text.Text.Plugins
+﻿namespace Roadkill.Text.Text.Plugins
 {
     /// <summary>
     /// Runs the BeforeParse and AfterParse methods on all TextPlugins, and determines if

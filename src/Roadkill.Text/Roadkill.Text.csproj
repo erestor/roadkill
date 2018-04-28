@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Roadkill.Core\Roadkill.Core.csproj" />
+    <ProjectReference Include="..\Roadkill.Localisation\Roadkill.Localisation.csproj" />
   </ItemGroup>
 
   </Project>

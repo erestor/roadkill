@@ -7,14 +7,14 @@ namespace Roadkill.Text.Text.Parsers.Markdig
 {
     public class MarkdigParserFactory : IMarkdigParserFactory
     {
-        public MarkdigParser Create(IPageRepository pageRepository, ApplicationSettings applicationSettings, IUrlHelper urlHelper)
+        public MarkdigParser Create(IPageRepository pageRepository, TextSettings textSettings, IUrlHelper urlHelper)
         {
             var markdigParser = new MarkdigParser();
 
             // When a link is parsed, use the LinkHrefParser
             markdigParser.LinkParsed = htmlLinkTag =>
             {
-                var tokenParser = new LinkHrefParser(pageRepository, applicationSettings, urlHelper);
+                var tokenParser = new LinkHrefParser(pageRepository, textSettings, urlHelper);
                 htmlLinkTag = tokenParser.Parse(htmlLinkTag);
 
                 return htmlLinkTag;
@@ -23,7 +23,7 @@ namespace Roadkill.Text.Text.Parsers.Markdig
             // When an image is parsed, use the ImageSrcParser
             markdigParser.ImageParsed = htmlImageTag =>
             {
-                var provider = new ImageSrcParser(applicationSettings, urlHelper);
+                var provider = new ImageSrcParser(textSettings, urlHelper);
                 htmlImageTag = provider.Parse(htmlImageTag);
 
                 return htmlImageTag;

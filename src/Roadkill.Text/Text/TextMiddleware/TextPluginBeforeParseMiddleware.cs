@@ -1,5 +1,4 @@
-﻿using Roadkill.Text.Text.Menu;
-using Roadkill.Text.Text.Plugins;
+﻿using Roadkill.Text.Text.Plugins;
 
 namespace Roadkill.Text.Text.TextMiddleware
 {

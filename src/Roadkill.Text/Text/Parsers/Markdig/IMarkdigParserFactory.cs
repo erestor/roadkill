@@ -7,6 +7,6 @@ namespace Roadkill.Text.Text.Parsers.Markdig
     {
         // TODO: NETStandard - replace urlhelper to IUrlHelper
 
-        MarkdigParser Create(IPageRepository pageRepository, ApplicationSettings applicationSettings, IUrlHelper urlHelper);
+        MarkdigParser Create(IPageRepository pageRepository, TextSettings textSettings, IUrlHelper urlHelper);
     }
 }

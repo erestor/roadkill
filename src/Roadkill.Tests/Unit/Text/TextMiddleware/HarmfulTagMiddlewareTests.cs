@@ -1,6 +1,6 @@
 using Ganss.XSS;
 using Moq;
-using Roadkill.Text.Text.Menu;
+using Roadkill.Text.Text;
 using Roadkill.Text.Text.Sanitizer;
 using Roadkill.Text.Text.TextMiddleware;
 using Xunit;

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Roadkill.Text.Text.Menu;
 
 namespace Roadkill.Text.Text.TextMiddleware
 {

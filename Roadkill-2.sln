@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Roadkill.Core", "src\Roadki
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roadkill.Text", "src\Roadkill.Text\Roadkill.Text.csproj", "{0E75066A-3C0F-41B5-9928-B36D53A5AAD5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roadkill.Localisation", "src\Roadkill.Localisation\Roadkill.Localisation.csproj", "{777138FF-9925-44D5-9C3A-F4CDD66D9D98}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{0E75066A-3C0F-41B5-9928-B36D53A5AAD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0E75066A-3C0F-41B5-9928-B36D53A5AAD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0E75066A-3C0F-41B5-9928-B36D53A5AAD5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{777138FF-9925-44D5-9C3A-F4CDD66D9D98}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{777138FF-9925-44D5-9C3A-F4CDD66D9D98}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{777138FF-9925-44D5-9C3A-F4CDD66D9D98}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{777138FF-9925-44D5-9C3A-F4CDD66D9D98}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

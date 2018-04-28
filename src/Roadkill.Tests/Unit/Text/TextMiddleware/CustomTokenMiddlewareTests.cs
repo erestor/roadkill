@@ -3,8 +3,8 @@ using System.IO;
 using Xunit;
 using Roadkill.Core;
 using Roadkill.Text;
+using Roadkill.Text.Text;
 using Roadkill.Text.Text.CustomTokens;
-using Roadkill.Text.Text.Menu;
 using Roadkill.Text.Text.TextMiddleware;
 
 namespace Roadkill.Tests.Unit.Text.TextMiddleware
@@ -28,7 +28,7 @@ here is some more content
 
             var pagehtml = new PageHtml() { Html = markdown };
 
-            var appSettings = new ApplicationSettings();
+            var appSettings = new TextSettings();
             appSettings.CustomTokensPath = Path.Combine(Directory.GetCurrentDirectory(), "Unit", "Text", "CustomTokens", "customvariables.xml");
 
             var customTokenParser = new CustomTokenParser(appSettings);

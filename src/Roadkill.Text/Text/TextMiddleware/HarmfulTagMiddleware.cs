@@ -1,5 +1,4 @@
 ﻿using Ganss.XSS;
-using Roadkill.Text.Text.Menu;
 using Roadkill.Text.Text.Sanitizer;
 
 namespace Roadkill.Text.Text.TextMiddleware

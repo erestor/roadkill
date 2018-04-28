@@ -19,7 +19,7 @@ namespace Roadkill.Text.Text.Parsers.Links
     public class LinkHrefParser
     {
         private readonly IPageRepository _pageRepository;
-        private readonly ApplicationSettings _applicationSettings;
+        private readonly TextSettings _textSettings;
 
         // TODO: NETStandard - replace urlhelper to IUrlHelper
         private readonly IUrlHelper _urlHelper;
@@ -37,16 +37,16 @@ namespace Roadkill.Text.Text.Parsers.Links
         private static readonly Regex _querystringRegex = new Regex("(?<querystring>(\\?).+)", RegexOptions.IgnoreCase);
         private static readonly Regex _anchorRegex = new Regex("(?<hash>(#|%23).+)", RegexOptions.IgnoreCase);
 
-        public LinkHrefParser(IPageRepository pageRepository, ApplicationSettings applicationSettings, IUrlHelper urlHelper)
+        public LinkHrefParser(IPageRepository pageRepository, TextSettings textSettings, IUrlHelper urlHelper)
         {
             if (pageRepository == null)
                 throw new ArgumentNullException(nameof(pageRepository));
 
-            if (applicationSettings == null)
-                throw new ArgumentNullException(nameof(applicationSettings));
+            if (textSettings == null)
+                throw new ArgumentNullException(nameof(textSettings));
 
             _pageRepository = pageRepository;
-            _applicationSettings = applicationSettings;
+            _textSettings = textSettings;
             _urlHelper = urlHelper;
         }
 
@@ -106,7 +106,7 @@ namespace Roadkill.Text.Text.Parsers.Links
             }
 
             // Get the full path to the attachment
-            string attachmentsPath = _applicationSettings.AttachmentsUrlPath;
+            string attachmentsPath = _textSettings.AttachmentsUrlPath;
             if (attachmentsPath.EndsWith("/"))
                 attachmentsPath = attachmentsPath.Remove(attachmentsPath.Length - 1);
 

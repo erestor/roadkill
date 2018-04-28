@@ -4,13 +4,13 @@ namespace Roadkill.Text.Text.Parsers.Links.Converters
 {
     public class AttachmentLinkConverter : IHtmlLinkTagConverter
     {
-        private readonly ApplicationSettings _applicationSettings;
+        private readonly TextSettings _textSettings;
 
         private readonly IUrlHelper _urlHelper;
 
-        public AttachmentLinkConverter(ApplicationSettings applicationSettings, IUrlHelper urlHelper)
+        public AttachmentLinkConverter(TextSettings textSettings, IUrlHelper urlHelper)
         {
-            _applicationSettings = applicationSettings;
+            _textSettings = textSettings;
             _urlHelper = urlHelper;
         }
 
@@ -47,7 +47,7 @@ namespace Roadkill.Text.Text.Parsers.Links.Converters
             }
 
             // Get the full path to the attachment
-            string attachmentsPath = _applicationSettings.AttachmentsUrlPath;
+            string attachmentsPath = _textSettings.AttachmentsUrlPath;
             if (attachmentsPath.EndsWith("/"))
                 attachmentsPath = attachmentsPath.Remove(attachmentsPath.Length - 1);
 

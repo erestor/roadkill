@@ -9,7 +9,7 @@ namespace Roadkill.Text.Text.Sanitizer
 	{
 		public List<HtmlElement> ElementWhiteList { get; set; }
 
-		public static HtmlWhiteList Deserialize(ApplicationSettings settings)
+		public static HtmlWhiteList Deserialize(TextSettings settings)
 		{
 			if (string.IsNullOrEmpty(settings.HtmlElementWhiteListPath) || !File.Exists(settings.HtmlElementWhiteListPath))
 			{

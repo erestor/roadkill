@@ -1,8 +1,8 @@
 using System;
 using Moq;
 using Roadkill.Text;
+using Roadkill.Text.Text;
 using Roadkill.Text.Text.CustomTokens;
-using Roadkill.Text.Text.Menu;
 using Roadkill.Text.Text.Plugins;
 using Roadkill.Text.Text.Sanitizer;
 using Roadkill.Text.Text.TextMiddleware;
@@ -26,8 +26,8 @@ namespace Roadkill.Tests.Unit.Text.TextMiddleware
         private TextMiddlewareBuilder CreateFullBuilder()
         {
             var builder = new TextMiddlewareBuilder();
-            builder.Use(new CustomTokenMiddleware(new CustomTokenParser(new ApplicationSettings())))
-                   .Use(new HarmfulTagMiddleware(new HtmlSanitizerFactory(new ApplicationSettings())))
+            builder.Use(new CustomTokenMiddleware(new CustomTokenParser(new TextSettings())))
+                   .Use(new HarmfulTagMiddleware(new HtmlSanitizerFactory(new TextSettings())))
                    .Use(new TextPluginAfterParseMiddleware(new TextPluginRunner()));
 
             return builder;

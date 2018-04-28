@@ -6,17 +6,17 @@ namespace Roadkill.Text.Text.Parsers.Images
 {
     public class ImageSrcParser
     {
-        private readonly ApplicationSettings _applicationSettings;
+        private readonly TextSettings _textSettings;
         private static readonly Regex _imgFileRegex = new Regex("^File:", RegexOptions.IgnoreCase);
 
         private readonly IUrlHelper _urlHelper;
 
-        public ImageSrcParser(ApplicationSettings applicationSettings, IUrlHelper urlHelper)
+        public ImageSrcParser(TextSettings textSettings, IUrlHelper urlHelper)
         {
-            if (applicationSettings == null)
-                throw new ArgumentNullException(nameof(applicationSettings));
+            if (textSettings == null)
+                throw new ArgumentNullException(nameof(textSettings));
 
-            _applicationSettings = applicationSettings;
+            _textSettings = textSettings;
             _urlHelper = urlHelper;
         }
 
@@ -32,7 +32,7 @@ namespace Roadkill.Text.Text.Parsers.Images
             string src = htmlImageTag.OriginalSrc;
             src = _imgFileRegex.Replace(src, "");
 
-            string attachmentsPath = _applicationSettings.AttachmentsUrlPath;
+            string attachmentsPath = _textSettings.AttachmentsUrlPath;
             if (attachmentsPath.EndsWith("/"))
                 attachmentsPath = attachmentsPath.Remove(attachmentsPath.Length - 1);
 

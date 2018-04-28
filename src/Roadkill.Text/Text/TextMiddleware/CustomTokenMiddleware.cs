@@ -1,5 +1,4 @@
 ﻿using Roadkill.Text.Text.CustomTokens;
-using Roadkill.Text.Text.Menu;
 
 namespace Roadkill.Text.Text.TextMiddleware
 {

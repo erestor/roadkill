@@ -14,7 +14,7 @@ namespace Roadkill.Tests.Unit.Text.Parsers.Links
     public class LinkHrefParserTests
     {
         // Many of these tests were converted from the v1.7 MarkdownConverter tests.
-        private ApplicationSettings _applicationSettings;
+        private TextSettings _textSettings;
 
         private LinkHrefParser _linkHrefParser;
         private Mock<IUrlHelper> _urlHelperMock;
@@ -23,11 +23,11 @@ namespace Roadkill.Tests.Unit.Text.Parsers.Links
         public LinkHrefParserTests()
         {
             _pageRepository = new Mock<IPageRepository>();
-            _applicationSettings = new ApplicationSettings();
+            _textSettings = new TextSettings();
             _urlHelperMock = new Mock<IUrlHelper>();
             _urlHelperMock.Setup(x => x.Content(It.IsAny<string>())).Returns<string>(s => s);
 
-            _linkHrefParser = new LinkHrefParser(_pageRepository.Object, _applicationSettings, _urlHelperMock.Object);
+            _linkHrefParser = new LinkHrefParser(_pageRepository.Object, _textSettings, _urlHelperMock.Object);
         }
 
         [Fact]

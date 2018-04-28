@@ -23,7 +23,7 @@ namespace Roadkill.Text.Text.CustomTokens
 			CacheTokensFile = true;
 		}
 
-		public CustomTokenParser(ApplicationSettings settings)
+		public CustomTokenParser(TextSettings settings)
 		{
 			if (CacheTokensFile && !_isTokensFileCached)
 			{
@@ -73,7 +73,7 @@ namespace Roadkill.Text.Text.CustomTokens
 			}
 		}
 
-		private static IEnumerable<TextToken> Deserialize(ApplicationSettings settings)
+		private static IEnumerable<TextToken> Deserialize(TextSettings settings)
 		{
 			if (string.IsNullOrEmpty(settings.CustomTokensPath) || !File.Exists(settings.CustomTokensPath))
 			{

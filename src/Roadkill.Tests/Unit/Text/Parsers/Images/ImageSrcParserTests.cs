@@ -8,16 +8,16 @@ namespace Roadkill.Tests.Unit.Text.Parsers.Images
 {
     public class ImageSrcParserTests
     {
-        private ApplicationSettings _applicationSettings;
+        private TextSettings _textSettings;
         private ImageSrcParser _srcParser;
         private Mock<IUrlHelper> _urlHelper;
 
         public ImageSrcParserTests()
         {
-            _applicationSettings = new ApplicationSettings();
+            _textSettings = new TextSettings();
             _urlHelper = new Mock<IUrlHelper>();
 
-            _srcParser = new ImageSrcParser(_applicationSettings, _urlHelper.Object);
+            _srcParser = new ImageSrcParser(_textSettings, _urlHelper.Object);
         }
 
         [Theory]
@@ -43,7 +43,7 @@ namespace Roadkill.Tests.Unit.Text.Parsers.Images
             // Arrange
             _urlHelper.Setup(x => x.Content(It.IsAny<string>())).Returns<string>(s => s);
 
-            _applicationSettings.AttachmentsUrlPath = "/attuchments/";
+            _textSettings.AttachmentsUrlPath = "/attuchments/";
             HtmlImageTag htmlImageTag = new HtmlImageTag(path, path, "alt", "title");
 
             // Act

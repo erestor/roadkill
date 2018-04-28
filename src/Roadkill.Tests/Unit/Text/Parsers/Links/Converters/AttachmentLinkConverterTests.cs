@@ -9,15 +9,15 @@ namespace Roadkill.Tests.Unit.Text.Parsers.Links.Converters
 {
     public class AttachmentLinkConverterTests
     {
-        private ApplicationSettings _applicationSettings;
+        private TextSettings _textSettings;
         private Mock<IUrlHelper> _urlHelperMock;
         private AttachmentLinkConverter _converter;
 
         public AttachmentLinkConverterTests()
         {
-            _applicationSettings = new ApplicationSettings();
+            _textSettings = new TextSettings();
             _urlHelperMock = new Mock<IUrlHelper>();
-            _converter = new AttachmentLinkConverter(_applicationSettings, _urlHelperMock.Object);
+            _converter = new AttachmentLinkConverter(_textSettings, _urlHelperMock.Object);
         }
 
         [Fact]
@@ -63,7 +63,7 @@ namespace Roadkill.Tests.Unit.Text.Parsers.Links.Converters
             // Arrange
             _urlHelperMock.Setup(x => x.Content(It.IsAny<string>())).Returns<string>(s => s);
 
-            _applicationSettings.AttachmentsUrlPath = "/myattachments/";
+            _textSettings.AttachmentsUrlPath = "/myattachments/";
             var expectedTag = new HtmlLinkTag(href, href, "text", "");
 
             // Act

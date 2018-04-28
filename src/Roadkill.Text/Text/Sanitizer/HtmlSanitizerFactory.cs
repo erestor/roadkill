@@ -5,19 +5,19 @@ namespace Roadkill.Text.Text.Sanitizer
 {
 	public class HtmlSanitizerFactory : IHtmlSanitizerFactory
 	{
-		private readonly ApplicationSettings _applicationSettings;
+		private readonly TextSettings _textSettings;
 
-		public HtmlSanitizerFactory(ApplicationSettings applicationSettings)
+		public HtmlSanitizerFactory(TextSettings textSettings)
 		{
-			_applicationSettings = applicationSettings;
+			_textSettings = textSettings;
 		}
 
 		public IHtmlSanitizer CreateHtmlSanitizer()
 		{
-			if (!_applicationSettings.UseHtmlWhiteList)
+			if (!_textSettings.UseHtmlWhiteList)
 				return null;
 
-			HtmlWhiteList htmlWhiteList = HtmlWhiteList.Deserialize(_applicationSettings);
+			HtmlWhiteList htmlWhiteList = HtmlWhiteList.Deserialize(_textSettings);
 			string[] allowedTags = htmlWhiteList.ElementWhiteList.Select(x => x.Name).ToArray();
 			string[] allowedAttributes =
 				htmlWhiteList.ElementWhiteList.SelectMany(x => x.AllowedAttributes.Select(y => y.Name)).ToArray();

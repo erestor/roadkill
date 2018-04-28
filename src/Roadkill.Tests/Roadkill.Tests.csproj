@@ -20,7 +20,6 @@
 
   <ItemGroup>
     <PackageReference Include="Marten" Version="2.7.1" />
-    <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.2.4" />
     <PackageReference Include="Scrutor" Version="2.2.2" />
     <PackageReference Include="AutoFixture" Version="4.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="2.0.1" />

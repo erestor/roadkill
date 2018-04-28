@@ -1,4 +1,5 @@
 using System;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Roadkill.Text;
 using Roadkill.Text.Text;
@@ -23,11 +24,20 @@ namespace Roadkill.Tests.Unit.Text.TextMiddleware
             }
         }
 
+        private readonly ILogger _logger;
+
+        public TextMiddlewareBuilderTests()
+        {
+            _logger = Mock.Of<ILogger>();
+        }
+
         private TextMiddlewareBuilder CreateFullBuilder()
         {
             var builder = new TextMiddlewareBuilder();
-            builder.Use(new CustomTokenMiddleware(new CustomTokenParser(new TextSettings())))
-                   .Use(new HarmfulTagMiddleware(new HtmlSanitizerFactory(new TextSettings())))
+            TextSettings settings = new TextSettings();
+
+            builder.Use(new CustomTokenMiddleware(new CustomTokenParser(settings, _logger)))
+                   .Use(new HarmfulTagMiddleware(new HtmlSanitizerFactory(settings, _logger)))
                    .Use(new TextPluginAfterParseMiddleware(new TextPluginRunner()));
 
             return builder;

@@ -1,4 +1,6 @@
 using System.IO;
+using Microsoft.Extensions.Logging;
+using Moq;
 using Roadkill.Text;
 using Roadkill.Text.Text.CustomTokens;
 using Xunit;
@@ -7,9 +9,16 @@ namespace Roadkill.Tests.Unit.Text.CustomTokens
 {
     public class CustomTokenParserTests
     {
+        private ILogger _logger;
+
         static CustomTokenParserTests()
         {
             CustomTokenParser.CacheTokensFile = false;
+        }
+
+        public CustomTokenParserTests()
+        {
+            _logger = Mock.Of<ILogger>();
         }
 
         [Fact]
@@ -18,7 +27,7 @@ namespace Roadkill.Tests.Unit.Text.CustomTokens
             // Arrange
             TextSettings settings = new TextSettings();
             settings.CustomTokensPath = Path.Combine(Directory.GetCurrentDirectory(), "Unit", "Text", "CustomTokens", "doesntexist.xml");
-            CustomTokenParser parser = new CustomTokenParser(settings);
+            CustomTokenParser parser = new CustomTokenParser(settings, _logger);
 
             string expectedHtml = "@@warningbox:ENTER YOUR CONTENT HERE {{some link}}@@";
 
@@ -38,7 +47,7 @@ namespace Roadkill.Tests.Unit.Text.CustomTokens
             string expectedHtml = "@@warningbox:ENTER YOUR CONTENT HERE {{some link}}@@";
 
             // Act
-            CustomTokenParser parser = new CustomTokenParser(settings);
+            CustomTokenParser parser = new CustomTokenParser(settings, _logger);
             string actualHtml = parser.ReplaceTokensAfterParse("@@warningbox:ENTER YOUR CONTENT HERE {{some link}}@@");
 
             // Assert
@@ -51,7 +60,7 @@ namespace Roadkill.Tests.Unit.Text.CustomTokens
             // Arrange
             TextSettings settings = new TextSettings();
             settings.CustomTokensPath = Path.Combine(Directory.GetCurrentDirectory(), "Unit", "Text", "CustomTokens", "customvariables.xml");
-            CustomTokenParser parser = new CustomTokenParser(settings);
+            CustomTokenParser parser = new CustomTokenParser(settings, _logger);
 
             string expectedHtml = @"<div class=""alert alert-warning"">ENTER YOUR CONTENT HERE {{some link}}</div><br style=""clear:both""/>";
 

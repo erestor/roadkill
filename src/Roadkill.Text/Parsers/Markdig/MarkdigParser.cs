@@ -25,13 +25,11 @@ namespace Roadkill.Text.Parsers.Markdig
 			MarkdownObject doc = Markdown.Parse(markdown, markdownPipeline);
 			var walker = new MarkdigImageAndLinkWalker((e) =>
 				{
-					if (ImageParsed != null)
-						ImageParsed(e);
+					ImageParsed?.Invoke(e);
 				},
 				(e) =>
 				{
-					if (LinkParsed != null)
-						LinkParsed(e);
+					LinkParsed?.Invoke(e);
 				});
 
 			walker.WalkAndBindParseEvents(doc);

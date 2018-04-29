@@ -7,6 +7,8 @@
   <ItemGroup>
     <None Remove="Unit\Text\CustomTokens\badxml-file.json" />
     <None Remove="Unit\Text\CustomTokens\customvariables.xml" />
+    <None Remove="Unit\Text\Sanitizer\dodgy-whitelist.json" />
+    <None Remove="Unit\Text\Sanitizer\whitelist.json" />
   </ItemGroup>
 
   <ItemGroup>
@@ -15,6 +17,12 @@
     </Content>
     <Content Include="Unit\Text\CustomTokens\customvariables.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Unit\Text\Sanitizer\dodgy-whitelist.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Unit\Text\Sanitizer\whitelist.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 

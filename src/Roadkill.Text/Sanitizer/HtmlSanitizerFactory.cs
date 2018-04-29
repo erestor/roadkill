@@ -1,18 +1,21 @@
-﻿using System.Linq;
-using Ganss.XSS;
-using Microsoft.Extensions.Logging;
+﻿using Ganss.XSS;
 
 namespace Roadkill.Text.Sanitizer
 {
+    public interface IHtmlSanitizerFactory
+    {
+        IHtmlSanitizer CreateHtmlSanitizer();
+    }
+
     public class HtmlSanitizerFactory : IHtmlSanitizerFactory
     {
         private readonly TextSettings _textSettings;
-        private readonly ILogger _logger;
+        private readonly IHtmlWhiteListProvider _htmlWhiteListProvider;
 
-        public HtmlSanitizerFactory(TextSettings textSettings, ILogger logger)
+        public HtmlSanitizerFactory(TextSettings textSettings, IHtmlWhiteListProvider htmlWhiteListProvider)
         {
             _textSettings = textSettings;
-            _logger = logger;
+            _htmlWhiteListProvider = htmlWhiteListProvider;
         }
 
         public IHtmlSanitizer CreateHtmlSanitizer()
@@ -20,10 +23,9 @@ namespace Roadkill.Text.Sanitizer
             if (!_textSettings.UseHtmlWhiteList)
                 return null;
 
-            HtmlWhiteList htmlWhiteList = HtmlWhiteList.Deserialize(_textSettings, _logger);
-            string[] allowedTags = htmlWhiteList.ElementWhiteList.Select(x => x.Name).ToArray();
-            string[] allowedAttributes =
-                htmlWhiteList.ElementWhiteList.SelectMany(x => x.AllowedAttributes.Select(y => y.Name)).ToArray();
+            HtmlWhiteListSettings whiteListSettings = _htmlWhiteListProvider.Deserialize();
+            string[] allowedTags = whiteListSettings.AllowedElements.ToArray();
+            string[] allowedAttributes = whiteListSettings.AllowedAttributes.ToArray();
 
             if (allowedTags.Length == 0)
                 allowedTags = null;

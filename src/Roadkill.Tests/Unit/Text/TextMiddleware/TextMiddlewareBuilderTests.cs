@@ -33,10 +33,11 @@ namespace Roadkill.Tests.Unit.Text.TextMiddleware
         private TextMiddlewareBuilder CreateFullBuilder()
         {
             var builder = new TextMiddlewareBuilder();
-            TextSettings settings = new TextSettings();
+            var settings = new TextSettings();
+            var whiteListProvider = Mock.Of<IHtmlWhiteListProvider>();
 
             builder.Use(new CustomTokenMiddleware(new CustomTokenParser(settings, _logger)))
-                   .Use(new HarmfulTagMiddleware(new HtmlSanitizerFactory(settings, _logger)))
+                   .Use(new HarmfulTagMiddleware(new HtmlSanitizerFactory(settings, whiteListProvider)))
                    .Use(new TextPluginAfterParseMiddleware(new TextPluginRunner()));
 
             return builder;

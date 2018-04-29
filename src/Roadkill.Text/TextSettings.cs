@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("Roadkill.Tests")]
 
 namespace Roadkill.Text
 {

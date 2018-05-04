@@ -11,9 +11,9 @@ namespace Roadkill.Core.Repositories
 	{
 		// AddNewPage and AddNewPageContentVersion should be altered so they don't return anything
 
-		Task<PageContent> AddNewPage(Page page, string text, string editedBy, DateTime editedOn);
+		Task<PageContent> AddNewPage(Page page, string text);
 
-		Task<PageContent> AddNewPageContentVersion(Page page, string text, string editedBy, DateTime editedOn, int version);
+		Task<PageContent> AddNewPageContentVersion(Page page, string text, int version);
 
 		// Returns a list of tags for all pages. Each item is a list of tags seperated by, e.g. { "tag1, tag2, tag3", "blah, blah2" }
 		Task<IEnumerable<Page>> AllPages();
@@ -75,7 +75,7 @@ namespace Roadkill.Core.Repositories
 			_store.Advanced.Clean.DeleteDocumentsFor(typeof(PageContent));
 		}
 
-		public async Task<PageContent> AddNewPage(Page page, string text, string editedBy, DateTime editedOn)
+		public async Task<PageContent> AddNewPage(Page page, string text)
 		{
 			using (IDocumentSession session = _store.LightweightSession())
 			{
@@ -84,8 +84,8 @@ namespace Roadkill.Core.Repositories
 				var pageContent = new PageContent()
 				{
 					Id = Guid.NewGuid(),
-					EditedBy = editedBy,
-					EditedOn = editedOn,
+					EditedBy = page.CreatedBy,
+					EditedOn = page.CreatedOn,
 					Page = page,
 					Text = text,
 					VersionNumber = 1
@@ -97,12 +97,12 @@ namespace Roadkill.Core.Repositories
 			}
 		}
 
-		public async Task<PageContent> AddNewPageContentVersion(Page page, string text, string editedBy, DateTime editedOn, int version)
+		public async Task<PageContent> AddNewPageContentVersion(Page page, string text, int version)
 		{
 			PageContent existingVersion = await GetLatestPageContent(page.Id);
 			if (existingVersion == null)
 			{
-				return await AddNewPage(page, text, editedBy, editedOn);
+				return await AddNewPage(page, text);
 			}
 
 			using (IDocumentSession session = _store.LightweightSession())
@@ -112,8 +112,8 @@ namespace Roadkill.Core.Repositories
 				var pageContent = new PageContent()
 				{
 					Id = Guid.NewGuid(),
-					EditedBy = editedBy,
-					EditedOn = editedOn,
+					EditedBy = page.ModifiedBy,
+					EditedOn = page.ModifiedOn,
 					Page = page,
 					Text = text,
 					VersionNumber = newVersionNumber
@@ -187,19 +187,37 @@ namespace Roadkill.Core.Repositories
 			}
 		}
 
-		public Task<IEnumerable<Page>> FindPagesCreatedBy(string username)
+		public async Task<IEnumerable<Page>> FindPagesCreatedBy(string username)
 		{
-			throw new NotImplementedException();
+			using (IQuerySession session = _store.QuerySession())
+			{
+				return await session
+					.Query<Page>()
+					.Where(x => x.CreatedBy.Equals(username, StringComparison.CurrentCultureIgnoreCase))
+					.ToListAsync();
+			}
 		}
 
-		public Task<IEnumerable<Page>> FindPagesModifiedBy(string username)
+		public async Task<IEnumerable<Page>> FindPagesModifiedBy(string username)
 		{
-			throw new NotImplementedException();
+			using (IQuerySession session = _store.QuerySession())
+			{
+				return await session
+					.Query<Page>()
+					.Where(x => x.ModifiedBy.Equals(username, StringComparison.CurrentCultureIgnoreCase))
+					.ToListAsync();
+			}
 		}
 
-		public Task<IEnumerable<Page>> FindPagesContainingTag(string tag)
+		public async Task<IEnumerable<Page>> FindPagesContainingTag(string tag)
 		{
-			throw new NotImplementedException();
+			using (IQuerySession session = _store.QuerySession())
+			{
+				return await session
+					.Query<Page>()
+					.Where(x => x.Tags.Contains(tag))
+					.ToListAsync();
+			}
 		}
 
 		public async Task<IEnumerable<PageContent>> FindPageContentsByPageId(int pageId)
@@ -264,9 +282,21 @@ namespace Roadkill.Core.Repositories
 			throw new NotImplementedException();
 		}
 
-		public Task UpdatePageContent(PageContent content)
+		public async Task UpdatePageContent(PageContent content)
 		{
-			throw new NotImplementedException();
+			PageContent latestPageContent = await GetLatestPageContent(content.Page.Id);
+
+			using (IDocumentSession session = _store.LightweightSession())
+			{
+				content.Page.ModifiedBy = content.EditedBy;
+				content.Page.ModifiedOn = DateTime.UtcNow;
+
+				content.VersionNumber = latestPageContent.VersionNumber + 1;
+
+				session.Store(content);
+				session.Store(content.Page);
+				await session.SaveChangesAsync();
+			}
 		}
 	}
 }

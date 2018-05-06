@@ -199,6 +199,7 @@ namespace Roadkill.Tests.Integration.Repositories
 			// given
 			PageRepository repository = CreateRepository();
 			List<Page> pages = CreateTenPages(repository);
+			Sleep500ms();
 
 			var expectedPage = pages[0];
 			string text = _fixture.Create<string>();

@@ -63,87 +63,64 @@ namespace Roadkill.Tests.Integration.Repositories
 
 			pages.ForEach(async page =>
 			{
-				PageContent content = await repository.AddNewPage(page, _fixture.Create<string>());
+				PageContentVersion contentVersion = await repository.AddNewPage(page, _fixture.Create<string>());
 			});
 			return pages;
 		}
 
-		private void Wait500ms()
+		private void Sleep500ms()
 		{
+			// This wait is necessary for slower Postgres instances, e.g Postgres running on Docker.
 			Thread.Sleep(500);
 		}
 
 		[Fact]
-		public async void AddNewPage_should_add_page_and_content_and_modifiedby()
+		public async void AddNewPage_should_add_page_and_content()
 		{
 			// given
+			string expectedText = _fixture.Create<string>();
+			string author = "larcy";
+			DateTime createdOn = DateTime.Today;
+
 			PageRepository repository = CreateRepository();
-			Page expectedPage = _fixture.Create<Page>();
-			expectedPage.CreatedBy = "boris";
-			expectedPage.ModifiedBy = "boris";
-			expectedPage.CreatedOn = DateTime.Today;
-			expectedPage.ModifiedOn = DateTime.Today;
-			PageContent dummyContent = _fixture.Create<PageContent>();
+
+			Page page = _fixture.Create<Page>();
+			page.LastModifiedBy = page.CreatedBy = author;
+			page.LastModifiedOn = page.CreatedOn = createdOn;
 
 			// when
-			PageContent actualPageContent = await repository.AddNewPage(expectedPage, dummyContent.Text);
+			PageContentVersion content = await repository.AddNewPage(page, expectedText);
 
 			// then
-			Assert.NotNull(actualPageContent);
+			Assert.NotNull(content);
 
-			PageContent savedContent = await repository.GetPageContentById(actualPageContent.Id);
-			Assert.NotNull(savedContent);
-
-			AssertExtensions.Equivalent(actualPageContent, savedContent);
-			Assert.Equal(expectedPage.CreatedBy, actualPageContent.Page.CreatedBy);
-			Assert.Equal(expectedPage.CreatedBy, actualPageContent.Page.ModifiedBy);
-
-			Assert.Equal(expectedPage.CreatedOn, actualPageContent.Page.CreatedOn);
-			Assert.Equal(expectedPage.CreatedOn, actualPageContent.Page.ModifiedOn);
+			PageContentVersion savedContentVersion = await repository.GetPageContentById(content.Id);
+			Assert.NotNull(savedContentVersion);
+			Assert.Equal(content.Author, author);
+			Assert.Equal(content.DateTime, createdOn);
 		}
 
 		[Fact]
-		public async void AddNewPageContentVersion_should_increment_version_for_existing_page()
+		public async void AddNewPageContentVersion_should_save_lastmodified_to_page()
 		{
 			// given
 			PageRepository repository = CreateRepository();
 			Page expectedPage = _fixture.Create<Page>();
-			PageContent dummyContent = _fixture.Create<PageContent>();
-
-			PageContent firstVersion = await repository.AddNewPage(expectedPage, "v1 content");
+			await repository.AddNewPage(expectedPage, "v1 content");
 
 			// when
-			PageContent secondVersion = await repository.AddNewPageContentVersion(expectedPage, "v2 content", 2);
+			PageContentVersion secondVersion = await repository.AddNewPageContentVersion(expectedPage.Id, "v2 content", "author2");
 
 			// then
 			Assert.NotNull(secondVersion);
 
-			PageContent savedContent = await repository.GetPageContentById(secondVersion.Id);
-			Assert.NotNull(savedContent);
-			AssertExtensions.Equivalent(secondVersion, savedContent);
+			PageContentVersion savedContentVersion = await repository.GetPageContentById(secondVersion.Id);
+			Assert.NotNull(savedContentVersion);
+			AssertExtensions.Equivalent(secondVersion, savedContentVersion);
 
-			Assert.Equal(2, secondVersion.VersionNumber);
-		}
-
-		[Fact]
-		public async void AddNewPageContentVersion_should_addnewpage_when_no_content_exists()
-		{
-			// given
-			PageRepository repository = CreateRepository();
-			Page expectedPage = _fixture.Create<Page>();
-			PageContent dummyContent = _fixture.Create<PageContent>();
-
-			// when
-			PageContent actualPageContent = await repository.AddNewPageContentVersion(expectedPage, "new content", 2);
-
-			// then
-			Assert.NotNull(actualPageContent);
-
-			PageContent savedContent = await repository.GetPageContentById(actualPageContent.Id);
-			Assert.NotNull(savedContent);
-			AssertExtensions.Equivalent(actualPageContent, savedContent);
-
-			Assert.Equal(1, actualPageContent.VersionNumber);
+			Page latestPage = await repository.GetPageById(expectedPage.Id);
+			Assert.Equal(savedContentVersion.Author, latestPage.LastModifiedBy);
+			Assert.Equal(savedContentVersion.DateTime, latestPage.LastModifiedOn);
 		}
 
 		[Fact]
@@ -152,10 +129,10 @@ namespace Roadkill.Tests.Integration.Repositories
 			// given
 			PageRepository repository = CreateRepository();
 			List<Page> pages = CreateTenPages(repository);
-			Wait500ms();
+			Sleep500ms();
 
 			// when
-			var actualPages = await repository.AllPages();
+			IEnumerable<Page> actualPages = await repository.AllPages();
 
 			// then
 			Assert.Equal(pages.Count, actualPages.Count());
@@ -167,10 +144,10 @@ namespace Roadkill.Tests.Integration.Repositories
 			// given
 			PageRepository repository = CreateRepository();
 			List<Page> pages = CreateTenPages(repository);
-			Wait500ms();
+			Sleep500ms();
 
 			// when
-			var actualPageContents = await repository.AllPageContents();
+			IEnumerable<PageContentVersion> actualPageContents = await repository.AllPageContents();
 
 			// then
 			Assert.Equal(pages.Count, actualPageContents.Count());
@@ -185,7 +162,7 @@ namespace Roadkill.Tests.Integration.Repositories
 			List<Page> pages = _fixture.CreateMany<Page>(10).ToList();
 			pages.ForEach(p => p.Tags = "tag1, tag2, tag3");
 			CreateTenPages(repository, pages);
-			Wait500ms();
+			Sleep500ms();
 
 			// when
 			IEnumerable<string> actualTags = await repository.AllTags();
@@ -212,7 +189,7 @@ namespace Roadkill.Tests.Integration.Repositories
 			var deletedPage = await repository.GetPageById(pageToDelete.Id);
 			Assert.Null(deletedPage);
 
-			var pageContents = await repository.FindPageContentsByPageId(pageToDelete.Id);
+			var pageContents = await repository.FindPageVersionsByPageId(pageToDelete.Id);
 			Assert.Empty(pageContents);
 		}
 
@@ -222,8 +199,10 @@ namespace Roadkill.Tests.Integration.Repositories
 			// given
 			PageRepository repository = CreateRepository();
 			List<Page> pages = CreateTenPages(repository);
+
 			var expectedPage = pages[0];
-			var version2PageContent = await repository.AddNewPageContentVersion(expectedPage, _fixture.Create<string>(), 2);
+			string text = _fixture.Create<string>();
+			var version2PageContent = await repository.AddNewPageContentVersion(expectedPage.Id, text, "author2");
 
 			// when
 			await repository.DeletePageContent(version2PageContent);
@@ -242,11 +221,11 @@ namespace Roadkill.Tests.Integration.Repositories
 			// given
 			PageRepository repository = CreateRepository();
 			CreateTenPages(repository);
-			Wait500ms();
+			Sleep500ms();
 
 			// when
 			await repository.DeleteAllPages();
-			Wait500ms();
+			Sleep500ms();
 
 			// then
 			IEnumerable<Page> allPages = await repository.AllPages();
@@ -257,62 +236,58 @@ namespace Roadkill.Tests.Integration.Repositories
 		}
 
 		[Fact]
-		public async Task FindPagesCreatedBy_should_find_pages_created_by_case_insensitive()
+		public async Task FindPagesCreatedBy_should_find_pages_created_by__with_case_insensitive_search()
 		{
 			// given
 			PageRepository repository = CreateRepository();
-			CreateTenPages(repository);
+			CreateTenPages(repository); // add random data
 
-			var myPage1 = _fixture.Create<Page>();
-			myPage1.CreatedBy = "myself";
-			await repository.AddNewPage(myPage1, "text");
+			var page1 = _fixture.Create<Page>();
+			var page2 = _fixture.Create<Page>();
+			page1.CreatedBy = "myself";
+			page2.CreatedBy = "MYSELf";
 
-			var myPage2 = _fixture.Create<Page>();
-			myPage2.CreatedBy = "MYSELf";
-			await repository.AddNewPage(myPage2, "text");
+			await repository.AddNewPage(page1, "text");
+			await repository.AddNewPage(page2, "text");
 
-			Wait500ms();
+			Sleep500ms();
 
 			// when
-			var actualPages = await repository.FindPagesCreatedBy("myself");
+			IEnumerable<Page> actualPages = await repository.FindPagesCreatedBy("myself");
 
 			// then
 			Assert.Equal(2, actualPages.Count());
-			Assert.NotNull(actualPages.First(x => x.Id == myPage1.Id));
-			Assert.NotNull(actualPages.First(x => x.Id == myPage2.Id));
+			Assert.NotNull(actualPages.First(x => x.Id == page1.Id));
+			Assert.NotNull(actualPages.First(x => x.Id == page2.Id));
 		}
 
 		[Fact]
-		public async Task FindPagesModifiedBy()
+		public async Task FindPagesModifiedBy_should_find_pages_with_case_insensitive_search()
 		{
 			// given
 			PageRepository repository = CreateRepository();
-			CreateTenPages(repository);
+			CreateTenPages(repository); // add random pages
 
-			var myPage1 = _fixture.Create<Page>();
-			var pageContent1 = await repository.AddNewPage(myPage1, "text");
+			var page1 = _fixture.Create<Page>();
+			var page2 = _fixture.Create<Page>();
+			await repository.AddNewPage(page1, "text");
+			await repository.AddNewPage(page2, "text");
+			await repository.AddNewPageContentVersion(page1.Id, "v2 text", "that guy");
+			await repository.AddNewPageContentVersion(page2.Id, "v2 text", "THaT guy");
 
-			var myPage2 = _fixture.Create<Page>();
-			var pageContent2 = await repository.AddNewPage(myPage2, "text");
-
-			pageContent1.EditedBy = "that guy";
-			pageContent2.EditedBy = "THAT guy";
-			await repository.UpdatePageContent(pageContent1);
-			await repository.UpdatePageContent(pageContent2);
-
-			Wait500ms();
+			Sleep500ms();
 
 			// when
-			var actualPages = await repository.FindPagesModifiedBy("that guy");
+			IEnumerable<Page> actualPages = await repository.FindPagesModifiedBy("that guy");
 
 			// then
 			Assert.Equal(2, actualPages.Count());
-			Assert.NotNull(actualPages.First(x => x.Id == myPage1.Id));
-			Assert.NotNull(actualPages.First(x => x.Id == myPage2.Id));
+			Assert.NotNull(actualPages.First(x => x.Id == page1.Id));
+			Assert.NotNull(actualPages.First(x => x.Id == page2.Id));
 		}
 
 		[Fact]
-		public async Task FindPagesContainingTag()
+		public async Task FindPagesContainingTag_should_find_tags_using_case_insensitive_search()
 		{
 			// given
 			PageRepository repository = CreateRepository();
@@ -334,15 +309,53 @@ namespace Roadkill.Tests.Integration.Repositories
 			Assert.NotNull(actualPages.First(x => x.Id == pages[2].Id));
 		}
 
-		//public IEnumerable<PageContent> FindPageContentsByPageId(int pageId)
-		//{
-		//    throw new NotImplementedException();
-		//}
+		[Fact]
+		public async Task FindPageVersionsByPageId_should_return_all_pagecontents_for_a_page()
+		{
+			// given
+			PageRepository repository = CreateRepository();
+			var pages = CreateTenPages(repository);
+			Sleep500ms();
 
-		//public IEnumerable<PageContent> FindPageContentsEditedBy(string username)
-		//{
-		//    throw new NotImplementedException();
-		//}
+			Page expectedPage = pages[0];
+			PageContentVersion latestPageContentVersion = await repository.AddNewPageContentVersion(expectedPage.Id, "v2 text", "author2");
+
+			// when
+			IEnumerable<PageContentVersion> actualPageContents = await repository.FindPageVersionsByPageId(expectedPage.Id);
+
+			// then
+			Assert.NotNull(actualPageContents);
+			Assert.NotEmpty(actualPageContents);
+			Assert.Equal(2, actualPageContents.Count());
+			AssertExtensions.Equivalent(latestPageContentVersion, actualPageContents.Last());
+		}
+
+		[Fact]
+		public async Task FindPageContentsEditedBy_should_find_using_case_insensitive_search()
+		{
+			// given
+			string editedBy = "shakespeare jr";
+
+			PageRepository repository = CreateRepository();
+			CreateTenPages(repository); // add random pages
+
+			var page1 = _fixture.Create<Page>();
+			var page2 = _fixture.Create<Page>();
+			await repository.AddNewPage(page1, "text");
+			await repository.AddNewPage(page2, "text");
+
+			PageContentVersion pageContent1 = await repository.AddNewPageContentVersion(page1.Id, "v2 text", editedBy);
+			PageContentVersion pageContent2 = await repository.AddNewPageContentVersion(page2.Id, "v2 text", editedBy);
+
+			Sleep500ms();
+
+			// when
+			IEnumerable<PageContentVersion> actualPageContents = await repository.FindPageContentsEditedBy(editedBy);
+
+			// then
+			Assert.Equal(2, actualPageContents.Count());
+			Assert.Contains(actualPageContents, p => p.Id == pageContent1.Id || p.Id == pageContent2.Id);
+		}
 
 		//public Task<PageContent> GetLatestPageContent(int pageId)
 		//{

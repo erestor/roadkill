@@ -51,7 +51,14 @@ namespace Roadkill.Core.Repositories
 
 		public void Wipe()
 		{
-			_store.Advanced.Clean.DeleteAllDocuments();
+			try
+			{
+				_store.Advanced.Clean.DeleteDocumentsFor(typeof(User));
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine(e);
+			}
 		}
 
 		public async Task DeleteAllUsers()

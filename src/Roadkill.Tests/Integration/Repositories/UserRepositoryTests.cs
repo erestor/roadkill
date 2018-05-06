@@ -22,14 +22,7 @@ namespace Roadkill.Tests.Integration.Repositories
 		public UserRepositoryTests()
 		{
 			_fixture = new Fixture();
-			using (var connection = new NpgsqlConnection(DocumentStoreManager.ConnectionString))
-			{
-				connection.Open();
-				var command = connection.CreateCommand();
-				command.CommandText = "delete from public.mt_doc_user";
-				command.ExecuteNonQuery();
-				command.ExecuteNonQuery();
-			}
+			new UserRepository(DocumentStoreManager.MartenDocumentStore).Wipe();
 		}
 
 		public UserRepository CreateRepository()

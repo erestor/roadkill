@@ -43,7 +43,7 @@ namespace Roadkill.Tests.Integration.Repositories
 				options.Connection(connectionString);
 				options.Schema.For<User>().Index(x => x.Id);
 				options.Schema.For<Page>().Index(x => x.Id);
-				options.Schema.For<PageContent>().Index(x => x.Id);
+				options.Schema.For<PageContentVersion>().Index(x => x.Id);
 			});
 
 			return documentStore;

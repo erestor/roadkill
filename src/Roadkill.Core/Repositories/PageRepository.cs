@@ -11,14 +11,14 @@ namespace Roadkill.Core.Repositories
 	{
 		// AddNewPage and AddNewPageContentVersion should be altered so they don't return anything
 
-		Task<PageContent> AddNewPage(Page page, string text);
+		Task<PageContentVersion> AddNewPage(Page page, string text);
 
-		Task<PageContent> AddNewPageContentVersion(Page page, string text, int version);
+		Task<PageContentVersion> AddNewPageContentVersion(int pageId, string text, string author, DateTime? dateTime = null);
 
 		// Returns a list of tags for all pages. Each item is a list of tags seperated by, e.g. { "tag1, tag2, tag3", "blah, blah2" }
 		Task<IEnumerable<Page>> AllPages();
 
-		Task<IEnumerable<PageContent>> AllPageContents();
+		Task<IEnumerable<PageContentVersion>> AllPageContents();
 
 		// the raw tags for every page, still comma delimited.
 		Task<IEnumerable<string>> AllTags();
@@ -26,7 +26,7 @@ namespace Roadkill.Core.Repositories
 		Task DeletePage(Page page);
 
 		//Removes a single version of page contents by its id.
-		Task DeletePageContent(PageContent pageContent);
+		Task DeletePageContent(PageContentVersion pageContentVersion);
 
 		Task DeleteAllPages();
 
@@ -36,25 +36,25 @@ namespace Roadkill.Core.Repositories
 
 		Task<IEnumerable<Page>> FindPagesContainingTag(string tag);
 
-		Task<IEnumerable<PageContent>> FindPageContentsByPageId(int pageId);
+		Task<IEnumerable<PageContentVersion>> FindPageVersionsByPageId(int pageId);
 
-		Task<IEnumerable<PageContent>> FindPageContentsEditedBy(string username);
+		Task<IEnumerable<PageContentVersion>> FindPageContentsEditedBy(string username);
 
-		Task<PageContent> GetLatestPageContent(int pageId);
+		Task<PageContentVersion> GetLatestPageContent(int pageId);
 
 		Task<Page> GetPageById(int id);
 
 		// Case insensitive search by page title
 		Task<Page> GetPageByTitle(string title);
 
-		Task<PageContent> GetPageContentById(Guid id);
+		Task<PageContentVersion> GetPageContentById(Guid id);
 
-		Task<PageContent> GetPageContentByPageIdAndVersionNumber(int id, int versionNumber);
+		Task<PageContentVersion> GetPageContentByPageIdAndVersionNumber(int id, int versionNumber);
 
 		Task<Page> SaveOrUpdatePage(Page page);
 
 		// doesn't add a new version
-		Task UpdatePageContent(PageContent content);
+		Task UpdatePageContent(PageContentVersion contentVersion);
 	}
 
 	public class PageRepository : IPageRepository
@@ -71,24 +71,30 @@ namespace Roadkill.Core.Repositories
 
 		public void Wipe()
 		{
-			_store.Advanced.Clean.DeleteDocumentsFor(typeof(Page));
-			_store.Advanced.Clean.DeleteDocumentsFor(typeof(PageContent));
+			try
+			{
+				_store.Advanced.Clean.DeleteDocumentsFor(typeof(Page));
+				_store.Advanced.Clean.DeleteDocumentsFor(typeof(PageContentVersion));
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine(e);
+			}
 		}
 
-		public async Task<PageContent> AddNewPage(Page page, string text)
+		public async Task<PageContentVersion> AddNewPage(Page page, string text)
 		{
 			using (IDocumentSession session = _store.LightweightSession())
 			{
 				session.Store(page);
 
-				var pageContent = new PageContent()
+				var pageContent = new PageContentVersion()
 				{
 					Id = Guid.NewGuid(),
-					EditedBy = page.CreatedBy,
-					EditedOn = page.CreatedOn,
-					Page = page,
-					Text = text,
-					VersionNumber = 1
+					PageId = page.Id,
+					Author = page.CreatedBy,
+					DateTime = page.CreatedOn,
+					Text = text
 				};
 				session.Store(pageContent);
 
@@ -97,28 +103,29 @@ namespace Roadkill.Core.Repositories
 			}
 		}
 
-		public async Task<PageContent> AddNewPageContentVersion(Page page, string text, int version)
+		public async Task<PageContentVersion> AddNewPageContentVersion(int pageId, string text, string author, DateTime? dateTime = null)
 		{
-			PageContent existingVersion = await GetLatestPageContent(page.Id);
-			if (existingVersion == null)
-			{
-				return await AddNewPage(page, text);
-			}
-
 			using (IDocumentSession session = _store.LightweightSession())
 			{
-				int newVersionNumber = existingVersion.VersionNumber + 1;
+				if (dateTime == null)
+					dateTime = DateTime.UtcNow;
 
-				var pageContent = new PageContent()
+				var pageContent = new PageContentVersion()
 				{
 					Id = Guid.NewGuid(),
-					EditedBy = page.ModifiedBy,
-					EditedOn = page.ModifiedOn,
-					Page = page,
-					Text = text,
-					VersionNumber = newVersionNumber
+					Author = author,
+					DateTime = dateTime.Value,
+					PageId = pageId,
+					Text = text
 				};
 				session.Store(pageContent);
+
+				Page page = await GetPageById(pageId);
+				if (page == null)
+					throw new InvalidOperationException($"The page id {pageId} does not exist anymore to save content for.");
+				page.LastModifiedBy = author;
+				page.LastModifiedOn = dateTime.Value;
+				session.Store(page);
 
 				await session.SaveChangesAsync();
 				return pageContent;
@@ -135,12 +142,12 @@ namespace Roadkill.Core.Repositories
 			}
 		}
 
-		public async Task<IEnumerable<PageContent>> AllPageContents()
+		public async Task<IEnumerable<PageContentVersion>> AllPageContents()
 		{
 			using (IQuerySession session = _store.QuerySession())
 			{
 				return await session
-					.Query<PageContent>()
+					.Query<PageContentVersion>()
 					.ToListAsync();
 			}
 		}
@@ -161,17 +168,17 @@ namespace Roadkill.Core.Repositories
 			using (IDocumentSession session = _store.LightweightSession())
 			{
 				session.Delete<Page>(page.Id);
-				session.DeleteWhere<PageContent>(x => x.Page.Id == page.Id);
+				session.DeleteWhere<PageContentVersion>(x => x.PageId == page.Id);
 				await session.SaveChangesAsync();
 			}
 		}
 
-		public async Task DeletePageContent(PageContent pageContent)
+		public async Task DeletePageContent(PageContentVersion pageContentVersion)
 		{
 			using (IDocumentSession session = _store.OpenSession())
 			{
-				session.Delete<PageContent>(pageContent.Id);
-				session.DeleteWhere<PageContent>(x => x.Id == pageContent.Id);
+				session.Delete<PageContentVersion>(pageContentVersion.Id);
+				session.DeleteWhere<PageContentVersion>(x => x.Id == pageContentVersion.Id);
 				await session.SaveChangesAsync();
 			}
 		}
@@ -181,7 +188,7 @@ namespace Roadkill.Core.Repositories
 			using (IDocumentSession session = _store.LightweightSession())
 			{
 				session.DeleteWhere<Page>(x => true);
-				session.DeleteWhere<PageContent>(x => true);
+				session.DeleteWhere<PageContentVersion>(x => true);
 
 				await session.SaveChangesAsync();
 			}
@@ -204,7 +211,7 @@ namespace Roadkill.Core.Repositories
 			{
 				return await session
 					.Query<Page>()
-					.Where(x => x.ModifiedBy.Equals(username, StringComparison.CurrentCultureIgnoreCase))
+					.Where(x => x.LastModifiedBy.Equals(username, StringComparison.CurrentCultureIgnoreCase))
 					.ToListAsync();
 			}
 		}
@@ -220,30 +227,36 @@ namespace Roadkill.Core.Repositories
 			}
 		}
 
-		public async Task<IEnumerable<PageContent>> FindPageContentsByPageId(int pageId)
+		public async Task<IEnumerable<PageContentVersion>> FindPageVersionsByPageId(int pageId)
 		{
 			using (IQuerySession session = _store.QuerySession())
 			{
 				return await session
-					.Query<PageContent>()
-					.Where(x => x.Page.Id == pageId)
+					.Query<PageContentVersion>()
+					.Where(x => x.PageId == pageId)
 					.ToListAsync();
 			}
 		}
 
-		public async Task<IEnumerable<PageContent>> FindPageContentsEditedBy(string username)
-		{
-			throw new NotImplementedException();
-		}
-
-		public async Task<PageContent> GetLatestPageContent(int pageId)
+		public async Task<IEnumerable<PageContentVersion>> FindPageContentsEditedBy(string username)
 		{
 			using (IQuerySession session = _store.QuerySession())
 			{
 				return await session
-					.Query<PageContent>()
-					.OrderByDescending(x => x.VersionNumber)
-					.FirstOrDefaultAsync(x => x.Page.Id == pageId);
+					.Query<PageContentVersion>()
+					.Where(x => x.Author.Equals(username, StringComparison.CurrentCultureIgnoreCase))
+					.ToListAsync();
+			}
+		}
+
+		public async Task<PageContentVersion> GetLatestPageContent(int pageId)
+		{
+			using (IQuerySession session = _store.QuerySession())
+			{
+				return await session
+					.Query<PageContentVersion>()
+					.OrderByDescending(x => x.DateTime)
+					.FirstOrDefaultAsync(x => x.PageId == pageId);
 			}
 		}
 
@@ -262,17 +275,17 @@ namespace Roadkill.Core.Repositories
 			throw new NotImplementedException();
 		}
 
-		public async Task<PageContent> GetPageContentById(Guid id)
+		public async Task<PageContentVersion> GetPageContentById(Guid id)
 		{
 			using (IQuerySession session = _store.QuerySession())
 			{
 				return await session
-					.Query<PageContent>()
+					.Query<PageContentVersion>()
 					.FirstOrDefaultAsync(x => x.Id == id);
 			}
 		}
 
-		public Task<PageContent> GetPageContentByPageIdAndVersionNumber(int id, int versionNumber)
+		public Task<PageContentVersion> GetPageContentByPageIdAndVersionNumber(int id, int versionNumber)
 		{
 			throw new NotImplementedException();
 		}
@@ -282,19 +295,12 @@ namespace Roadkill.Core.Repositories
 			throw new NotImplementedException();
 		}
 
-		public async Task UpdatePageContent(PageContent content)
+		// updates an existing page contentVersion only
+		public async Task UpdatePageContent(PageContentVersion contentVersion)
 		{
-			PageContent latestPageContent = await GetLatestPageContent(content.Page.Id);
-
 			using (IDocumentSession session = _store.LightweightSession())
 			{
-				content.Page.ModifiedBy = content.EditedBy;
-				content.Page.ModifiedOn = DateTime.UtcNow;
-
-				content.VersionNumber = latestPageContent.VersionNumber + 1;
-
-				session.Store(content);
-				session.Store(content.Page);
+				session.Store(contentVersion);
 				await session.SaveChangesAsync();
 			}
 		}

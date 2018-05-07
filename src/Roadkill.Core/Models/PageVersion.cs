@@ -2,7 +2,7 @@
 
 namespace Roadkill.Core.Models
 {
-	public class PageContentVersion
+	public class PageVersion
 	{
 		public Guid Id { get; set; }
 

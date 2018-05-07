@@ -4,7 +4,6 @@ namespace Roadkill.Core.Models
 {
 	public class Page
 	{
-		public Guid ObjectId { get; set; }
 		public int Id { get; set; }
 		public string Title { get; set; }
 

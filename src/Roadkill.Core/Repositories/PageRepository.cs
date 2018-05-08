@@ -154,7 +154,7 @@ namespace Roadkill.Core.Repositories
 			{
 				return await session
 					.Query<Page>()
-					.FirstOrDefaultAsync(x => x.Id != id);
+					.FirstOrDefaultAsync(x => x.Id == id);
 			}
 		}
 
@@ -172,7 +172,7 @@ namespace Roadkill.Core.Repositories
 		{
 			using (IDocumentSession session = _store.LightweightSession())
 			{
-				session.Store(page);
+				session.Update(page);
 
 				await session.SaveChangesAsync();
 				return page;

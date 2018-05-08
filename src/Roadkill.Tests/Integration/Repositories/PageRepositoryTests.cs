@@ -249,7 +249,7 @@ namespace Roadkill.Tests.Integration.Repositories
 		}
 
 		[Fact]
-		public async Task GetPageById_should_find_by_auto_incrementing_id()
+		public async Task GetPageById_should_find_by_id()
 		{
 			// given
 			PageRepository repository = CreateRepository();

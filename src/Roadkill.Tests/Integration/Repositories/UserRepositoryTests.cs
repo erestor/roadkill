@@ -22,17 +22,19 @@ namespace Roadkill.Tests.Integration.Repositories
 		public UserRepositoryTests()
 		{
 			_fixture = new Fixture();
-			new UserRepository(DocumentStoreManager.MartenDocumentStore).Wipe();
+			IDocumentStore documentStore = DocumentStoreManager.GetMartenDocumentStore(typeof(UserRepositoryTests));
+			new UserRepository(documentStore).Wipe();
 		}
 
 		public UserRepository CreateRepository()
 		{
-			return new UserRepository(DocumentStoreManager.MartenDocumentStore);
+			IDocumentStore documentStore = DocumentStoreManager.GetMartenDocumentStore(typeof(UserRepositoryTests));
+			return new UserRepository(documentStore);
 		}
 
 		private void Wait500ms()
 		{
-			Thread.Sleep(500);
+			//Thread.Sleep(500);
 		}
 
 		[Fact]
@@ -138,7 +140,7 @@ namespace Roadkill.Tests.Integration.Repositories
 
 			adminUsers.ForEach(async u =>
 			{
-				await repository.SaveOrUpdateUser(u);
+				repository.SaveOrUpdateUser(u).GetAwaiter().GetResult();
 			});
 			Wait500ms();
 

@@ -4,209 +4,225 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture;
-using Npgsql;
+using Marten;
 using Roadkill.Core.Models;
 using Roadkill.Core.Repositories;
 using Xunit;
 using Xunit.Abstractions;
 
+// ReSharper disable PossibleMultipleEnumeration
+
 namespace Roadkill.Tests.Integration.Repositories
 {
 	public class PageVersionRepositoryTests
 	{
-		private readonly ITestOutputHelper _output;
 		private readonly Fixture _fixture;
 
-		public PageVersionRepositoryTests(ITestOutputHelper outputHelper)
+		public PageVersionRepositoryTests()
 		{
-			_output = outputHelper;
 			_fixture = new Fixture();
+			IDocumentStore documentStore = DocumentStoreManager.GetMartenDocumentStore(typeof(PageVersionRepository));
 
-			new PageRepository(DocumentStoreManager.MartenDocumentStore).Wipe();
-			new PageVersionRepository(DocumentStoreManager.MartenDocumentStore).Wipe();
-		}
-
-		private void PrintPages()
-		{
-			using (var connection = new NpgsqlConnection(DocumentStoreManager.ConnectionString))
-			{
-				connection.Open();
-				var command = connection.CreateCommand();
-				command.CommandText = "delete from public.mt_doc_page";
-				//command.ExecuteNonQuery();
-
-				command.CommandText = "delete from public.mt_doc_pagecontent";
-				//command.ExecuteNonQuery();
-
-				command.CommandText = "select count(*) from public.mt_doc_page";
-				long result = (long)command.ExecuteScalar();
-				_output.WriteLine("Pages: {0}", result);
-
-				command.CommandText = "select count(*) from public.mt_doc_pagecontent";
-				result = (long)command.ExecuteScalar();
-				_output.WriteLine("PageContents: {0}", result);
-			}
+			new PageRepository(documentStore).Wipe();
+			new PageVersionRepository(documentStore).Wipe();
 		}
 
 		public PageVersionRepository CreateRepository()
 		{
-			return new PageVersionRepository(DocumentStoreManager.MartenDocumentStore);
+			IDocumentStore documentStore = DocumentStoreManager.GetMartenDocumentStore(typeof(PageVersionRepository));
+
+			return new PageVersionRepository(documentStore);
 		}
 
-		private List<Page> CreateTenPages(PageVersionRepository repository, List<Page> pages = null)
+		private List<PageVersion> CreateTenPages(PageVersionRepository repository)
 		{
-			if (pages == null)
-				pages = _fixture.CreateMany<Page>(10).ToList();
+			IDocumentStore documentStore = DocumentStoreManager.GetMartenDocumentStore(typeof(PageVersionRepository));
+			var pageRepository = new PageRepository(documentStore);
 
-			var pageRepository = new PageRepository(DocumentStoreManager.MartenDocumentStore);
-			pages.ForEach(async page =>
-			{
-				Page newPage = await pageRepository.AddNewPage(page);
-				pages.First(x => x.Id == page.Id).Id = newPage.Id;
-			});
+			List<Page> pages = _fixture.CreateMany<Page>(10).ToList();
 
-			pages.ForEach(async page =>
+			var pageVersions = new List<PageVersion>();
+			foreach (Page page in pages)
 			{
-				await repository.AddNewVersion(page.Id, _fixture.Create<string>(), _fixture.Create<string>());
-			});
-			return pages;
+				string text = _fixture.Create<string>();
+				string author = _fixture.Create<string>();
+				DateTime dateTime = DateTime.Today;
+
+				Page newPage = pageRepository.AddNewPage(page).GetAwaiter().GetResult();
+				PageVersion pageVersion = repository.AddNewVersion(newPage.Id, text, author, dateTime).GetAwaiter().GetResult();
+				pageVersions.Add(pageVersion);
+			}
+
+			return pageVersions;
 		}
 
 		private void Sleep500ms()
 		{
 			// This wait is necessary for slower Postgres instances, e.g Postgres running on Docker.
-			Thread.Sleep(500);
+			//Thread.Sleep(500);
 		}
 
 		[Fact]
-		public async void AddNewPageContentVersion_should_save_lastmodified_to_page()
+		public async void AddNewVersion()
 		{
 			// given
 			PageVersionRepository repository = CreateRepository();
-			List<Page> pages = CreateTenPages(repository);
-			Page expectedPage = pages.Last();
-			await repository.AddNewVersion(expectedPage.Id, "v1 content", "brian");
+			List<PageVersion> pages = CreateTenPages(repository);
+			PageVersion expectedPage = pages.Last();
+			await repository.AddNewVersion(expectedPage.PageId, "v2 text", "brian");
 
 			// when
-			PageVersion secondVersion = await repository.AddNewVersion(expectedPage.Id, "v2 content", "author2");
+			PageVersion thirdVersion = await repository.AddNewVersion(expectedPage.PageId, "v3 text", "author2");
 
 			// then
-			Assert.NotNull(secondVersion);
+			Assert.NotNull(thirdVersion);
 
-			PageVersion savedVersions = await repository.GetVersionById(secondVersion.Id);
+			PageVersion savedVersions = await repository.GetById(thirdVersion.Id);
 			Assert.NotNull(savedVersions);
-			AssertExtensions.Equivalent(secondVersion, savedVersions);
+			AssertExtensions.Equivalent(thirdVersion, savedVersions);
 		}
 
 		[Fact]
-		public async void AllPageContents()
+		public async void AllVersions()
 		{
 			// given
 			PageVersionRepository repository = CreateRepository();
-			List<Page> pages = CreateTenPages(repository);
+			List<PageVersion> pages = CreateTenPages(repository);
 			Sleep500ms();
 
 			// when
-			IEnumerable<PageVersion> actualPageContents = await repository.AllVersions();
+			IEnumerable<PageVersion> allVersions = await repository.AllVersions();
 
 			// then
-			Assert.Equal(pages.Count, actualPageContents.Count());
-			Assert.NotEmpty(actualPageContents.Last().Text);
+			Assert.Equal(pages.Count, allVersions.Count());
+			Assert.NotEmpty(allVersions.Last().Text);
 		}
 
 		[Fact]
-		public async void DeletePageContent_should_remove_specific_pagecontent_version()
+		public async void DeleteVersion()
 		{
 			// given
 			PageVersionRepository repository = CreateRepository();
-			List<Page> pages = CreateTenPages(repository);
+			List<PageVersion> pages = CreateTenPages(repository);
+
 			Sleep500ms();
 
 			var expectedPage = pages[0];
-			var version1PageContent = await repository.AddNewVersion(expectedPage.Id, "v1", "author2");
-			var version2PageContent = await repository.AddNewVersion(expectedPage.Id, "v2", "author2");
+			var version2 = await repository.AddNewVersion(expectedPage.PageId, "v2", "author2");
+			var version3 = await repository.AddNewVersion(expectedPage.PageId, "v3", "author2");
 
 			// when
-			await repository.DeleteVersion(version2PageContent.Id);
+			await repository.DeleteVersion(version3.Id);
 
 			// then
-			var deletedVersion = await repository.GetVersionById(version2PageContent.Id);
+			var deletedVersion = await repository.GetById(version3.Id);
 			Assert.Null(deletedVersion);
 
-			var latestVersion = await repository.GetVersionById(version1PageContent.Id);
+			var latestVersion = await repository.GetById(version2.Id);
 			Assert.NotNull(latestVersion);
 		}
 
 		[Fact]
-		public async Task FindPageVersionByPageId_should_return_all_pageversions_for_a_page()
+		public async Task FindPageVersionsByPageId_should_return_versions_sorted_by_date_desc()
 		{
 			// given
 			PageVersionRepository repository = CreateRepository();
-			var pages = CreateTenPages(repository);
+			List<PageVersion> pages = CreateTenPages(repository);
 			Sleep500ms();
 
-			Page expectedPage = pages[0];
-			PageVersion latestPageVersion = await repository.AddNewVersion(expectedPage.Id, "v2 text", "author2");
+			var expectedPage = pages[0];
+			var version2 = await repository.AddNewVersion(expectedPage.PageId, "v2", "author1", DateTime.Today.AddMinutes(10));
+			var version3 = await repository.AddNewVersion(expectedPage.PageId, "v3", "author2", DateTime.Today.AddMinutes(20));
+			var version4 = await repository.AddNewVersion(expectedPage.PageId, "v4", "author3", DateTime.Today.AddMinutes(30));
 
 			// when
-			IEnumerable<PageVersion> versions = await repository.FindPageVersionsByPageId(expectedPage.Id);
+			IEnumerable<PageVersion> versions = await repository.FindPageVersionsByPageId(expectedPage.PageId);
 
 			// then
 			Assert.NotNull(versions);
 			Assert.NotEmpty(versions);
-			Assert.Equal(2, versions.Count());
-			AssertExtensions.Equivalent(latestPageVersion, versions.Last());
+			Assert.Equal(4, versions.Count());
+			AssertExtensions.Equivalent(version4, versions.First());
+			AssertExtensions.Equivalent(expectedPage, versions.Last());
 		}
 
 		[Fact]
-		public async Task FindPageVersionAuthoredBy_should_find_using_case_insensitive_search()
+		public async Task FindPageVersionsByAuthor_should_be_case_insensitive_and_return_versions_sorted_by_date_desc()
 		{
 			// given
-			string editedBy = "shakespeare jr";
-
 			PageVersionRepository repository = CreateRepository();
-			CreateTenPages(repository); // add random pages
-
-			var page1 = _fixture.Create<Page>();
-			var page2 = _fixture.Create<Page>();
-
-			PageVersion pageContent1 = await repository.AddNewVersion(page1.Id, "v2 text", editedBy);
-			PageVersion pageContent2 = await repository.AddNewVersion(page2.Id, "v2 text", editedBy);
-
+			List<PageVersion> pageVersions = CreateTenPages(repository);
 			Sleep500ms();
 
+			string editedBy = "shakespeare jr";
+			PageVersion version2 = await repository.AddNewVersion(pageVersions[0].PageId, "v2 text", editedBy);
+			PageVersion version3 = await repository.AddNewVersion(pageVersions[1].PageId, "v3 text", editedBy);
+
 			// when
-			IEnumerable<PageVersion> actualPageContents = await repository.FindPageVersionsByAuthor(editedBy);
+			IEnumerable<PageVersion> actualPageVersions = await repository.FindPageVersionsByAuthor("SHAKESPEARE jr");
 
 			// then
-			Assert.Equal(2, actualPageContents.Count());
-			Assert.Contains(actualPageContents, p => p.Id == pageContent1.Id || p.Id == pageContent2.Id);
+			Assert.Equal(2, actualPageVersions.Count());
+			Assert.Contains(actualPageVersions, p => p.Id == version2.Id);
+			Assert.Contains(actualPageVersions, p => p.Id == version3.Id);
 		}
 
 		[Fact]
-		public async Task GetLatestPageContent()
+		public async Task GetLatestVersions()
 		{
-			throw new NotImplementedException();
+			// given
+			PageVersionRepository repository = CreateRepository();
+			List<PageVersion> pageVersions = CreateTenPages(repository);
+			Sleep500ms();
+
+			int pageId = pageVersions[0].PageId;
+			PageVersion version2 = await repository.AddNewVersion(pageId, "v2 text", "editedBy", DateTime.Today.AddMinutes(10));
+			PageVersion version3 = await repository.AddNewVersion(pageId, "v3 text", "editedBy", DateTime.Today.AddMinutes(30));
+
+			// when
+			PageVersion latestVersion = await repository.GetLatestVersion(pageId);
+
+			// then
+			Assert.NotNull(latestVersion);
+			AssertExtensions.Equivalent(version3, latestVersion);
 		}
 
 		[Fact]
-		public async Task GetPageContentById()
+		public async Task GetById()
 		{
-			throw new NotImplementedException();
+			// given
+			PageVersionRepository repository = CreateRepository();
+			List<PageVersion> pageVersions = CreateTenPages(repository);
+			Sleep500ms();
+			PageVersion pageVersion = pageVersions[0];
+
+			// when
+			PageVersion latestVersion = await repository.GetById(pageVersion.Id);
+
+			// then
+			Assert.NotNull(latestVersion);
+			AssertExtensions.Equivalent(pageVersion, latestVersion);
 		}
 
 		[Fact]
-		public async Task GetPageContentByPageIdAndVersionNumber()
+		public async Task UpdateExistingVersion()
 		{
-			throw new NotImplementedException();
-		}
+			// given
+			PageVersionRepository repository = CreateRepository();
+			List<PageVersion> pageVersions = CreateTenPages(repository);
+			Sleep500ms();
 
-		[Fact]
-		public Task UpdatePageContent()
-		{
-			//check it saves the page too
+			PageVersion newVersion = pageVersions[0];
+			newVersion.Text = "some new text";
+			newVersion.Author = "blake";
 
-			throw new NotImplementedException();
+			// when
+			await repository.UpdateExistingVersion(newVersion);
+
+			// then
+			PageVersion savedVersion = await repository.GetById(newVersion.Id);
+			Assert.NotNull(savedVersion);
+			AssertExtensions.Equivalent(newVersion, savedVersion);
 		}
 	}
 }

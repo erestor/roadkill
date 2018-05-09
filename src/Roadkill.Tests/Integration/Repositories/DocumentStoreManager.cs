@@ -1,29 +1,29 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using Marten;
-using Marten.Schema.Identity.Sequences;
 using Roadkill.Core.Models;
 
 namespace Roadkill.Tests.Integration.Repositories
 {
 	public class DocumentStoreManager
 	{
-		private static IDocumentStore _martenDocumentStore;
+		private static readonly ConcurrentDictionary<string, IDocumentStore> _documentStores = new ConcurrentDictionary<string, IDocumentStore>();
 		public static string ConnectionString => "host=localhost;port=5432;database=roadkill;username=roadkill;password=roadkill;";
 
-		public static IDocumentStore MartenDocumentStore
+		public static IDocumentStore GetMartenDocumentStore(Type testClassType)
 		{
-			get
-			{
-				if (_martenDocumentStore == null)
-				{
-					_martenDocumentStore = CreateDocumentStore(ConnectionString);
-				}
+			string documentStoreSchemaName = testClassType.Name;
 
-				return _martenDocumentStore;
+			if (!_documentStores.ContainsKey(documentStoreSchemaName))
+			{
+				IDocumentStore docStore = CreateDocumentStore(ConnectionString, documentStoreSchemaName);
+				_documentStores.TryAdd(documentStoreSchemaName, docStore);
 			}
+
+			return _documentStores[documentStoreSchemaName];
 		}
 
-		internal static IDocumentStore CreateDocumentStore(string connectionString)
+		internal static IDocumentStore CreateDocumentStore(string connectionString, string schemaName)
 		{
 			var documentStore = DocumentStore.For(options =>
 			{
@@ -41,6 +41,7 @@ namespace Roadkill.Tests.Integration.Repositories
 						});
 				});
 
+				options.DatabaseSchemaName = schemaName;
 				options.Connection(connectionString);
 				options.Schema.For<User>().Index(x => x.Id);
 				options.Schema.For<Page>().Identity(x => x.Id);

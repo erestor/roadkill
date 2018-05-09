@@ -21,7 +21,7 @@ namespace Roadkill.Core.Repositories
 
 		Task<PageVersion> GetLatestVersion(int pageId);
 
-		Task<PageVersion> GetVersionById(Guid id);
+		Task<PageVersion> GetById(Guid id);
 
 		// doesn't add a new version
 		Task UpdateExistingVersion(PageVersion version);
@@ -100,6 +100,7 @@ namespace Roadkill.Core.Repositories
 				return await session
 					.Query<PageVersion>()
 					.Where(x => x.PageId == pageId)
+					.OrderByDescending(x => x.DateTime)
 					.ToListAsync();
 			}
 		}
@@ -111,6 +112,7 @@ namespace Roadkill.Core.Repositories
 				return await session
 					.Query<PageVersion>()
 					.Where(x => x.Author.Equals(username, StringComparison.CurrentCultureIgnoreCase))
+					.OrderByDescending(x => x.DateTime)
 					.ToListAsync();
 			}
 		}
@@ -126,7 +128,7 @@ namespace Roadkill.Core.Repositories
 			}
 		}
 
-		public async Task<PageVersion> GetVersionById(Guid id)
+		public async Task<PageVersion> GetById(Guid id)
 		{
 			using (IQuerySession session = _store.QuerySession())
 			{

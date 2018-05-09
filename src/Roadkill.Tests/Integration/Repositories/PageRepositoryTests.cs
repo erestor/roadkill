@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture;
+using Marten;
 using Npgsql;
 using Roadkill.Core.Models;
 using Roadkill.Core.Repositories;
@@ -24,7 +25,9 @@ namespace Roadkill.Tests.Integration.Repositories
 		{
 			_output = outputHelper;
 			_fixture = new Fixture();
-			new PageRepository(DocumentStoreManager.MartenDocumentStore).Wipe();
+			IDocumentStore documentStore = DocumentStoreManager.GetMartenDocumentStore(typeof(PageRepositoryTests));
+
+			new PageRepository(documentStore).Wipe();
 		}
 
 		private void PrintPages()
@@ -51,7 +54,9 @@ namespace Roadkill.Tests.Integration.Repositories
 
 		public PageRepository CreateRepository()
 		{
-			return new PageRepository(DocumentStoreManager.MartenDocumentStore);
+			IDocumentStore documentStore = DocumentStoreManager.GetMartenDocumentStore(typeof(PageRepositoryTests));
+
+			return new PageRepository(documentStore);
 		}
 
 		private List<Page> CreateTenPages(PageRepository repository, List<Page> pages = null)
@@ -72,7 +77,7 @@ namespace Roadkill.Tests.Integration.Repositories
 		private void Sleep500ms()
 		{
 			// This wait is necessary for slower Postgres instances, e.g Postgres running on Docker.
-			Thread.Sleep(500);
+			//Thread.Sleep(500);
 		}
 
 		[Fact]

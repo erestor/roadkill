@@ -74,12 +74,6 @@ namespace Roadkill.Tests.Integration.Repositories
 			return newPages;
 		}
 
-		private void Sleep500ms()
-		{
-			// This wait is necessary for slower Postgres instances, e.g Postgres running on Docker.
-			//Thread.Sleep(500);
-		}
-
 		[Fact]
 		public async void AddNewPage_should_add_page_and_increment_id()
 		{
@@ -116,7 +110,6 @@ namespace Roadkill.Tests.Integration.Repositories
 			// given
 			PageRepository repository = CreateRepository();
 			List<Page> pages = CreateTenPages(repository);
-			Sleep500ms();
 
 			// when
 			IEnumerable<Page> actualPages = await repository.AllPages();
@@ -133,7 +126,6 @@ namespace Roadkill.Tests.Integration.Repositories
 			List<Page> pages = _fixture.CreateMany<Page>(10).ToList();
 			pages.ForEach(p => p.Tags = "tag1, tag2, tag3");
 			CreateTenPages(repository, pages);
-			Sleep500ms();
 
 			// when
 			IEnumerable<string> actualTags = await repository.AllTags();
@@ -149,7 +141,6 @@ namespace Roadkill.Tests.Integration.Repositories
 			// given
 			PageRepository repository = CreateRepository();
 			CreateTenPages(repository);
-			Sleep500ms();
 
 			var pageToDelete = _fixture.Create<Page>();
 			await repository.AddNewPage(pageToDelete);
@@ -168,11 +159,9 @@ namespace Roadkill.Tests.Integration.Repositories
 			// given
 			PageRepository repository = CreateRepository();
 			CreateTenPages(repository);
-			Sleep500ms();
 
 			// when
 			await repository.DeleteAllPages();
-			Sleep500ms();
 
 			// then
 			IEnumerable<Page> allPages = await repository.AllPages();
@@ -193,8 +182,6 @@ namespace Roadkill.Tests.Integration.Repositories
 
 			await repository.AddNewPage(page1);
 			await repository.AddNewPage(page2);
-
-			Sleep500ms();
 
 			// when
 			IEnumerable<Page> actualPages = await repository.FindPagesCreatedBy("myself");
@@ -219,7 +206,6 @@ namespace Roadkill.Tests.Integration.Repositories
 
 			await repository.AddNewPage(page1);
 			await repository.AddNewPage(page2);
-			Sleep500ms();
 
 			// when
 			IEnumerable<Page> actualPages = await repository.FindPagesLastModifiedBy("that guy");
@@ -259,7 +245,6 @@ namespace Roadkill.Tests.Integration.Repositories
 			// given
 			PageRepository repository = CreateRepository();
 			List<Page> pages = CreateTenPages(repository);
-			Sleep500ms();
 
 			Page expectedPage = pages[0];
 
@@ -277,7 +262,6 @@ namespace Roadkill.Tests.Integration.Repositories
 			// given
 			PageRepository repository = CreateRepository();
 			List<Page> pages = CreateTenPages(repository);
-			Sleep500ms();
 
 			Page expectedPage = pages[0];
 
@@ -295,7 +279,6 @@ namespace Roadkill.Tests.Integration.Repositories
 			// given
 			PageRepository repository = CreateRepository();
 			List<Page> pages = CreateTenPages(repository);
-			Sleep500ms();
 
 			Page expectedPage = pages[0];
 			expectedPage.Tags = "new-tags";

@@ -15,7 +15,7 @@ using Xunit;
 
 namespace Roadkill.Tests.Integration.Repositories
 {
-	public class UserRepositoryTests : IDisposable
+	public class UserRepositoryTests
 	{
 		private readonly Fixture _fixture;
 
@@ -30,11 +30,6 @@ namespace Roadkill.Tests.Integration.Repositories
 		{
 			IDocumentStore documentStore = DocumentStoreManager.GetMartenDocumentStore(typeof(UserRepositoryTests));
 			return new UserRepository(documentStore);
-		}
-
-		private void Wait500ms()
-		{
-			//Thread.Sleep(500);
 		}
 
 		[Fact]
@@ -116,7 +111,6 @@ namespace Roadkill.Tests.Integration.Repositories
 			{
 				await repository.SaveOrUpdateUser(u);
 			});
-			Wait500ms();
 
 			// when
 			IEnumerable<User> actualEditors = await repository.FindAllEditors();
@@ -142,7 +136,6 @@ namespace Roadkill.Tests.Integration.Repositories
 			{
 				repository.SaveOrUpdateUser(u).GetAwaiter().GetResult();
 			});
-			Wait500ms();
 
 			// when
 			IEnumerable<User> actualAdmins = await repository.FindAllAdmins();
@@ -163,7 +156,6 @@ namespace Roadkill.Tests.Integration.Repositories
 										.Create();
 
 			await repository.SaveOrUpdateUser(expectedUser);
-			Wait500ms();
 
 			// when
 			User actualUser = await repository.GetAdminById(expectedUser.Id);
@@ -334,10 +326,6 @@ namespace Roadkill.Tests.Integration.Repositories
 			// then
 			User actualUser = await repository.GetUserById(expectedUser.Id);
 			Assert.NotNull(actualUser);
-		}
-
-		public void Dispose()
-		{
 		}
 	}
 }

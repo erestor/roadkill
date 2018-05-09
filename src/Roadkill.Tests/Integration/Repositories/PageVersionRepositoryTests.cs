@@ -56,12 +56,6 @@ namespace Roadkill.Tests.Integration.Repositories
 			return pageVersions;
 		}
 
-		private void Sleep500ms()
-		{
-			// This wait is necessary for slower Postgres instances, e.g Postgres running on Docker.
-			//Thread.Sleep(500);
-		}
-
 		[Fact]
 		public async void AddNewVersion()
 		{
@@ -88,7 +82,6 @@ namespace Roadkill.Tests.Integration.Repositories
 			// given
 			PageVersionRepository repository = CreateRepository();
 			List<PageVersion> pages = CreateTenPages(repository);
-			Sleep500ms();
 
 			// when
 			IEnumerable<PageVersion> allVersions = await repository.AllVersions();
@@ -104,8 +97,6 @@ namespace Roadkill.Tests.Integration.Repositories
 			// given
 			PageVersionRepository repository = CreateRepository();
 			List<PageVersion> pages = CreateTenPages(repository);
-
-			Sleep500ms();
 
 			var expectedPage = pages[0];
 			var version2 = await repository.AddNewVersion(expectedPage.PageId, "v2", "author2");
@@ -128,7 +119,6 @@ namespace Roadkill.Tests.Integration.Repositories
 			// given
 			PageVersionRepository repository = CreateRepository();
 			List<PageVersion> pages = CreateTenPages(repository);
-			Sleep500ms();
 
 			var expectedPage = pages[0];
 			var version2 = await repository.AddNewVersion(expectedPage.PageId, "v2", "author1", DateTime.Today.AddMinutes(10));
@@ -152,7 +142,6 @@ namespace Roadkill.Tests.Integration.Repositories
 			// given
 			PageVersionRepository repository = CreateRepository();
 			List<PageVersion> pageVersions = CreateTenPages(repository);
-			Sleep500ms();
 
 			string editedBy = "shakespeare jr";
 			PageVersion version2 = await repository.AddNewVersion(pageVersions[0].PageId, "v2 text", editedBy);
@@ -173,7 +162,6 @@ namespace Roadkill.Tests.Integration.Repositories
 			// given
 			PageVersionRepository repository = CreateRepository();
 			List<PageVersion> pageVersions = CreateTenPages(repository);
-			Sleep500ms();
 
 			int pageId = pageVersions[0].PageId;
 			PageVersion version2 = await repository.AddNewVersion(pageId, "v2 text", "editedBy", DateTime.Today.AddMinutes(10));
@@ -193,7 +181,6 @@ namespace Roadkill.Tests.Integration.Repositories
 			// given
 			PageVersionRepository repository = CreateRepository();
 			List<PageVersion> pageVersions = CreateTenPages(repository);
-			Sleep500ms();
 			PageVersion pageVersion = pageVersions[0];
 
 			// when
@@ -210,7 +197,6 @@ namespace Roadkill.Tests.Integration.Repositories
 			// given
 			PageVersionRepository repository = CreateRepository();
 			List<PageVersion> pageVersions = CreateTenPages(repository);
-			Sleep500ms();
 
 			PageVersion newVersion = pageVersions[0];
 			newVersion.Text = "some new text";

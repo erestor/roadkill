@@ -7,6 +7,7 @@ using AutoFixture;
 using Marten;
 using Roadkill.Core.Models;
 using Roadkill.Core.Repositories;
+using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -69,11 +70,11 @@ namespace Roadkill.Tests.Integration.Repositories
 			PageVersion thirdVersion = await repository.AddNewVersion(expectedPage.PageId, "v3 text", "author2");
 
 			// then
-			Assert.NotNull(thirdVersion);
+			thirdVersion.ShouldNotBeNull();
 
-			PageVersion savedVersions = await repository.GetById(thirdVersion.Id);
-			Assert.NotNull(savedVersions);
-			AssertExtensions.Equivalent(thirdVersion, savedVersions);
+			PageVersion savedVersion = await repository.GetById(thirdVersion.Id);
+			savedVersion.ShouldNotBeNull();
+			savedVersion.ShouldBeEquivalent(thirdVersion);
 		}
 
 		[Fact]
@@ -87,8 +88,8 @@ namespace Roadkill.Tests.Integration.Repositories
 			IEnumerable<PageVersion> allVersions = await repository.AllVersions();
 
 			// then
-			Assert.Equal(pages.Count, allVersions.Count());
-			Assert.NotEmpty(allVersions.Last().Text);
+			allVersions.Count().ShouldBe(pages.Count);
+			allVersions.Last().Text.ShouldNotBeEmpty();
 		}
 
 		[Fact]
@@ -107,10 +108,10 @@ namespace Roadkill.Tests.Integration.Repositories
 
 			// then
 			var deletedVersion = await repository.GetById(version3.Id);
-			Assert.Null(deletedVersion);
+			deletedVersion.ShouldBeNull();
 
 			var latestVersion = await repository.GetById(version2.Id);
-			Assert.NotNull(latestVersion);
+			latestVersion.ShouldNotBeNull();
 		}
 
 		[Fact]
@@ -120,20 +121,20 @@ namespace Roadkill.Tests.Integration.Repositories
 			PageVersionRepository repository = CreateRepository();
 			List<PageVersion> pages = CreateTenPages(repository);
 
-			var expectedPage = pages[0];
-			var version2 = await repository.AddNewVersion(expectedPage.PageId, "v2", "author1", DateTime.Today.AddMinutes(10));
-			var version3 = await repository.AddNewVersion(expectedPage.PageId, "v3", "author2", DateTime.Today.AddMinutes(20));
-			var version4 = await repository.AddNewVersion(expectedPage.PageId, "v4", "author3", DateTime.Today.AddMinutes(30));
+			var firstPage = pages[0];
+			var version2 = await repository.AddNewVersion(firstPage.PageId, "v2", "author1", DateTime.Today.AddMinutes(10));
+			var version3 = await repository.AddNewVersion(firstPage.PageId, "v3", "author2", DateTime.Today.AddMinutes(20));
+			var version4 = await repository.AddNewVersion(firstPage.PageId, "v4", "author3", DateTime.Today.AddMinutes(30));
 
 			// when
-			IEnumerable<PageVersion> versions = await repository.FindPageVersionsByPageId(expectedPage.PageId);
+			IEnumerable<PageVersion> versions = await repository.FindPageVersionsByPageId(firstPage.PageId);
 
 			// then
-			Assert.NotNull(versions);
-			Assert.NotEmpty(versions);
-			Assert.Equal(4, versions.Count());
-			AssertExtensions.Equivalent(version4, versions.First());
-			AssertExtensions.Equivalent(expectedPage, versions.Last());
+			versions.ShouldNotBeNull();
+			versions.ShouldNotBeEmpty();
+			versions.Count().ShouldBe(4);
+			versions.First().ShouldBeEquivalent(version4);
+			versions.Last().ShouldBeEquivalent(firstPage);
 		}
 
 		[Fact]
@@ -151,9 +152,9 @@ namespace Roadkill.Tests.Integration.Repositories
 			IEnumerable<PageVersion> actualPageVersions = await repository.FindPageVersionsByAuthor("SHAKESPEARE jr");
 
 			// then
-			Assert.Equal(2, actualPageVersions.Count());
-			Assert.Contains(actualPageVersions, p => p.Id == version2.Id);
-			Assert.Contains(actualPageVersions, p => p.Id == version3.Id);
+			actualPageVersions.Count().ShouldBe(2);
+			actualPageVersions.ShouldContain(p => p.Id == version2.Id);
+			actualPageVersions.ShouldContain(p => p.Id == version3.Id);
 		}
 
 		[Fact]
@@ -171,8 +172,8 @@ namespace Roadkill.Tests.Integration.Repositories
 			PageVersion latestVersion = await repository.GetLatestVersion(pageId);
 
 			// then
-			Assert.NotNull(latestVersion);
-			AssertExtensions.Equivalent(version3, latestVersion);
+			latestVersion.ShouldNotBeNull();
+			latestVersion.ShouldBeEquivalent(version3);
 		}
 
 		[Fact]
@@ -188,7 +189,8 @@ namespace Roadkill.Tests.Integration.Repositories
 
 			// then
 			Assert.NotNull(latestVersion);
-			AssertExtensions.Equivalent(pageVersion, latestVersion);
+			latestVersion.ShouldNotBeNull();
+			latestVersion.ShouldBeEquivalent(pageVersion);
 		}
 
 		[Fact]
@@ -207,8 +209,8 @@ namespace Roadkill.Tests.Integration.Repositories
 
 			// then
 			PageVersion savedVersion = await repository.GetById(newVersion.Id);
-			Assert.NotNull(savedVersion);
-			AssertExtensions.Equivalent(newVersion, savedVersion);
+			savedVersion.ShouldNotBeNull();
+			savedVersion.ShouldBeEquivalent(newVersion);
 		}
 	}
 }

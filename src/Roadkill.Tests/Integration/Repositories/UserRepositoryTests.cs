@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using Npgsql;
 using Roadkill.Core.Models;
 using Roadkill.Core.Repositories;
+using Shouldly;
 using Xunit;
 
 // ReSharper disable PossibleMultipleEnumeration
@@ -41,7 +42,10 @@ namespace Roadkill.Tests.Integration.Repositories
 									 .With(x => x.IsEditor, false)
 									 .Create();
 
-			User editorUser = _fixture.Build<User>().With(x => x.IsAdmin, false).With(x => x.IsEditor, true).Create();
+			User editorUser = _fixture.Build<User>()
+									  .With(x => x.IsAdmin, false)
+									  .With(x => x.IsEditor, true)
+									  .Create();
 
 			UserRepository repository = CreateRepository();
 			await repository.SaveOrUpdateUser(adminUser);
@@ -58,10 +62,10 @@ namespace Roadkill.Tests.Integration.Repositories
 
 			// then
 			admins = await repository.FindAllAdmins();
-			Assert.Empty(admins);
-
 			editors = await repository.FindAllEditors();
-			Assert.Empty(editors);
+
+			admins.ShouldBeEmpty();
+			editors.ShouldBeEmpty();
 		}
 
 		[Fact]
@@ -86,13 +90,12 @@ namespace Roadkill.Tests.Integration.Repositories
 			await repository.DeleteUser(actualUser);
 
 			// then
-			User checkUser = await repository.GetUserById(actualUser.Id);
-			Assert.Null(checkUser);
+			User deletedUser = await repository.GetUserById(actualUser.Id);
+			deletedUser.ShouldBeNull();
 
-			var all = await repository.FindAllAdmins();
 			Guid userId = remainingUsers.First().Id;
-			User other = await repository.GetUserById(userId);
-			Assert.NotNull(other);
+			User firstRemainingUser = await repository.GetUserById(userId);
+			firstRemainingUser.ShouldNotBeNull();
 		}
 
 		[Fact]
@@ -107,17 +110,17 @@ namespace Roadkill.Tests.Integration.Repositories
 
 			UserRepository repository = CreateRepository();
 
-			editorUsers.ForEach(async u =>
+			editorUsers.ForEach(user =>
 			{
-				await repository.SaveOrUpdateUser(u);
+				repository.SaveOrUpdateUser(user).GetAwaiter().GetResult();
 			});
 
 			// when
 			IEnumerable<User> actualEditors = await repository.FindAllEditors();
 
 			// then
-			Assert.Equal(editorUsers.Count(), actualEditors.Count());
-			Assert.True(actualEditors.All(x => x.IsEditor));
+			actualEditors.Count().ShouldBe(editorUsers.Count);
+			actualEditors.ShouldAllBe(x => x.IsEditor);
 		}
 
 		[Fact]
@@ -125,23 +128,23 @@ namespace Roadkill.Tests.Integration.Repositories
 		{
 			// given
 			List<User> adminUsers = _fixture.Build<User>()
-				.With(x => x.IsAdmin, true)
-				.With(x => x.IsEditor, false)
-				.CreateMany()
-				.ToList();
+											.With(x => x.IsAdmin, true)
+											.With(x => x.IsEditor, false)
+											.CreateMany()
+											.ToList();
 
 			UserRepository repository = CreateRepository();
 
-			adminUsers.ForEach(async u =>
+			adminUsers.ForEach(user =>
 			{
-				repository.SaveOrUpdateUser(u).GetAwaiter().GetResult();
+				repository.SaveOrUpdateUser(user).GetAwaiter().GetResult();
 			});
 
 			// when
 			IEnumerable<User> actualAdmins = await repository.FindAllAdmins();
 
 			// then
-			Assert.Equal(adminUsers.Count(), actualAdmins.Count());
+			actualAdmins.Count().ShouldBe(adminUsers.Count());
 		}
 
 		[Fact]
@@ -161,8 +164,8 @@ namespace Roadkill.Tests.Integration.Repositories
 			User actualUser = await repository.GetAdminById(expectedUser.Id);
 
 			// then
-			Assert.NotNull(actualUser);
-			AssertExtensions.Equivalent(expectedUser, actualUser);
+			actualUser.ShouldNotBeNull();
+			actualUser.ShouldBeEquivalent(expectedUser);
 		}
 
 		[Fact]
@@ -177,8 +180,8 @@ namespace Roadkill.Tests.Integration.Repositories
 			User actualUser = await repository.GetUserByActivationKey(expectedUser.ActivationKey);
 
 			// then
-			Assert.NotNull(actualUser);
-			AssertExtensions.Equivalent(expectedUser, actualUser);
+			actualUser.ShouldNotBeNull();
+			actualUser.ShouldBeEquivalent(expectedUser);
 		}
 
 		[Fact]
@@ -197,8 +200,8 @@ namespace Roadkill.Tests.Integration.Repositories
 			User actualUser = await repository.GetEditorById(expectedUser.Id);
 
 			// then
-			Assert.NotNull(actualUser);
-			AssertExtensions.Equivalent(expectedUser, actualUser);
+			actualUser.ShouldNotBeNull();
+			actualUser.ShouldBeEquivalent(expectedUser);
 		}
 
 		[Theory]
@@ -218,8 +221,8 @@ namespace Roadkill.Tests.Integration.Repositories
 			User actualUser = await repository.GetUserByEmail(expectedUser.Email, isActivated);
 
 			// then
-			Assert.NotNull(actualUser);
-			AssertExtensions.Equivalent(expectedUser, actualUser);
+			actualUser.ShouldNotBeNull();
+			actualUser.ShouldBeEquivalent(expectedUser);
 		}
 
 		[Theory]
@@ -239,8 +242,8 @@ namespace Roadkill.Tests.Integration.Repositories
 			User actualUser = await repository.GetUserById(expectedUser.Id, isActivated);
 
 			// then
-			Assert.NotNull(actualUser);
-			AssertExtensions.Equivalent(expectedUser, actualUser);
+			actualUser.ShouldNotBeNull();
+			actualUser.ShouldBeEquivalent(expectedUser);
 		}
 
 		[Fact]
@@ -256,8 +259,8 @@ namespace Roadkill.Tests.Integration.Repositories
 			User actualUser = await repository.GetUserByPasswordResetKey(expectedUser.PasswordResetKey);
 
 			// then
-			Assert.NotNull(actualUser);
-			AssertExtensions.Equivalent(expectedUser, actualUser);
+			actualUser.ShouldNotBeNull();
+			actualUser.ShouldBeEquivalent(expectedUser);
 		}
 
 		[Fact]
@@ -273,8 +276,8 @@ namespace Roadkill.Tests.Integration.Repositories
 			User actualUser = await repository.GetUserByUsername(expectedUser.Username);
 
 			// then
-			Assert.NotNull(actualUser);
-			AssertExtensions.Equivalent(expectedUser, actualUser);
+			actualUser.ShouldNotBeNull();
+			actualUser.ShouldBeEquivalent(expectedUser);
 		}
 
 		[Fact]
@@ -290,8 +293,8 @@ namespace Roadkill.Tests.Integration.Repositories
 			User actualUser = await repository.GetUserByUsernameOrEmail(expectedUser.Username, expectedUser.Email);
 
 			// then
-			Assert.NotNull(actualUser);
-			AssertExtensions.Equivalent(expectedUser, actualUser);
+			actualUser.ShouldNotBeNull();
+			actualUser.ShouldBeEquivalent(expectedUser);
 		}
 
 		[Fact]
@@ -306,7 +309,7 @@ namespace Roadkill.Tests.Integration.Repositories
 
 			// then
 			User actualUser = await repository.GetUserById(expectedUser.Id);
-			Assert.NotNull(actualUser);
+			actualUser.ShouldNotBeNull();
 		}
 
 		[Fact]
@@ -325,7 +328,7 @@ namespace Roadkill.Tests.Integration.Repositories
 
 			// then
 			User actualUser = await repository.GetUserById(expectedUser.Id);
-			Assert.NotNull(actualUser);
+			actualUser.ShouldNotBeNull();
 		}
 	}
 }

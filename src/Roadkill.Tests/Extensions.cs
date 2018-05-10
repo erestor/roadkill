@@ -2,10 +2,23 @@
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
+using Shouldly;
 using Xunit;
 
 namespace Roadkill.Tests
 {
+	[ShouldlyMethods]
+	public static class ShouldlyExtensions
+	{
+		public static void ShouldBeEquivalent<T>(this T actual, T expected)
+		{
+			string expectedJson = JsonConvert.SerializeObject(expected);
+			string actualJson = JsonConvert.SerializeObject(actual);
+
+			Assert.Equal(expectedJson, actualJson);
+		}
+	}
+
 	public class AssertExtensions
 	{
 		public static void Equivalent(object expected, object actual)

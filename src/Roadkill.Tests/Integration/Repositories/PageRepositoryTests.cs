@@ -8,6 +8,7 @@ using Marten;
 using Npgsql;
 using Roadkill.Core.Models;
 using Roadkill.Core.Repositories;
+using Shouldly;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -95,13 +96,13 @@ namespace Roadkill.Tests.Integration.Repositories
 			Page actualPage = await repository.AddNewPage(page);
 
 			// then
-			Assert.NotNull(actualPage);
+			actualPage.ShouldNotBeNull();
+			actualPage.CreatedOn.ShouldBe(createdOn);
+			actualPage.CreatedBy.ShouldBe(createdBy);
 
 			Page savedVersion = await repository.GetPageById(actualPage.Id);
-			Assert.NotNull(savedVersion);
-			Assert.InRange(actualPage.Id, 1, int.MaxValue);
-			Assert.Equal(actualPage.CreatedBy, createdBy);
-			Assert.Equal(actualPage.CreatedOn, createdOn);
+			savedVersion.ShouldNotBeNull();
+			savedVersion.Id.ShouldBeGreaterThanOrEqualTo(1);
 		}
 
 		[Fact]
@@ -115,7 +116,7 @@ namespace Roadkill.Tests.Integration.Repositories
 			IEnumerable<Page> actualPages = await repository.AllPages();
 
 			// then
-			Assert.Equal(pages.Count, actualPages.Count());
+			actualPages.Count().ShouldBe(pages.Count());
 		}
 
 		[Fact]
@@ -131,8 +132,8 @@ namespace Roadkill.Tests.Integration.Repositories
 			IEnumerable<string> actualTags = await repository.AllTags();
 
 			// then
-			Assert.Equal(pages.Count, actualTags.Count());
-			Assert.Equal("tag1, tag2, tag3", actualTags.First());
+			actualTags.Count().ShouldBe(pages.Count());
+			actualTags.First().ShouldBe("tag1, tag2, tag3");
 		}
 
 		[Fact]
@@ -150,7 +151,7 @@ namespace Roadkill.Tests.Integration.Repositories
 
 			// then
 			var deletedPage = await repository.GetPageById(pageToDelete.Id);
-			Assert.Null(deletedPage);
+			deletedPage.ShouldBeNull();
 		}
 
 		[Fact]
@@ -165,7 +166,7 @@ namespace Roadkill.Tests.Integration.Repositories
 
 			// then
 			IEnumerable<Page> allPages = await repository.AllPages();
-			Assert.Empty(allPages);
+			allPages.ShouldBeEmpty();
 		}
 
 		[Fact]
@@ -187,9 +188,9 @@ namespace Roadkill.Tests.Integration.Repositories
 			IEnumerable<Page> actualPages = await repository.FindPagesCreatedBy("myself");
 
 			// then
-			Assert.Equal(2, actualPages.Count());
-			Assert.NotNull(actualPages.First(x => x.Id == page1.Id));
-			Assert.NotNull(actualPages.First(x => x.Id == page2.Id));
+			actualPages.Count().ShouldBe(2);
+			actualPages.First(x => x.Id == page1.Id).ShouldNotBeNull();
+			actualPages.First(x => x.Id == page2.Id).ShouldNotBeNull();
 		}
 
 		[Fact]
@@ -211,9 +212,9 @@ namespace Roadkill.Tests.Integration.Repositories
 			IEnumerable<Page> actualPages = await repository.FindPagesLastModifiedBy("that guy");
 
 			// then
-			Assert.Equal(2, actualPages.Count());
-			Assert.NotNull(actualPages.First(x => x.Id == page1.Id));
-			Assert.NotNull(actualPages.First(x => x.Id == page2.Id));
+			actualPages.Count().ShouldBe(2);
+			actualPages.First(x => x.Id == page1.Id).ShouldNotBeNull();
+			actualPages.First(x => x.Id == page2.Id).ShouldNotBeNull();
 		}
 
 		[Fact]
@@ -233,10 +234,10 @@ namespace Roadkill.Tests.Integration.Repositories
 			var actualPages = await repository.FindPagesContainingTag("facebook-data-leak");
 
 			// then
-			Assert.Equal(3, actualPages.Count());
-			Assert.NotNull(actualPages.First(x => x.Id == pages[0].Id));
-			Assert.NotNull(actualPages.First(x => x.Id == pages[1].Id));
-			Assert.NotNull(actualPages.First(x => x.Id == pages[2].Id));
+			actualPages.Count().ShouldBe(3);
+			actualPages.First(x => x.Id == pages[0].Id).ShouldNotBeNull();
+			actualPages.First(x => x.Id == pages[1].Id).ShouldNotBeNull();
+			actualPages.First(x => x.Id == pages[2].Id).ShouldNotBeNull();
 		}
 
 		[Fact]
@@ -252,8 +253,8 @@ namespace Roadkill.Tests.Integration.Repositories
 			Page actualPage = await repository.GetPageById(expectedPage.Id);
 
 			// then
-			Assert.NotNull(actualPage);
-			AssertExtensions.Equivalent(expectedPage, actualPage);
+			actualPage.ShouldNotBeNull();
+			actualPage.ShouldBeEquivalent(expectedPage);
 		}
 
 		[Fact]
@@ -269,8 +270,8 @@ namespace Roadkill.Tests.Integration.Repositories
 			Page actualPage = await repository.GetPageByTitle(expectedPage.Title);
 
 			// then
-			Assert.NotNull(actualPage);
-			AssertExtensions.Equivalent(expectedPage, actualPage);
+			actualPage.ShouldNotBeNull();
+			actualPage.ShouldBeEquivalent(expectedPage);
 		}
 
 		[Fact]
@@ -289,7 +290,7 @@ namespace Roadkill.Tests.Integration.Repositories
 
 			// then
 			Page actualPage = await repository.GetPageById(expectedPage.Id);
-			AssertExtensions.Equivalent(expectedPage, actualPage);
+			actualPage.ShouldBeEquivalent(expectedPage);
 		}
 	}
 }

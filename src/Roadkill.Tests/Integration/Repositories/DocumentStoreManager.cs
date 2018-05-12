@@ -12,7 +12,10 @@ namespace Roadkill.Tests.Integration.Repositories
 
 		public static IDocumentStore GetMartenDocumentStore(Type testClassType)
 		{
-			string documentStoreSchemaName = testClassType.Name;
+			string documentStoreSchemaName = "";
+
+			if (testClassType != null)
+				documentStoreSchemaName = testClassType.Name;
 
 			if (!_documentStores.ContainsKey(documentStoreSchemaName))
 			{
@@ -41,7 +44,11 @@ namespace Roadkill.Tests.Integration.Repositories
 						});
 				});
 
-				options.DatabaseSchemaName = schemaName;
+				if (!string.IsNullOrEmpty(schemaName))
+				{
+					options.DatabaseSchemaName = schemaName;
+				}
+
 				options.Connection(connectionString);
 				options.Schema.For<User>().Index(x => x.Id);
 				options.Schema.For<Page>().Identity(x => x.Id);

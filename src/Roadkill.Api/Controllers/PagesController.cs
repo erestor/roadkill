@@ -14,6 +14,13 @@ namespace Roadkill.Api.Controllers
 	[Route("pages")]
 	public class PagesController : Controller, IPageService
 	{
+		private readonly IPageRepository _pageRepository;
+
+		public PagesController(IPageRepository pageRepository)
+		{
+			_pageRepository = pageRepository;
+		}
+
 		[HttpPost]
 		public async Task<PageViewModel> AddPage(PageViewModel model)
 		{
@@ -24,8 +31,7 @@ namespace Roadkill.Api.Controllers
 		[HttpGet]
 		public async Task<IEnumerable<PageViewModel>> AllPages(bool loadPageContent = false)
 		{
-			var repo = new PageRepository(Startup.GetMartenDocumentStore());
-			var allpages = await repo.AllPages();
+			var allpages = await _pageRepository.AllPages();
 
 			var converter = new PageViewModelConverter();
 			return allpages.Select(converter.Create);

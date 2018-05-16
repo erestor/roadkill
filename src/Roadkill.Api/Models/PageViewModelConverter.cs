@@ -6,12 +6,12 @@ namespace Roadkill.Api.Models
 {
 	public interface IPageViewModelConverter
 	{
-		PageViewModel Create(Page page);
+		PageViewModel CreateViewModel(Page page);
 	}
 
 	public class PageViewModelConverter : IPageViewModelConverter
 	{
-		public PageViewModel Create(Page page)
+		public PageViewModel CreateViewModel(Page page)
 		{
 			return new PageViewModel()
 			{
@@ -19,7 +19,7 @@ namespace Roadkill.Api.Models
 				Title = page.Title,
 				SeoFriendlyTitle = CreateSeoFriendlyPageTitle(page.Title),
 				TagsAsCsv = page.Tags,
-				TagList = ParseTags(page.Tags),
+				TagList = TagsToList(page.Tags),
 				LastModifiedBy = page.LastModifiedBy,
 				LastModifiedOn = page.LastModifiedOn,
 				CreatedBy = page.CreatedBy,
@@ -28,7 +28,7 @@ namespace Roadkill.Api.Models
 			};
 		}
 
-		private IEnumerable<string> ParseTags(string csvTags)
+		private IEnumerable<string> TagsToList(string csvTags)
 		{
 			List<string> tagList = new List<string>();
 			char delimiter = ',';

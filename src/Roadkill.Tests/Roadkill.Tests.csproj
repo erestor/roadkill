@@ -27,21 +27,22 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Marten" Version="2.7.1" />
+    <PackageReference Include="Marten" Version="2.8.0" />
     <PackageReference Include="Scrutor" Version="2.2.2" />
-    <PackageReference Include="AutoFixture" Version="4.2.1" />
-    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="2.0.2" />
+    <PackageReference Include="AutoFixture" Version="4.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="2.0.3" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.0" />
     <PackageReference Include="Moq" Version="4.8.2" />
     <PackageReference Include="Shouldly" Version="3.0.0" />
     <PackageReference Include="xunit" Version="2.3.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Routing.Abstractions" Version="2.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Routing.Abstractions" Version="2.0.3" />
     <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.0-beta4-build3742" />
   </ItemGroup>
 
 
   <ItemGroup>
+    <ProjectReference Include="..\Roadkill.Api\Roadkill.Api.csproj" />
     <ProjectReference Include="..\Roadkill.Core\Roadkill.Core.csproj" />
     <ProjectReference Include="..\Roadkill.Text\Roadkill.Text.csproj" />
   </ItemGroup>

@@ -1,6 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
 using Newtonsoft.Json;
 using Shouldly;
 using Xunit;
@@ -16,6 +19,15 @@ namespace Roadkill.Tests
 			string actualJson = JsonConvert.SerializeObject(actual);
 
 			Assert.Equal(expectedJson, actualJson);
+		}
+
+		public static void ShouldHaveAttribute<T>(this T actual, string methodName, Type attributeType) where T : class
+		{
+			MethodInfo methodType = actual.GetType().GetMethod(methodName);
+
+			var customAttributes = methodType.GetCustomAttributes(attributeType, false);
+
+			Assert.NotEmpty(customAttributes);
 		}
 	}
 

@@ -10,15 +10,15 @@ namespace Roadkill.Api.Interfaces
 		/// <summary>
 		/// Adds the page to the database.
 		/// </summary>
-		/// <param name="model">The summary details for the page. The id is automatically generated for you.</param>
+		/// <param name="viewModel">The summary details for the page. The id is automatically generated for you.</param>
 		/// <returns>A <see cref="PageViewModel"/> for the newly added page.</returns>
-		Task<PageViewModel> Add(PageViewModel model);
+		Task<PageViewModel> Add(PageViewModel viewModel);
 
 		/// <summary>
 		/// Updates the provided page.
 		/// </summary>
-		/// <param name="model">The page model.</param>
-		Task Update(PageViewModel model);
+		/// <param name="viewModel">The page model.</param>
+		Task<PageViewModel> Update(PageViewModel viewModel);
 
 		/// <summary>
 		/// Deletes a page from the database.
@@ -36,9 +36,8 @@ namespace Roadkill.Api.Interfaces
 		/// <summary>
 		/// Retrieves a list of all pages in the system.
 		/// </summary>
-		/// <param name="loadPageContent">If true, includes the latest text for each page.</param>
 		/// <returns>An <see cref="IEnumerable{PageViewModel}"/> of the pages.</returns>
-		Task<IEnumerable<PageViewModel>> AllPages(bool loadPageContent = false);
+		Task<IEnumerable<PageViewModel>> AllPages();
 
 		/// <summary>
 		/// Gets alls the pages created by a user.

@@ -17,7 +17,7 @@ namespace Roadkill.Core.Repositories
 		// the raw tags for every page, still comma delimited.
 		Task<IEnumerable<string>> AllTags();
 
-		Task DeletePage(Page page);
+		Task DeletePage(int id);
 
 		Task DeleteAllPages();
 
@@ -94,12 +94,11 @@ namespace Roadkill.Core.Repositories
 			}
 		}
 
-		public async Task DeletePage(Page page)
+		public async Task DeletePage(int pageId)
 		{
 			using (IDocumentSession session = _store.LightweightSession())
 			{
-				session.Delete<Page>(page.Id);
-				session.DeleteWhere<PageVersion>(x => x.PageId == page.Id);
+				session.Delete<Page>(pageId);
 				await session.SaveChangesAsync();
 			}
 		}

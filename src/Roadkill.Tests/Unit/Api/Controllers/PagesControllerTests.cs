@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Roadkill.Api.Controllers;
 using Roadkill.Api.Models;
@@ -27,49 +28,126 @@ namespace Roadkill.Tests.Unit.Api.Controllers
 			_fixture = new Fixture();
 
 			_pageRepositoryMock = new Mock<IPageRepository>();
+
 			_viewModelCreatorMock = new Mock<IPageViewModelConverter>();
 
+			_viewModelCreatorMock
+				.Setup(x => x.ConvertToViewModel(It.IsAny<Page>()))
+				.Returns<Page>(page => new PageViewModel() { Id = page.Id, Title = page.Title });
+
+			_viewModelCreatorMock
+				.Setup(x => x.ConvertToPage(It.IsAny<PageViewModel>()))
+				.Returns<PageViewModel>(viewModel => new Page() { Id = viewModel.Id, Title = viewModel.Title });
+
 			_pagesController = new PagesController(_pageRepositoryMock.Object, _viewModelCreatorMock.Object);
+		}
+
+		[Fact]
+		public void restful_verb_methods_should_have_httpattributes()
+		{
+			_pagesController.ShouldHaveAttribute(nameof(PagesController.Add), typeof(HttpPostAttribute));
+			_pagesController.ShouldHaveAttribute(nameof(PagesController.Update), typeof(HttpPutAttribute));
+			_pagesController.ShouldHaveAttribute(nameof(PagesController.Delete), typeof(HttpDeleteAttribute));
+			_pagesController.ShouldHaveAttribute(nameof(PagesController.GetById), typeof(HttpGetAttribute));
 		}
 
 		[Fact]
 		public async Task Add()
 		{
 			// given
+			var inputPageViewModel = _fixture.Create<PageViewModel>();
+			int autoIncrementedId = 99;
+
+			_pageRepositoryMock
+				.Setup(x => x.AddNewPage(It.IsAny<Page>()))
+				.Returns<Page>(page =>
+				{
+					// the repository returns a new id (autoincremented)
+					return Task.FromResult(new Page()
+					{
+						Id = autoIncrementedId,
+						Title = page.Title
+					});
+				});
 
 			// when
+			var actualPageViewModel = await _pagesController.Add(inputPageViewModel);
 
 			// then
+			actualPageViewModel.Id.ShouldBe(autoIncrementedId);
+			actualPageViewModel.Title.ShouldBe(inputPageViewModel.Title);
+
+			_pageRepositoryMock
+				.Verify(x => x.AddNewPage(It.Is<Page>(p => p.Id == inputPageViewModel.Id)), Times.Once);
 		}
 
 		[Fact]
 		public async Task Update()
 		{
 			// given
+			var changedPageViewModel = new PageViewModel()
+			{
+				Id = 88,
+				Title = "new title"
+			};
+			var changedPage = new Page()
+			{
+				Id = changedPageViewModel.Id,
+				Title = changedPageViewModel.Title
+			};
+
+			_pageRepositoryMock
+				.Setup(x => x.UpdateExisting(It.IsAny<Page>()))
+				.ReturnsAsync(changedPage);
 
 			// when
+			PageViewModel actualChangedPage = await _pagesController.Update(changedPageViewModel);
 
 			// then
+			actualChangedPage.ShouldBeEquivalent(changedPageViewModel);
+			_pageRepositoryMock.Verify(x => x.UpdateExisting(It.Is<Page>(page => page.Id == changedPage.Id)), Times.Once);
 		}
 
 		[Fact]
 		public async Task Delete()
 		{
 			// given
+			IEnumerable<Page> pages = _fixture.CreateMany<Page>().ToList();
+			Page expectedPage = pages.Last();
+			int expectedPageId = expectedPage.Id;
+
+			_pageRepositoryMock
+				.Setup(x => x.DeletePage(expectedPageId))
+				.Returns(Task.CompletedTask);
 
 			// when
+			await _pagesController.Delete(expectedPageId);
 
 			// then
+			_pageRepositoryMock.Verify(x => x.DeletePage(expectedPageId), Times.Once);
 		}
 
 		[Fact]
 		public async Task GetById()
 		{
 			// given
+			IEnumerable<Page> pages = _fixture.CreateMany<Page>().ToList();
+			Page expectedPage = pages.Last();
+			int id = expectedPage.Id;
+
+			_pageRepositoryMock
+				.Setup(x => x.GetPageById(id))
+				.ReturnsAsync(expectedPage);
 
 			// when
+			PageViewModel pageViewModel = await _pagesController.GetById(id);
 
 			// then
+			pageViewModel.ShouldNotBeNull();
+			pageViewModel.Id.ShouldBe(id);
+
+			_pageRepositoryMock.Verify(x => x.GetPageById(id), Times.Once);
+			_viewModelCreatorMock.Verify(x => x.ConvertToViewModel(expectedPage));
 		}
 
 		[Fact]
@@ -78,8 +156,9 @@ namespace Roadkill.Tests.Unit.Api.Controllers
 			// given
 			IEnumerable<Page> pages = _fixture.CreateMany<Page>();
 
-			_pageRepositoryMock.Setup(x => x.AllPages())
-							   .ReturnsAsync(pages);
+			_pageRepositoryMock
+				.Setup(x => x.AllPages())
+				.ReturnsAsync(pages);
 
 			// when
 			IEnumerable<PageViewModel> pageViewModels = await _pagesController.AllPages();
@@ -88,7 +167,7 @@ namespace Roadkill.Tests.Unit.Api.Controllers
 			pageViewModels.Count().ShouldBe(pages.Count());
 
 			_pageRepositoryMock.Verify(x => x.AllPages(), Times.Once);
-			_viewModelCreatorMock.Verify(x => x.CreateViewModel(It.IsAny<Page>()));
+			_viewModelCreatorMock.Verify(x => x.ConvertToViewModel(It.IsAny<Page>()));
 		}
 
 		[Fact]
@@ -98,7 +177,8 @@ namespace Roadkill.Tests.Unit.Api.Controllers
 			string username = "bob";
 			IEnumerable<Page> pages = _fixture.CreateMany<Page>();
 
-			_pageRepositoryMock.Setup(x => x.FindPagesCreatedBy(username))
+			_pageRepositoryMock
+				.Setup(x => x.FindPagesCreatedBy(username))
 				.ReturnsAsync(pages);
 
 			// when
@@ -108,27 +188,56 @@ namespace Roadkill.Tests.Unit.Api.Controllers
 			pageViewModels.Count().ShouldBe(pages.Count());
 
 			_pageRepositoryMock.Verify(x => x.FindPagesCreatedBy(username), Times.Once);
-			_viewModelCreatorMock.Verify(x => x.CreateViewModel(It.IsAny<Page>()));
+			_viewModelCreatorMock.Verify(x => x.ConvertToViewModel(It.IsAny<Page>()));
 		}
 
 		[Fact]
-		public async Task FindHomePage()
+		public async Task FindHomePage_should_return_first_page_with_homepage_tag()
 		{
 			// given
+			List<Page> pages = _fixture.CreateMany<Page>(10).ToList();
+			for (int i = 0; i < pages.Count; i++)
+			{
+				pages[i].Tags += ", homepage";
+				pages[i].Title = $"page {i}";
+			}
+
+			_pageRepositoryMock.Setup(x => x.FindPagesContainingTag("homepage"))
+				.ReturnsAsync(pages);
 
 			// when
+			PageViewModel pageViewModel = await _pagesController.FindHomePage();
 
 			// then
+			pageViewModel.ShouldNotBeNull();
+			pageViewModel.Title.ShouldBe("page 0");
+			pageViewModel.Id.ShouldBe(pages[0].Id);
+
+			_pageRepositoryMock.Verify(x => x.FindPagesContainingTag("homepage"), Times.Once);
+			_viewModelCreatorMock.Verify(x => x.ConvertToViewModel(pages[0]));
 		}
 
 		[Fact]
 		public async Task FindByTitle()
 		{
 			// given
+			List<Page> pages = _fixture.CreateMany<Page>(10).ToList();
+			Page expectedPage = pages.Last();
+			string title = expectedPage.Title;
+
+			_pageRepositoryMock.Setup(x => x.GetPageByTitle(title))
+				.ReturnsAsync(expectedPage);
 
 			// when
+			PageViewModel pageViewModel = await _pagesController.FindByTitle(title);
 
 			// then
+			pageViewModel.ShouldNotBeNull();
+			pageViewModel.Title.ShouldBe(title);
+			pageViewModel.Id.ShouldBe(expectedPage.Id);
+
+			_pageRepositoryMock.Verify(x => x.GetPageByTitle(title), Times.Once);
+			_viewModelCreatorMock.Verify(x => x.ConvertToViewModel(expectedPage));
 		}
 	}
 }

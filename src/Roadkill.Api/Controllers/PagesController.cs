@@ -24,57 +24,81 @@ namespace Roadkill.Api.Controllers
 		}
 
 		[HttpPost]
-		public async Task<PageViewModel> Add(PageViewModel model)
+		public async Task<PageViewModel> Add(PageViewModel viewModel)
 		{
-			throw new NotImplementedException();
+			Page page = _pageViewModelConverter.ConvertToPage(viewModel);
+			if (page == null)
+				return null;
+
+			Page newPage = await _pageRepository.AddNewPage(page);
+			return _pageViewModelConverter.ConvertToViewModel(newPage);
 		}
 
 		[HttpPut]
-		public async Task Update(PageViewModel model)
+		public async Task<PageViewModel> Update(PageViewModel viewModel)
 		{
-			throw new NotImplementedException();
+			Page page = _pageViewModelConverter.ConvertToPage(viewModel);
+			if (page == null)
+				return null;
+
+			Page newPage = await _pageRepository.UpdateExisting(page);
+			return _pageViewModelConverter.ConvertToViewModel(newPage);
 		}
 
 		[HttpDelete]
 		public async Task Delete(int pageId)
 		{
-			throw new NotImplementedException();
+			await _pageRepository.DeletePage(pageId);
 		}
 
 		[HttpGet]
 		public async Task<PageViewModel> GetById(int id)
 		{
-			throw new NotImplementedException();
+			Page page = await _pageRepository.GetPageById(id);
+			if (page == null)
+				return null;
+
+			return _pageViewModelConverter.ConvertToViewModel(page);
 		}
 
 		[Route("AllPages")]
 		[HttpGet]
-		public async Task<IEnumerable<PageViewModel>> AllPages(bool loadPageContent = false)
+		public async Task<IEnumerable<PageViewModel>> AllPages()
 		{
-			var allpages = await _pageRepository.AllPages();
-			return allpages.Select(_pageViewModelConverter.CreateViewModel);
+			IEnumerable<Page> allpages = await _pageRepository.AllPages();
+			return allpages.Select(_pageViewModelConverter.ConvertToViewModel);
 		}
 
 		[Route("AllPagesCreatedBy")]
 		[HttpGet]
 		public async Task<IEnumerable<PageViewModel>> AllPagesCreatedBy(string username)
 		{
-			var pagesCreatedBy = await _pageRepository.FindPagesCreatedBy(username);
-			return pagesCreatedBy.Select(_pageViewModelConverter.CreateViewModel);
+			IEnumerable<Page> pagesCreatedBy = await _pageRepository.FindPagesCreatedBy(username);
+			return pagesCreatedBy.Select(_pageViewModelConverter.ConvertToViewModel);
 		}
 
 		[Route("FindHomePage")]
 		[HttpGet]
 		public async Task<PageViewModel> FindHomePage()
 		{
-			throw new NotImplementedException();
+			IEnumerable<Page> pagesWithHomePageTag = await _pageRepository.FindPagesContainingTag("homepage");
+
+			if (!pagesWithHomePageTag.Any())
+				return null;
+
+			Page firstResult = pagesWithHomePageTag.First();
+			return _pageViewModelConverter.ConvertToViewModel(firstResult);
 		}
 
 		[Route("FindByTitle")]
 		[HttpGet]
 		public async Task<PageViewModel> FindByTitle(string title)
 		{
-			throw new NotImplementedException();
+			Page page = await _pageRepository.GetPageByTitle(title);
+			if (page == null)
+				return null;
+
+			return _pageViewModelConverter.ConvertToViewModel(page);
 		}
 	}
 }

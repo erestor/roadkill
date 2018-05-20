@@ -147,7 +147,7 @@ namespace Roadkill.Tests.Integration.Repositories
 			await repository.AddNewPage(pageToDelete);
 
 			// when
-			await repository.DeletePage(pageToDelete);
+			await repository.DeletePage(pageToDelete.Id);
 
 			// then
 			var deletedPage = await repository.GetPageById(pageToDelete.Id);

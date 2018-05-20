@@ -6,12 +6,14 @@ namespace Roadkill.Api.Models
 {
 	public interface IPageViewModelConverter
 	{
-		PageViewModel CreateViewModel(Page page);
+		PageViewModel ConvertToViewModel(Page page);
+
+		Page ConvertToPage(PageViewModel viewModel);
 	}
 
 	public class PageViewModelConverter : IPageViewModelConverter
 	{
-		public PageViewModel CreateViewModel(Page page)
+		public PageViewModel ConvertToViewModel(Page page)
 		{
 			return new PageViewModel()
 			{
@@ -25,6 +27,21 @@ namespace Roadkill.Api.Models
 				CreatedBy = page.CreatedBy,
 				CreatedOn = page.CreatedOn,
 				IsLocked = page.IsLocked
+			};
+		}
+
+		public Page ConvertToPage(PageViewModel viewModel)
+		{
+			return new Page()
+			{
+				Id = viewModel.Id,
+				Title = viewModel.Title,
+				LastModifiedBy = viewModel.LastModifiedBy,
+				LastModifiedOn = viewModel.LastModifiedOn,
+				CreatedBy = viewModel.CreatedBy,
+				CreatedOn = viewModel.CreatedOn,
+				IsLocked = viewModel.IsLocked,
+				Tags = viewModel.TagsAsCsv
 			};
 		}
 

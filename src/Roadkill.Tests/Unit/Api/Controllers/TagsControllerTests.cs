@@ -60,19 +60,31 @@ namespace Roadkill.Tests.Unit.Api.Controllers
 			tagViewModels.Count().ShouldBe(expectedTagCount);
 		}
 
-		[Fact]
-		public async Task RenameTag()
+		[Theory]
+		[InlineData("tag1, typo-tag ", "tag1,fixed-tag")]
+		[InlineData("tag1, typo-tag , tag3", "tag1,fixed-tag, tag3")]
+		public async Task RenameTag_should_ignore_and_normalize_whitespace_for_tag(string existingTags, string expectedTags)
 		{
 			// given
-			IEnumerable<string> tags = _fixture.CreateMany<string>();
+			string tagToSearch = "typo-tag";
+			string newTag = "fixed-tag";
 
-			//_pageRepositoryMock.Setup(x => x.tag(It.IsAny<string>(), It.IsAny<string>()))
-			//	.Returns(Task.CompletedTask);
+			List<Page> pagesWithTags = _fixture.CreateMany<Page>().ToList();
+			pagesWithTags.ForEach(p => { p.Tags = existingTags; });
+
+			_pageRepositoryMock.Setup(x => x.FindPagesContainingTag(tagToSearch))
+				.ReturnsAsync(pagesWithTags);
+
+			_pageRepositoryMock
+				.Setup(x => x.UpdateExisting(It.IsAny<Page>()))
+				.ReturnsAsync(It.IsAny<Page>());
 
 			// when
-			await _tagsController.Rename("old tag", "new tag");
+			await _tagsController.Rename(tagToSearch, newTag);
 
 			// then
+			_pageRepositoryMock.Verify(x => x.FindPagesContainingTag(tagToSearch), Times.Once);
+			_pageRepositoryMock.Verify(x => x.UpdateExisting(It.Is<Page>(p => p.Tags == expectedTags)), Times.Exactly(pagesWithTags.Count));
 		}
 
 		[Fact]

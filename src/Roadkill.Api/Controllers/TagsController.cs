@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Roadkill.Api.Interfaces;
@@ -27,7 +28,13 @@ namespace Roadkill.Api.Controllers
 		[HttpPost]
 		public async Task Rename(string oldTagName, string newTagName)
 		{
-			throw new NotImplementedException();
+			IEnumerable<Page> pages = await _pageRepository.FindPagesContainingTag(oldTagName);
+
+			foreach (Page page in pages)
+			{
+				page.Tags = Regex.Replace(page.Tags, $@"\s{oldTagName}\s", newTagName);
+				await _pageRepository.UpdateExisting(page);
+			}
 		}
 
 		[Route("AllTags")]

@@ -11,6 +11,6 @@ namespace Roadkill.Api.Interfaces
 		/// Exports all pages in the database, including content, to an XML format.
 		/// </summary>
 		/// <returns>An XML string.</returns>
-		Task<string> ExportToXml();
+		Task<string> ExportPagesToXml();
 	}
 }

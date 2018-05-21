@@ -1,7 +1,11 @@
-﻿using System;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 using Microsoft.AspNetCore.Mvc;
 using Roadkill.Api.Interfaces;
+using Roadkill.Core.Models;
 using Roadkill.Core.Repositories;
 
 namespace Roadkill.Api.Controllers
@@ -16,11 +20,19 @@ namespace Roadkill.Api.Controllers
 			_pageRepository = pageRepository;
 		}
 
-		[Route("ExportToXml")]
+		[Route("ExportPagesToXml")]
 		[HttpGet]
-		public async Task<string> ExportToXml()
+		public async Task<string> ExportPagesToXml()
 		{
-			throw new NotImplementedException();
+			IEnumerable<Page> allPages = await _pageRepository.AllPages();
+			XmlSerializer serializer = new XmlSerializer(typeof(List<Page>));
+
+			StringBuilder builder = new StringBuilder();
+			using (StringWriter writer = new StringWriter(builder))
+			{
+				serializer.Serialize(writer, allPages);
+				return builder.ToString();
+			}
 		}
 	}
 }

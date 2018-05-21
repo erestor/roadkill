@@ -11,10 +11,9 @@ namespace Roadkill.Core.Repositories
 	{
 		Task<Page> AddNewPage(Page page);
 
-		// Returns a list of tags for all pages. Each item is a list of tags seperated by, e.g. { "tag1, tag2, tag3", "blah, blah2" }
 		Task<IEnumerable<Page>> AllPages();
 
-		// the raw tags for every page, still comma delimited.
+		// TODO
 		Task<IEnumerable<string>> AllTags();
 
 		Task DeletePage(int id);

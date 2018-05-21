@@ -1,8 +1,14 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Xml.Serialization;
 using AutoFixture;
 using Moq;
 using Roadkill.Api.Controllers;
+using Roadkill.Core.Models;
 using Roadkill.Core.Repositories;
+using Shouldly;
 using Xunit;
 
 // ReSharper disable PossibleMultipleEnumeration
@@ -27,10 +33,19 @@ namespace Roadkill.Tests.Unit.Api.Controllers
 		public async Task ExportToXml()
 		{
 			// given
+			List<Page> actualPages = _fixture.CreateMany<Page>().ToList();
+
+			_pageRepositoryMock.Setup(x => x.AllPages())
+				.ReturnsAsync(actualPages);
+
+			XmlSerializer serializer = new XmlSerializer(typeof(List<Page>));
 
 			// when
+			string actualXml = await _exportController.ExportPagesToXml();
 
 			// then
+			var deserializedPages = serializer.Deserialize(new StringReader(actualXml)) as List<Page>;
+			deserializedPages.Count.ShouldBe(actualPages.Count());
 		}
 	}
 }

@@ -7,7 +7,6 @@ using Moq;
 using Roadkill.Api.Controllers;
 using Roadkill.Api.Models;
 using Roadkill.Core.Models;
-using Roadkill.Core.Mvc.ViewModels;
 using Roadkill.Core.Repositories;
 using Shouldly;
 using Xunit;
@@ -112,8 +111,7 @@ namespace Roadkill.Tests.Unit.Api.Controllers
 		public async Task Delete()
 		{
 			// given
-			IEnumerable<Page> pages = _fixture.CreateMany<Page>().ToList();
-			Page expectedPage = pages.Last();
+			Page expectedPage = _fixture.Create<Page>();
 			int expectedPageId = expectedPage.Id;
 
 			_pageRepositoryMock
@@ -131,8 +129,7 @@ namespace Roadkill.Tests.Unit.Api.Controllers
 		public async Task GetById()
 		{
 			// given
-			IEnumerable<Page> pages = _fixture.CreateMany<Page>().ToList();
-			Page expectedPage = pages.Last();
+			Page expectedPage = _fixture.Create<Page>();
 			int id = expectedPage.Id;
 
 			_pageRepositoryMock
@@ -221,8 +218,7 @@ namespace Roadkill.Tests.Unit.Api.Controllers
 		public async Task FindByTitle()
 		{
 			// given
-			List<Page> pages = _fixture.CreateMany<Page>(10).ToList();
-			Page expectedPage = pages.Last();
+			Page expectedPage = _fixture.Create<Page>();
 			string title = expectedPage.Title;
 
 			_pageRepositoryMock.Setup(x => x.GetPageByTitle(title))

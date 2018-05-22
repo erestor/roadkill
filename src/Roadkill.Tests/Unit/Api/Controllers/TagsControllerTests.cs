@@ -6,7 +6,6 @@ using Moq;
 using Roadkill.Api.Controllers;
 using Roadkill.Api.Models;
 using Roadkill.Core.Models;
-using Roadkill.Core.Mvc.ViewModels;
 using Roadkill.Core.Repositories;
 using Shouldly;
 using Xunit;
@@ -36,7 +35,7 @@ namespace Roadkill.Tests.Unit.Api.Controllers
 		}
 
 		[Fact]
-		public async Task AllTags_should_return_all_tags_and_remove_duplicates()
+		public async Task AllTags_should_return_all_tags_fill_count_property()
 		{
 			// given
 			List<string> tags = _fixture.CreateMany<string>().ToList();
@@ -58,6 +57,8 @@ namespace Roadkill.Tests.Unit.Api.Controllers
 			// then
 			_pageRepositoryMock.Verify(x => x.AllTags(), Times.Once);
 			tagViewModels.Count().ShouldBe(expectedTagCount);
+
+			tagViewModels.First(x => x.Name == "duplicate-tag").Count.ShouldBe(3);
 		}
 
 		[Theory]

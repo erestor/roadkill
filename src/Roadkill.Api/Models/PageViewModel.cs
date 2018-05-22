@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Roadkill.Core.Mvc.ViewModels;
 
 namespace Roadkill.Api.Models
 {

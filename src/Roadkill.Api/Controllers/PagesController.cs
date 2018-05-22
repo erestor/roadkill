@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Roadkill.Api.Interfaces;
 using Roadkill.Api.Models;
 using Roadkill.Core.Models;
-using Roadkill.Core.Mvc.ViewModels;
 using Roadkill.Core.Repositories;
 
 namespace Roadkill.Api.Controllers

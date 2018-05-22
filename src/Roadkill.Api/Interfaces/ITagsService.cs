@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Roadkill.Api.Models;
-using Roadkill.Core.Mvc.ViewModels;
 
 namespace Roadkill.Api.Interfaces
 {

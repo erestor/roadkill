@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Roadkill.Api.Models;
 using Roadkill.Core.Models;
 
 namespace Roadkill.Api.Interfaces

@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using Roadkill.Api.Interfaces;
 using Roadkill.Api.Models;
 using Roadkill.Core.Models;
-using Roadkill.Core.Mvc.ViewModels;
 using Roadkill.Core.Repositories;
 
 namespace Roadkill.Api.Controllers
@@ -43,9 +42,21 @@ namespace Roadkill.Api.Controllers
 		{
 			IEnumerable<string> allTags = await _pageRepository.AllTags();
 
-			return allTags
-					.Distinct()
-					.Select(tag => new TagViewModel(tag));
+			var viewModels = new List<TagViewModel>();
+			foreach (string tag in allTags)
+			{
+				var existingModel = viewModels.FirstOrDefault(x => x.Name == tag);
+				if (existingModel != null)
+				{
+					existingModel.Count += 1;
+				}
+				else
+				{
+					viewModels.Add(new TagViewModel() { Name = tag, Count = 1 });
+				}
+			}
+
+			return viewModels;
 		}
 
 		[Route("FindPageWithTag")]

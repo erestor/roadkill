@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Roadkill.Core.Models
+namespace Roadkill.Api.Models
 {
 	public class PageVersionViewModel
 	{

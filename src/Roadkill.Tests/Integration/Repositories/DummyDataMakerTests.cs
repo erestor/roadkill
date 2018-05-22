@@ -8,11 +8,11 @@ using Xunit;
 
 namespace Roadkill.Tests.Integration.Repositories
 {
-	public class DummyDataMaker
+	public class DummyDataMakerTests
 	{
 		private readonly Fixture _fixture;
 
-		public DummyDataMaker()
+		public DummyDataMakerTests()
 		{
 			_fixture = new Fixture();
 		}

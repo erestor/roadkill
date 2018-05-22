@@ -6,7 +6,6 @@ using Moq;
 using Roadkill.Api.Controllers;
 using Roadkill.Api.Models;
 using Roadkill.Core.Models;
-using Roadkill.Core.Mvc.ViewModels;
 using Roadkill.Core.Repositories;
 using Shouldly;
 using Xunit;

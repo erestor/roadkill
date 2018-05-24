@@ -14,6 +14,8 @@ namespace Roadkill.Core
 			IDocumentStore documentStore = CreateDocumentStore(postgresConnectionString);
 			services.AddSingleton(documentStore);
 
+			// ElasticSearch
+
 			services.Scan(scan => scan
 			   .FromAssemblyOf<Roadkill.Core.DependencyInjection>()
 

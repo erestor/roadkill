@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Roadkill.Api.Interfaces;
 using Roadkill.Api.Models;
-using Roadkill.Core.Models;
 using Roadkill.Core.Repositories;
 
 namespace Roadkill.Api.Controllers

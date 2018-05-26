@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using Roadkill.Core.Models;
+﻿using Roadkill.Core.Models;
 
 namespace Roadkill.Api.Models
 {
 	public interface IPageVersionViewModelConverter
 	{
 		PageVersionViewModel ConvertToViewModel(PageVersion pageVersion);
+
+		PageVersion ConvertToPageVersion(PageVersionViewModel viewModel);
 	}
 
 	public class PageVersionViewModelConverter : IPageVersionViewModelConverter
@@ -20,6 +20,18 @@ namespace Roadkill.Api.Models
 				DateTime = pageVersion.DateTime,
 				Author = pageVersion.Author,
 				PageId = pageVersion.PageId
+			};
+		}
+
+		public PageVersion ConvertToPageVersion(PageVersionViewModel viewModel)
+		{
+			return new PageVersion()
+			{
+				Id = viewModel.Id,
+				Text = viewModel.Text,
+				DateTime = viewModel.DateTime,
+				Author = viewModel.Author,
+				PageId = viewModel.PageId
 			};
 		}
 	}

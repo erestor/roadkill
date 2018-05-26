@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture;
 using Marten;
@@ -9,7 +8,6 @@ using Roadkill.Core.Models;
 using Roadkill.Core.Repositories;
 using Shouldly;
 using Xunit;
-using Xunit.Abstractions;
 
 // ReSharper disable PossibleMultipleEnumeration
 
@@ -115,6 +113,26 @@ namespace Roadkill.Tests.Integration.Repositories
 		}
 
 		[Fact]
+		public async Task UpdateExistingVersion()
+		{
+			// given
+			PageVersionRepository repository = CreateRepository();
+			List<PageVersion> pageVersions = CreateTenPages(repository);
+
+			PageVersion newVersion = pageVersions[0];
+			newVersion.Text = "some new text";
+			newVersion.Author = "blake";
+
+			// when
+			await repository.UpdateExistingVersion(newVersion);
+
+			// then
+			PageVersion savedVersion = await repository.GetById(newVersion.Id);
+			savedVersion.ShouldNotBeNull();
+			savedVersion.ShouldBeEquivalent(newVersion);
+		}
+
+		[Fact]
 		public async Task FindPageVersionsByPageId_should_return_versions_sorted_by_date_desc()
 		{
 			// given
@@ -191,26 +209,6 @@ namespace Roadkill.Tests.Integration.Repositories
 			Assert.NotNull(latestVersion);
 			latestVersion.ShouldNotBeNull();
 			latestVersion.ShouldBeEquivalent(pageVersion);
-		}
-
-		[Fact]
-		public async Task UpdateExistingVersion()
-		{
-			// given
-			PageVersionRepository repository = CreateRepository();
-			List<PageVersion> pageVersions = CreateTenPages(repository);
-
-			PageVersion newVersion = pageVersions[0];
-			newVersion.Text = "some new text";
-			newVersion.Author = "blake";
-
-			// when
-			await repository.UpdateExistingVersion(newVersion);
-
-			// then
-			PageVersion savedVersion = await repository.GetById(newVersion.Id);
-			savedVersion.ShouldNotBeNull();
-			savedVersion.ShouldBeEquivalent(newVersion);
 		}
 	}
 }

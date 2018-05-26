@@ -22,6 +22,7 @@ namespace Roadkill.Api.Controllers
 			_viewModelConverter = viewModelConverter;
 		}
 
+		[HttpPost]
 		public async Task<PageVersionViewModel> Add(int pageId, string text, string author, DateTime? dateTime = null)
 		{
 			PageVersion pageVersion = await _pageVersionRepository.AddNewVersion(pageId, text, author, dateTime);
@@ -29,6 +30,8 @@ namespace Roadkill.Api.Controllers
 			return _viewModelConverter.ConvertToViewModel(pageVersion);
 		}
 
+		[HttpGet]
+		[Route("Get")]
 		public async Task<PageVersionViewModel> GetById(Guid id)
 		{
 			PageVersion pageVersion = await _pageVersionRepository.GetById(id);
@@ -36,43 +39,45 @@ namespace Roadkill.Api.Controllers
 			return _viewModelConverter.ConvertToViewModel(pageVersion);
 		}
 
+		[HttpDelete]
 		public async Task Delete(Guid id)
 		{
 			await _pageVersionRepository.DeleteVersion(id);
 		}
 
-		public Task Update(PageVersionViewModel version)
+		[HttpPut]
+		public async Task Update(PageVersionViewModel pageVersionViewModel)
 		{
-			throw new NotImplementedException();
+			PageVersion pageVersion = _viewModelConverter.ConvertToPageVersion(pageVersionViewModel);
+			await _pageVersionRepository.UpdateExistingVersion(pageVersion);
 		}
 
-		[Route("UpdateLinksToPage")]
-		[HttpPost]
-		public async Task UpdateLinksToPage(string oldTitle, string newTitle)
-		{
-			throw new NotImplementedException();
-		}
-
+		[HttpGet]
+		[Route(nameof(AllVersions))]
 		public async Task<IEnumerable<PageVersionViewModel>> AllVersions()
 		{
 			IEnumerable<PageVersion> pageVersions = await _pageVersionRepository.AllVersions();
 			return pageVersions.Select(_viewModelConverter.ConvertToViewModel);
 		}
 
+		[HttpGet]
+		[Route(nameof(FindPageVersionsByPageId))]
 		public async Task<IEnumerable<PageVersionViewModel>> FindPageVersionsByPageId(int pageId)
 		{
 			IEnumerable<PageVersion> pageVersions = await _pageVersionRepository.FindPageVersionsByPageId(pageId);
 			return pageVersions.Select(_viewModelConverter.ConvertToViewModel);
 		}
 
+		[HttpGet]
+		[Route(nameof(FindPageVersionsByAuthor))]
 		public async Task<IEnumerable<PageVersionViewModel>> FindPageVersionsByAuthor(string username)
 		{
 			IEnumerable<PageVersion> pageVersions = await _pageVersionRepository.FindPageVersionsByAuthor(username);
 			return pageVersions.Select(_viewModelConverter.ConvertToViewModel);
 		}
 
-		[Route("GetLatestVersion")]
 		[HttpGet]
+		[Route(nameof(GetLatestVersion))]
 		public async Task<PageVersionViewModel> GetLatestVersion(int pageId)
 		{
 			PageVersion latestPageVersion = await _pageVersionRepository.GetLatestVersion(pageId);

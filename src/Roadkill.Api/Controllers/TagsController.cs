@@ -14,7 +14,7 @@ namespace Roadkill.Api.Controllers
 	public class TagsController : Controller, ITagsService
 	{
 		private readonly IPageRepository _pageRepository;
-		private IPageViewModelConverter _pageViewModelConverter;
+		private readonly IPageViewModelConverter _pageViewModelConverter;
 
 		public TagsController(IPageRepository pageRepository, IPageViewModelConverter pageViewModelConverter)
 		{
@@ -22,8 +22,8 @@ namespace Roadkill.Api.Controllers
 			_pageViewModelConverter = pageViewModelConverter;
 		}
 
-		[Route("Rename")]
 		[HttpPost]
+		[Route(nameof(Rename))]
 		public async Task Rename(string oldTagName, string newTagName)
 		{
 			IEnumerable<Page> pages = await _pageRepository.FindPagesContainingTag(oldTagName);
@@ -35,8 +35,8 @@ namespace Roadkill.Api.Controllers
 			}
 		}
 
-		[Route("AllTags")]
 		[HttpGet]
+		[Route(nameof(AllTags))]
 		public async Task<IEnumerable<TagViewModel>> AllTags()
 		{
 			IEnumerable<string> allTags = await _pageRepository.AllTags();
@@ -58,8 +58,8 @@ namespace Roadkill.Api.Controllers
 			return viewModels;
 		}
 
-		[Route("FindPageWithTag")]
 		[HttpGet]
+		[Route(nameof(FindPageWithTag))]
 		public async Task<IEnumerable<PageViewModel>> FindPageWithTag(string tag)
 		{
 			IEnumerable<Page> pages = await _pageRepository.FindPagesContainingTag(tag);

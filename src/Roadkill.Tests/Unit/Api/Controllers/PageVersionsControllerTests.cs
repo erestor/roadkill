@@ -67,16 +67,6 @@ namespace Roadkill.Tests.Unit.Api.Controllers
 		}
 
 		[Fact]
-		public async Task UpdateLinksToPage()
-		{
-			// given
-
-			// when
-
-			// then
-		}
-
-		[Fact]
 		public async Task Add()
 		{
 			// given
@@ -154,10 +144,37 @@ namespace Roadkill.Tests.Unit.Api.Controllers
 		public async Task Update()
 		{
 			// given
+			var viewModel = new PageVersionViewModel()
+			{
+				Id = Guid.NewGuid(),
+				Author = "buxton",
+				DateTime = DateTime.Today,
+				PageId = 42,
+				Text = "Some new text"
+			};
+
+			var pageVersion = new PageVersion()
+			{
+				Id = viewModel.Id,
+				Author = viewModel.Author,
+				DateTime = viewModel.DateTime,
+				PageId = viewModel.PageId,
+				Text = viewModel.Text,
+			};
+
+			_viewModelCreatorMock.Setup(x => x.ConvertToPageVersion(viewModel))
+				.Returns(pageVersion);
+
+			_pageVersionRepositoryMock
+				.Setup(x => x.UpdateExistingVersion(pageVersion))
+				.Returns(Task.CompletedTask);
 
 			// when
+			await _pageVersionsController.Update(viewModel);
 
 			// then
+			_pageVersionRepositoryMock.Verify(x => x.UpdateExistingVersion(pageVersion), Times.Once);
+			_viewModelCreatorMock.Verify(x => x.ConvertToPageVersion(viewModel));
 		}
 
 		[Fact]

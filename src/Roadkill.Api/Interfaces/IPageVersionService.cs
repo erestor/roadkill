@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Roadkill.Api.Models;
-using Roadkill.Core.Models;
 
 namespace Roadkill.Api.Interfaces
 {
@@ -14,21 +13,9 @@ namespace Roadkill.Api.Interfaces
 
 		Task Delete(Guid id);
 
-		Task Update(PageVersionViewModel version);
+		Task Update(PageVersionViewModel pageVersionViewModel);
 
-		/// <summary>
-		/// Retrieves the current text content for a page.
-		/// </summary>
-		/// <param name="pageId">The id of the page.</param>
-		/// <returns>The <see cref="PageVersionViewModel"/> for the page.</returns>
 		Task<PageVersionViewModel> GetLatestVersion(int pageId);
-
-		/// <summary>
-		/// Updates all links in a page to point to the new page's title.
-		/// </summary>
-		/// <param name="oldTitle">The previous page title.</param>
-		/// <param name="newTitle">The new page title.</param>
-		Task UpdateLinksToPage(string oldTitle, string newTitle);
 
 		Task<IEnumerable<PageVersionViewModel>> AllVersions();
 

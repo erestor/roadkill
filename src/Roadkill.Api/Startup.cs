@@ -31,8 +31,8 @@ namespace Roadkill.Api
 			Roadkill.Core.DependencyInjection.ConfigureServices(services, connectionString);
 			Roadkill.Api.DependencyInjection.ConfigureServices(services);
 
-			services.AddMvc();
 			services.AddOptions();
+			services.AddMvc();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -50,6 +50,7 @@ namespace Roadkill.Api.Controllers
 		}
 
 		[HttpGet]
+		[Route("Get")]
 		public async Task<PageViewModel> GetById(int id)
 		{
 			Page page = await _pageRepository.GetPageById(id);
@@ -59,24 +60,24 @@ namespace Roadkill.Api.Controllers
 			return _pageViewModelConverter.ConvertToViewModel(page);
 		}
 
-		[Route("AllPages")]
 		[HttpGet]
+		[Route(nameof(AllPages))]
 		public async Task<IEnumerable<PageViewModel>> AllPages()
 		{
 			IEnumerable<Page> allpages = await _pageRepository.AllPages();
 			return allpages.Select(_pageViewModelConverter.ConvertToViewModel);
 		}
 
-		[Route("AllPagesCreatedBy")]
 		[HttpGet]
+		[Route(nameof(AllPagesCreatedBy))]
 		public async Task<IEnumerable<PageViewModel>> AllPagesCreatedBy(string username)
 		{
 			IEnumerable<Page> pagesCreatedBy = await _pageRepository.FindPagesCreatedBy(username);
 			return pagesCreatedBy.Select(_pageViewModelConverter.ConvertToViewModel);
 		}
 
-		[Route("FindHomePage")]
 		[HttpGet]
+		[Route(nameof(FindHomePage))]
 		public async Task<PageViewModel> FindHomePage()
 		{
 			IEnumerable<Page> pagesWithHomePageTag = await _pageRepository.FindPagesContainingTag("homepage");
@@ -88,8 +89,8 @@ namespace Roadkill.Api.Controllers
 			return _pageViewModelConverter.ConvertToViewModel(firstResult);
 		}
 
-		[Route("FindByTitle")]
 		[HttpGet]
+		[Route(nameof(FindByTitle))]
 		public async Task<PageViewModel> FindByTitle(string title)
 		{
 			Page page = await _pageRepository.GetPageByTitle(title);

@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Nest;
-using Roadkill.Core.Models;
 using Page = Roadkill.Core.Models.Page;
 
 namespace Roadkill.Core.Adapters

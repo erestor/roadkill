@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using AutoFixture;
 using Marten;
-using Newtonsoft.Json;
-using Npgsql;
 using Roadkill.Core.Models;
 using Roadkill.Core.Repositories;
 using Shouldly;

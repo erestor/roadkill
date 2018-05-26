@@ -20,8 +20,8 @@ namespace Roadkill.Api.Controllers
 			_pageRepository = pageRepository;
 		}
 
-		[Route("ExportPagesToXml")]
 		[HttpGet]
+		[Route(nameof(ExportPagesToXml))]
 		public async Task<string> ExportPagesToXml()
 		{
 			IEnumerable<Page> allPages = await _pageRepository.AllPages();

@@ -34,5 +34,26 @@ namespace Roadkill.Api.Controllers
 				return builder.ToString();
 			}
 		}
+
+		[HttpGet]
+		[Route(nameof(ExportPagesVersionsToXml))]
+		public async Task<string> ExportPagesVersionsToXml()
+		{
+			throw new System.NotImplementedException();
+		}
+
+		[HttpGet]
+		[Route(nameof(ExportAsSql))]
+		public async Task<string> ExportAsSql()
+		{
+			throw new System.NotImplementedException();
+		}
+
+		[HttpGet]
+		[Route(nameof(ExportAttachments))]
+		public async Task ExportAttachments()
+		{
+			throw new System.NotImplementedException();
+		}
 	}
 }

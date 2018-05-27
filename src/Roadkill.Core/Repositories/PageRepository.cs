@@ -13,7 +13,6 @@ namespace Roadkill.Core.Repositories
 
 		Task<IEnumerable<Page>> AllPages();
 
-		// TODO
 		Task<IEnumerable<string>> AllTags();
 
 		Task DeletePage(int id);

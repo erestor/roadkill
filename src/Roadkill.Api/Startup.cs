@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NSwag.AspNetCore;
+using Roadkill.Core.Configuration;
 
 namespace Roadkill.Api
 {
@@ -18,7 +19,7 @@ namespace Roadkill.Api
 			var builder = new ConfigurationBuilder();
 			builder
 				.SetBasePath(Path.Combine(env.ContentRootPath))
-				.AddJsonFile("appsettings.json", optional: true, reloadOnChange: false)
+				.AddJsonFile("appsettings.json", optional: false, reloadOnChange: false)
 				.AddEnvironmentVariables();
 
 			Configuration = builder.Build();
@@ -32,6 +33,7 @@ namespace Roadkill.Api
 			Roadkill.Api.DependencyInjection.ConfigureServices(services);
 
 			services.AddOptions();
+			services.Configure<SmtpSettings>(Configuration.GetSection("Smtp"));
 			services.AddMvc();
 		}
 

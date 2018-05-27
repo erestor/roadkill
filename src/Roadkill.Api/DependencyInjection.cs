@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using MailKit;
+using MailKit.Net.Smtp;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Roadkill.Text;
 using Roadkill.Text.Sanitizer;
@@ -12,6 +14,9 @@ namespace Roadkill.Api
 		public static void ConfigureServices(IServiceCollection services)
 		{
 			services.AddLogging();
+
+			// MailKit
+			services.AddScoped<IMailTransport, SmtpClient>();
 
 			// Markdown
 			services.AddScoped<TextSettings>();

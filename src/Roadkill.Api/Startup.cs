@@ -1,7 +1,10 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Reflection;
+using Marten.AspNetIdentity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -27,7 +30,17 @@ namespace Roadkill.Api
 
 		public void ConfigureServices(IServiceCollection services)
 		{
+			services.AddLogging();
+
 			string connectionString = Configuration["ConnectionString"];
+			services.AddIdentity<RoadkillUser, IdentityRole>(options =>
+				{
+					options.Password.RequireDigit = true;
+					options.Password.RequireNonAlphanumeric = false;
+					options.Password.RequireUppercase = false;
+				})
+				.AddMartenStores<RoadkillUser, IdentityRole>()
+				.AddDefaultTokenProviders();
 
 			Roadkill.Core.DependencyInjection.ConfigureServices(services, connectionString);
 			Roadkill.Api.DependencyInjection.ConfigureServices(services);
@@ -44,7 +57,12 @@ namespace Roadkill.Api
 			app.UseSwagger(Assembly.GetEntryAssembly());
 			app.UseSwaggerUi(Assembly.GetEntryAssembly());
 			app.UseStaticFiles();
+			app.UseAuthentication();
 			app.UseMvc();
 		}
+	}
+
+	public class RoadkillUser : IdentityUser
+	{
 	}
 }

@@ -5,6 +5,8 @@ using Roadkill.Core.Models;
 
 namespace Roadkill.Tests.Integration.Repositories
 {
+	// docker run -d -p 5432:5432 --name roadkill-postgres -e POSTGRES_USER=roadkill -e POSTGRES_PASSWORD=roadkill postgres
+
 	public class DocumentStoreManager
 	{
 		private static readonly ConcurrentDictionary<string, IDocumentStore> _documentStores = new ConcurrentDictionary<string, IDocumentStore>();

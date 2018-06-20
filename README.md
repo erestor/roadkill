@@ -3,6 +3,8 @@
 [![Coverage Status](https://coveralls.io/repos/roadkillwiki/roadkill/badge.svg?branch=master&service=github)](https://coveralls.io/github/roadkillwiki/roadkill?branch=master)
 [![Join the chat at Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/roadkillwiki/general)
 
+.NET Core 2.1 : https://www.microsoft.com/net/download/visual-studio-sdks
+
 # Introduction
 
 * [Download the latest **stable** version (2.0)](https://github.com/roadkillwiki/roadkill/releases/tag/v2.0)

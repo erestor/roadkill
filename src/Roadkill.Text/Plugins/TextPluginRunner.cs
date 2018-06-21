@@ -1,4 +1,6 @@
-﻿namespace Roadkill.Text.Plugins
+﻿using Roadkill.Text.Models;
+
+namespace Roadkill.Text.Plugins
 {
     /// <summary>
     /// Runs the BeforeParse and AfterParse methods on all TextPlugins, and determines if

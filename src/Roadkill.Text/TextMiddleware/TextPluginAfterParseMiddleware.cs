@@ -1,4 +1,5 @@
-﻿using Roadkill.Text.Plugins;
+﻿using Roadkill.Text.Models;
+using Roadkill.Text.Plugins;
 
 namespace Roadkill.Text.TextMiddleware
 {

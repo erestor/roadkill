@@ -5,6 +5,7 @@ using Moq;
 using Xunit;
 using Roadkill.Text;
 using Roadkill.Text.CustomTokens;
+using Roadkill.Text.Models;
 using Roadkill.Text.TextMiddleware;
 
 namespace Roadkill.Tests.Unit.Text.TextMiddleware

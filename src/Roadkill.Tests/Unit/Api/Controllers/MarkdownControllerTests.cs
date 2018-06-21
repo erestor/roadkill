@@ -3,6 +3,7 @@ using AutoFixture;
 using Moq;
 using Roadkill.Api.Controllers;
 using Roadkill.Text;
+using Roadkill.Text.Models;
 using Roadkill.Text.TextMiddleware;
 using Shouldly;
 using Xunit;

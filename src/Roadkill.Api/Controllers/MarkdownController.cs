@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Roadkill.Api.Interfaces;
 using Roadkill.Text;
+using Roadkill.Text.Models;
 using Roadkill.Text.TextMiddleware;
 
 namespace Roadkill.Api.Controllers

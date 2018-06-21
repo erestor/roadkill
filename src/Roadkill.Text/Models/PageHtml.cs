@@ -1,4 +1,4 @@
-﻿namespace Roadkill.Text
+﻿namespace Roadkill.Text.Models
 {
     /// <summary>
     /// Encapsulates the HTML returned by the markup converter, to display on the page.

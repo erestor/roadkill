@@ -1,5 +1,6 @@
 using Moq;
 using Roadkill.Text;
+using Roadkill.Text.Models;
 using Roadkill.Text.Parsers;
 using Roadkill.Text.TextMiddleware;
 using Xunit;

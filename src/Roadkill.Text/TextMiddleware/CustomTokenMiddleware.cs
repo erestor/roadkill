@@ -1,4 +1,5 @@
 ﻿using Roadkill.Text.CustomTokens;
+using Roadkill.Text.Models;
 
 namespace Roadkill.Text.TextMiddleware
 {

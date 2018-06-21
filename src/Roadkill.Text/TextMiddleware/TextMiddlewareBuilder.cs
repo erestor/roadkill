@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using Roadkill.Text.CustomTokens;
+using Roadkill.Text.Models;
 using Roadkill.Text.Parsers.Markdig;
 using Roadkill.Text.Plugins;
 using Roadkill.Text.Sanitizer;

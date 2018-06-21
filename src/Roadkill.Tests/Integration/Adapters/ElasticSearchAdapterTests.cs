@@ -8,7 +8,7 @@ using Xunit;
 using Xunit.Abstractions;
 using Page = Roadkill.Core.Models.Page;
 
-namespace Roadkill.Tests.Unit.Adapters
+namespace Roadkill.Tests.Integration.Adapters
 {
 	public class ElasticSearchAdapterTests
 	{

@@ -1,4 +1,6 @@
-﻿namespace Roadkill.Text.TextMiddleware
+﻿using Roadkill.Text.Models;
+
+namespace Roadkill.Text.TextMiddleware
 {
     public abstract class Middleware
     {

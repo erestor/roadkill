@@ -1,4 +1,5 @@
-﻿using Roadkill.Text.Parsers;
+﻿using Roadkill.Text.Models;
+using Roadkill.Text.Parsers;
 
 namespace Roadkill.Text.TextMiddleware
 {

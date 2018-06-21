@@ -1,4 +1,4 @@
-﻿namespace Roadkill.Api.Interfaces
+﻿namespace Roadkill.Api.Models
 {
 	public class UserViewModel
 	{

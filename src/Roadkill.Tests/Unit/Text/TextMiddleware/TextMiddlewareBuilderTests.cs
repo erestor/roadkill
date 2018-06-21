@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Roadkill.Text;
 using Roadkill.Text.CustomTokens;
+using Roadkill.Text.Models;
 using Roadkill.Text.Plugins;
 using Roadkill.Text.Sanitizer;
 using Roadkill.Text.TextMiddleware;

@@ -15,13 +15,13 @@ namespace Roadkill.Api.Interfaces
 		/// Retrieves a list of all tags in the system.
 		/// </summary>
 		/// <returns>A <see cref="IEnumerable{TagViewModel}"/> for the tags.</returns>
-		Task<IEnumerable<TagViewModel>> AllTags();
+		Task<IEnumerable<TagModel>> AllTags();
 
 		/// <summary>
 		/// Finds all pages with the given tag.
 		/// </summary>
 		/// <param name="tag">The tag to search for.</param>
 		/// <returns>A <see cref="IEnumerable{PageViewModel}"/> of pages tagged with the provided tag.</returns>
-		Task<IEnumerable<PageViewModel>> FindPageWithTag(string tag);
+		Task<IEnumerable<PageModel>> FindPageWithTag(string tag);
 	}
 }

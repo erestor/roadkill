@@ -6,20 +6,20 @@ namespace Roadkill.Api.Interfaces
 {
 	public interface IPagesService
 	{
-		Task<PageViewModel> Add(PageViewModel viewModel);
+		Task<PageModel> Add(PageModel model);
 
-		Task<PageViewModel> Update(PageViewModel viewModel);
+		Task<PageModel> Update(PageModel model);
 
 		Task Delete(int pageId);
 
-		Task<PageViewModel> GetById(int id);
+		Task<PageModel> GetById(int id);
 
-		Task<IEnumerable<PageViewModel>> AllPages();
+		Task<IEnumerable<PageModel>> AllPages();
 
-		Task<IEnumerable<PageViewModel>> AllPagesCreatedBy(string username);
+		Task<IEnumerable<PageModel>> AllPagesCreatedBy(string username);
 
-		Task<PageViewModel> FindHomePage();
+		Task<PageModel> FindHomePage();
 
-		Task<PageViewModel> FindByTitle(string title);
+		Task<PageModel> FindByTitle(string title);
 	}
 }

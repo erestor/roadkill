@@ -2,7 +2,7 @@
 
 namespace Roadkill.Api.Models
 {
-	public class PageVersionViewModel
+	public class PageVersionModel
 	{
 		public Guid Id { get; set; }
 

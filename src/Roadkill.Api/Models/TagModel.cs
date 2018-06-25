@@ -3,7 +3,7 @@
 	/// <summary>
 	/// Provides data for the tag cloud.
 	/// </summary>
-	public class TagViewModel
+	public class TagModel
 	{
 		public string Name { get; set; }
 

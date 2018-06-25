@@ -30,21 +30,21 @@ namespace Roadkill.Api.Interfaces
 
 		Task<bool> IsEditor(string cookieValue);
 
-		Task<IEnumerable<UserViewModel>> ListAdmins();
+		Task<IEnumerable<UserModel>> ListAdmins();
 
-		Task<IEnumerable<UserViewModel>> ListEditors();
+		Task<IEnumerable<UserModel>> ListEditors();
 
 		Task Logout();
 
 		Task<string> ResetPassword(string email);
 
-		Task<string> Signup(UserViewModel model, Action completed);
+		Task<string> Signup(UserModel model, Action completed);
 
 		Task ToggleAdmin(string email);
 
 		Task ToggleEditor(string email);
 
-		Task<bool> UpdateUser(UserViewModel model);
+		Task<bool> UpdateUser(UserModel model);
 
 		Task<bool> UserExists(string email);
 

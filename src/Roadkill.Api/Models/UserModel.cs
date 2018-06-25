@@ -1,6 +1,6 @@
 ﻿namespace Roadkill.Api.Models
 {
-	public class UserViewModel
+	public class UserModel
 	{
 	}
 }

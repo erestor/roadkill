@@ -4,18 +4,18 @@ using Roadkill.Core.Models;
 
 namespace Roadkill.Api.Models
 {
-	public interface IPageViewModelConverter
+	public interface IPageModelConverter
 	{
-		PageViewModel ConvertToViewModel(Page page);
+		PageModel ConvertToViewModel(Page page);
 
-		Page ConvertToPage(PageViewModel viewModel);
+		Page ConvertToPage(PageModel model);
 	}
 
-	public class PageViewModelConverter : IPageViewModelConverter
+	public class PageModelConverter : IPageModelConverter
 	{
-		public PageViewModel ConvertToViewModel(Page page)
+		public PageModel ConvertToViewModel(Page page)
 		{
-			return new PageViewModel()
+			return new PageModel()
 			{
 				Id = page.Id,
 				Title = page.Title,
@@ -30,18 +30,18 @@ namespace Roadkill.Api.Models
 			};
 		}
 
-		public Page ConvertToPage(PageViewModel viewModel)
+		public Page ConvertToPage(PageModel model)
 		{
 			return new Page()
 			{
-				Id = viewModel.Id,
-				Title = viewModel.Title,
-				LastModifiedBy = viewModel.LastModifiedBy,
-				LastModifiedOn = viewModel.LastModifiedOn,
-				CreatedBy = viewModel.CreatedBy,
-				CreatedOn = viewModel.CreatedOn,
-				IsLocked = viewModel.IsLocked,
-				Tags = viewModel.TagsAsCsv
+				Id = model.Id,
+				Title = model.Title,
+				LastModifiedBy = model.LastModifiedBy,
+				LastModifiedOn = model.LastModifiedOn,
+				CreatedBy = model.CreatedBy,
+				CreatedOn = model.CreatedOn,
+				IsLocked = model.IsLocked,
+				Tags = model.TagsAsCsv
 			};
 		}
 

@@ -7,20 +7,20 @@ namespace Roadkill.Api.Interfaces
 {
 	public interface IPageVersionsService
 	{
-		Task<PageVersionViewModel> Add(int pageId, string text, string author, DateTime? dateTime = null);
+		Task<PageVersionModel> Add(int pageId, string text, string author, DateTime? dateTime = null);
 
-		Task<PageVersionViewModel> GetById(Guid id);
+		Task<PageVersionModel> GetById(Guid id);
 
 		Task Delete(Guid id);
 
-		Task Update(PageVersionViewModel pageVersionViewModel);
+		Task Update(PageVersionModel pageVersionModel);
 
-		Task<PageVersionViewModel> GetLatestVersion(int pageId);
+		Task<PageVersionModel> GetLatestVersion(int pageId);
 
-		Task<IEnumerable<PageVersionViewModel>> AllVersions();
+		Task<IEnumerable<PageVersionModel>> AllVersions();
 
-		Task<IEnumerable<PageVersionViewModel>> FindPageVersionsByPageId(int pageId);
+		Task<IEnumerable<PageVersionModel>> FindPageVersionsByPageId(int pageId);
 
-		Task<IEnumerable<PageVersionViewModel>> FindPageVersionsByAuthor(string username);
+		Task<IEnumerable<PageVersionModel>> FindPageVersionsByAuthor(string username);
 	}
 }

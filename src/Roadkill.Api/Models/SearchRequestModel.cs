@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Roadkill.Api.Models
 {
-	public class PageViewModel
+	public class SearchRequestModel
 	{
 		public int Id { get; set; }
 		public string Title { get; set; }

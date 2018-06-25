@@ -18,7 +18,7 @@ namespace Roadkill.Tests.Unit.Api.Controllers
 	public class PagesControllerTests
 	{
 		private Mock<IPageRepository> _pageRepositoryMock;
-		private Mock<IPageViewModelConverter> _viewModelCreatorMock;
+		private Mock<IPageModelConverter> _viewModelCreatorMock;
 		private PagesController _pagesController;
 		private Fixture _fixture;
 
@@ -28,15 +28,15 @@ namespace Roadkill.Tests.Unit.Api.Controllers
 
 			_pageRepositoryMock = new Mock<IPageRepository>();
 
-			_viewModelCreatorMock = new Mock<IPageViewModelConverter>();
+			_viewModelCreatorMock = new Mock<IPageModelConverter>();
 
 			_viewModelCreatorMock
 				.Setup(x => x.ConvertToViewModel(It.IsAny<Page>()))
-				.Returns<Page>(page => new PageViewModel() { Id = page.Id, Title = page.Title });
+				.Returns<Page>(page => new PageModel() { Id = page.Id, Title = page.Title });
 
 			_viewModelCreatorMock
-				.Setup(x => x.ConvertToPage(It.IsAny<PageViewModel>()))
-				.Returns<PageViewModel>(viewModel => new Page() { Id = viewModel.Id, Title = viewModel.Title });
+				.Setup(x => x.ConvertToPage(It.IsAny<PageModel>()))
+				.Returns<PageModel>(viewModel => new Page() { Id = viewModel.Id, Title = viewModel.Title });
 
 			_pagesController = new PagesController(_pageRepositoryMock.Object, _viewModelCreatorMock.Object);
 		}
@@ -54,7 +54,7 @@ namespace Roadkill.Tests.Unit.Api.Controllers
 		public async Task Add()
 		{
 			// given
-			var inputPageViewModel = _fixture.Create<PageViewModel>();
+			var inputPageViewModel = _fixture.Create<PageModel>();
 			int autoIncrementedId = 99;
 
 			_pageRepositoryMock
@@ -84,7 +84,7 @@ namespace Roadkill.Tests.Unit.Api.Controllers
 		public async Task Update()
 		{
 			// given
-			var changedPageViewModel = new PageViewModel()
+			var changedPageViewModel = new PageModel()
 			{
 				Id = 88,
 				Title = "new title"
@@ -100,7 +100,7 @@ namespace Roadkill.Tests.Unit.Api.Controllers
 				.ReturnsAsync(changedPage);
 
 			// when
-			PageViewModel actualChangedPage = await _pagesController.Update(changedPageViewModel);
+			PageModel actualChangedPage = await _pagesController.Update(changedPageViewModel);
 
 			// then
 			actualChangedPage.ShouldBeEquivalent(changedPageViewModel);
@@ -137,11 +137,11 @@ namespace Roadkill.Tests.Unit.Api.Controllers
 				.ReturnsAsync(expectedPage);
 
 			// when
-			PageViewModel pageViewModel = await _pagesController.GetById(id);
+			PageModel pageModel = await _pagesController.GetById(id);
 
 			// then
-			pageViewModel.ShouldNotBeNull();
-			pageViewModel.Id.ShouldBe(id);
+			pageModel.ShouldNotBeNull();
+			pageModel.Id.ShouldBe(id);
 
 			_pageRepositoryMock.Verify(x => x.GetPageById(id), Times.Once);
 			_viewModelCreatorMock.Verify(x => x.ConvertToViewModel(expectedPage));
@@ -158,7 +158,7 @@ namespace Roadkill.Tests.Unit.Api.Controllers
 				.ReturnsAsync(pages);
 
 			// when
-			IEnumerable<PageViewModel> pageViewModels = await _pagesController.AllPages();
+			IEnumerable<PageModel> pageViewModels = await _pagesController.AllPages();
 
 			// then
 			pageViewModels.Count().ShouldBe(pages.Count());
@@ -179,7 +179,7 @@ namespace Roadkill.Tests.Unit.Api.Controllers
 				.ReturnsAsync(pages);
 
 			// when
-			IEnumerable<PageViewModel> pageViewModels = await _pagesController.AllPagesCreatedBy(username);
+			IEnumerable<PageModel> pageViewModels = await _pagesController.AllPagesCreatedBy(username);
 
 			// then
 			pageViewModels.Count().ShouldBe(pages.Count());
@@ -203,12 +203,12 @@ namespace Roadkill.Tests.Unit.Api.Controllers
 				.ReturnsAsync(pages);
 
 			// when
-			PageViewModel pageViewModel = await _pagesController.FindHomePage();
+			PageModel pageModel = await _pagesController.FindHomePage();
 
 			// then
-			pageViewModel.ShouldNotBeNull();
-			pageViewModel.Title.ShouldBe("page 0");
-			pageViewModel.Id.ShouldBe(pages[0].Id);
+			pageModel.ShouldNotBeNull();
+			pageModel.Title.ShouldBe("page 0");
+			pageModel.Id.ShouldBe(pages[0].Id);
 
 			_pageRepositoryMock.Verify(x => x.FindPagesContainingTag("homepage"), Times.Once);
 			_viewModelCreatorMock.Verify(x => x.ConvertToViewModel(pages[0]));
@@ -225,12 +225,12 @@ namespace Roadkill.Tests.Unit.Api.Controllers
 				.ReturnsAsync(expectedPage);
 
 			// when
-			PageViewModel pageViewModel = await _pagesController.FindByTitle(title);
+			PageModel pageModel = await _pagesController.FindByTitle(title);
 
 			// then
-			pageViewModel.ShouldNotBeNull();
-			pageViewModel.Title.ShouldBe(title);
-			pageViewModel.Id.ShouldBe(expectedPage.Id);
+			pageModel.ShouldNotBeNull();
+			pageModel.Title.ShouldBe(title);
+			pageModel.Id.ShouldBe(expectedPage.Id);
 
 			_pageRepositoryMock.Verify(x => x.GetPageByTitle(title), Times.Once);
 			_viewModelCreatorMock.Verify(x => x.ConvertToViewModel(expectedPage));

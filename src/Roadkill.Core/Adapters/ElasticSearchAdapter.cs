@@ -13,7 +13,12 @@ namespace Roadkill.Core.Adapters
 		public ElasticSearchAdapter(IElasticClient elasticClient)
 		{
 			_elasticClient = elasticClient;
-			var response = _elasticClient.CreateIndexAsync("pages");
+			_elasticClient.CreateIndexAsync("pages");
+		}
+
+		public async Task Add(Page page)
+		{
+			await _elasticClient.IndexAsync(page, idx => idx.Index("pages"));
 		}
 
 		public async Task<IEnumerable<Page>> Find(string title)
@@ -31,11 +36,6 @@ namespace Roadkill.Core.Adapters
 						.Size(10)
 						.Index("pages")
 						.Query(q => q.Match(m => m.Field(f => f.Title).Query(title)));
-		}
-
-		public async Task Add(Page page)
-		{
-			await _elasticClient.IndexAsync(page, idx => idx.Index("pages"));
 		}
 	}
 }

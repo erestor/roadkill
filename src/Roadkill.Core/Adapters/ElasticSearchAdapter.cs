@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Nest;
@@ -14,12 +15,12 @@ namespace Roadkill.Core.Adapters
 
 		Task DeleteAll();
 
-		Task<IEnumerable<SearchablePage>> Find(string title);
+		Task<IEnumerable<SearchablePage>> Find(string query);
 	}
 
 	public class ElasticSearchAdapter : IElasticSearchAdapter
 	{
-		private const string PagesIndexName = "pages";
+		public const string PagesIndexName = "pages";
 		private readonly IElasticClient _elasticClient;
 
 		public ElasticSearchAdapter(IElasticClient elasticClient)
@@ -51,22 +52,21 @@ namespace Roadkill.Core.Adapters
 			throw new System.NotImplementedException();
 		}
 
-		public async Task<IEnumerable<SearchablePage>> Find(string title)
+		public async Task<IEnumerable<SearchablePage>> Find(string query)
 		{
-			SearchDescriptor<SearchablePage> searchDescriptor = CreateSearchDescriptor(title);
+			SearchDescriptor<SearchablePage> searchDescriptor = CreateSearchDescriptor(query);
 			ISearchResponse<SearchablePage> response = await _elasticClient.SearchAsync<SearchablePage>(searchDescriptor);
 
 			return response.Documents.AsEnumerable();
 		}
 
-		private static SearchDescriptor<SearchablePage> CreateSearchDescriptor(string title)
+		private static SearchDescriptor<SearchablePage> CreateSearchDescriptor(string query)
 		{
 			return new SearchDescriptor<SearchablePage>()
 						.From(0)
 						.Size(20)
 						.Index(PagesIndexName)
-						.Query(q => q.Match(m => m.Field(f => f.Title)
-												  .Query(title)));
+						.Query(q => q.SimpleQueryString(qs => qs.Query(query)));
 		}
 	}
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture;
@@ -47,7 +48,6 @@ namespace Roadkill.Tests.Integration.Adapters
 			var node = new Uri("http://localhost:9200");
 			var connectionSettings = new ConnectionSettings(node);
 			_elasticClient = new ElasticClient(connectionSettings);
-			Thread.Sleep(500);
 		}
 
 		private ElasticSearchAdapter CreateAdapter()
@@ -56,34 +56,42 @@ namespace Roadkill.Tests.Integration.Adapters
 		}
 
 		[Fact]
-		public async Task AddPage()
+		public async Task Add()
 		{
 			// given
 			ElasticSearchAdapter adapter = CreateAdapter();
 			string title = "A long example title";
 			var page = new SearchablePage() { Id = int.MaxValue, Title = title };
-			await adapter.Add(page);
 
 			// when
-			var results = await adapter.Find("A long");
+			await adapter.Add(page);
+			Thread.Sleep(1000);
 
 			// then
+			var results = await adapter.Find("A long");
 			var firstResult = results.FirstOrDefault();
 			firstResult.ShouldNotBeNull();
 			firstResult.Title.ShouldBe(title);
 			firstResult.Id.ShouldBe(page.Id);
 		}
 
-		[Fact]
-		public async Task Find()
+		[Theory]
+		[InlineData("Id", "id : {0}")]
+		[InlineData("Title", "title: {0}")]
+		[InlineData("Text", "text: {0}")]
+		[InlineData("Author", "author: {0}")]
+		[InlineData("Tags", "tags: {0}")]
+		public async Task Find(string property, string query)
 		{
 			// given
 			ElasticSearchAdapter adapter = CreateAdapter();
 			var page = _classFixture.TestPages.First();
-			Thread.Sleep(1000);
+
+			var val = typeof(SearchablePage).GetProperty(property).GetValue(page, null);
+			query = string.Format(query, val);
 
 			// when
-			IEnumerable<SearchablePage> results = await adapter.Find(page.Title);
+			IEnumerable<SearchablePage> results = await adapter.Find(query);
 
 			// then
 			var firstResult = results.FirstOrDefault();
@@ -93,34 +101,6 @@ namespace Roadkill.Tests.Integration.Adapters
 			firstResult.Title.ShouldBe(page.Title);
 			firstResult.Author.ShouldBe(page.Author);
 			firstResult.DateTime.ShouldBe(page.DateTime);
-		}
-	}
-
-	public class ElasticSearchAdapterFixture
-	{
-		public ElasticClient ElasticClient { get; set; }
-		public List<SearchablePage> TestPages { get; set; }
-
-		public ElasticSearchAdapterFixture()
-		{
-			var node = new Uri("http://localhost:9200");
-			var connectionSettings = new ConnectionSettings(node);
-			ElasticClient = new ElasticClient(connectionSettings);
-
-			AddDummyData(ElasticClient);
-		}
-
-		private void AddDummyData(ElasticClient elasticClient)
-		{
-			var fixture = new Fixture();
-			var adapter = new ElasticSearchAdapter(elasticClient);
-			adapter.DeleteAll().GetAwaiter().GetResult();
-
-			TestPages = fixture.CreateMany<SearchablePage>(10).ToList();
-			foreach (SearchablePage page in TestPages)
-			{
-				adapter.Add(page).GetAwaiter().GetResult();
-			}
 		}
 	}
 }

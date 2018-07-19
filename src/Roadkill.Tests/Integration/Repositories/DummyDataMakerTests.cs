@@ -39,7 +39,7 @@ namespace Roadkill.Tests.Integration.Repositories
 			return newPages;
 		}
 
-		[Fact]
+		//[Fact]
 		public async void TenPagesPlease()
 		{
 			PageRepository repository = CreateRepository();

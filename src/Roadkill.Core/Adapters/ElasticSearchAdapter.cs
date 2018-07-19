@@ -66,7 +66,7 @@ namespace Roadkill.Core.Adapters
 						.From(0)
 						.Size(20)
 						.Index(PagesIndexName)
-						.Query(q => q.SimpleQueryString(qs => qs.Query(query)));
+						.Query(q => q.QueryString(qs => qs.Query(query)));
 		}
 	}
 }

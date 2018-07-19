@@ -11,6 +11,7 @@ namespace Roadkill.Tests.Integration.Adapters
 	public class ElasticSearchAdapterFixture : IDisposable
 	{
 		public ElasticClient ElasticClient { get; set; }
+		public ElasticSearchAdapter ElasticSearchAdapter { get; set; }
 		public List<SearchablePage> TestPages { get; set; }
 
 		public ElasticSearchAdapterFixture()
@@ -18,7 +19,7 @@ namespace Roadkill.Tests.Integration.Adapters
 			var node = new Uri("http://localhost:9200");
 			var connectionSettings = new ConnectionSettings(node);
 			ElasticClient = new ElasticClient(connectionSettings);
-			ElasticClient.DeleteIndex(ElasticSearchAdapter.PagesIndexName);
+			ElasticSearchAdapter = new ElasticSearchAdapter(ElasticClient);
 
 			AddDummyData(ElasticClient);
 		}
@@ -26,18 +27,17 @@ namespace Roadkill.Tests.Integration.Adapters
 		private void AddDummyData(ElasticClient elasticClient)
 		{
 			var fixture = new Fixture();
-			var adapter = new ElasticSearchAdapter(elasticClient);
 
 			TestPages = fixture.CreateMany<SearchablePage>(10).ToList();
 			foreach (SearchablePage page in TestPages)
 			{
-				adapter.Add(page).GetAwaiter().GetResult();
+				ElasticSearchAdapter.Add(page).GetAwaiter().GetResult();
 			}
 		}
 
 		public void Dispose()
 		{
-			ElasticClient.DeleteIndex(ElasticSearchAdapter.PagesIndexName);
+			//ElasticClient.DeleteIndex(ElasticSearchAdapter.PagesIndexName);
 		}
 	}
 }

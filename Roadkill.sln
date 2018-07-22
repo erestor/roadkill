@@ -11,9 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Roadkill.ApiClient", "src\R
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Roadkill.Core", "src\Roadkill.Core\Roadkill.Core.csproj", "{18BB8C5E-2319-4033-9E54-465F5E8BC61E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roadkill.Text", "src\Roadkill.Text\Roadkill.Text.csproj", "{0E75066A-3C0F-41B5-9928-B36D53A5AAD5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Roadkill.Text", "src\Roadkill.Text\Roadkill.Text.csproj", "{0E75066A-3C0F-41B5-9928-B36D53A5AAD5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roadkill.Localisation", "src\Roadkill.Localisation\Roadkill.Localisation.csproj", "{777138FF-9925-44D5-9C3A-F4CDD66D9D98}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Roadkill.Localisation", "src\Roadkill.Localisation\Roadkill.Localisation.csproj", "{777138FF-9925-44D5-9C3A-F4CDD66D9D98}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{A1396D86-0213-47A8-A930-CED61F9AF0D8}"
 EndProject

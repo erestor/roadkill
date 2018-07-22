@@ -16,6 +16,7 @@ namespace Roadkill.Tests.Integration.Repositories
 		{
 			string documentStoreSchemaName = "";
 
+			// Use a different schema for each test class, so their data is isolated
 			if (testClassType != null)
 				documentStoreSchemaName = testClassType.Name;
 
@@ -32,6 +33,7 @@ namespace Roadkill.Tests.Integration.Repositories
 		{
 			var documentStore = DocumentStore.For(options =>
 			{
+				options.AutoCreateSchemaObjects = AutoCreate.All;
 				options.CreateDatabasesForTenants(c =>
 				{
 					c.MaintenanceDatabase(connectionString);

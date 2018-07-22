@@ -15,8 +15,8 @@ addons:
 
 before_script:
   - psql -c "create database roadkill;" -U postgres
-  - psql -c "CREATE USER roadkill-postgres WITH PASSWORD 'roadkill-postgres';" -U postgres
-  - psql -c "ALTER USER roadkill-postgres WITH SUPERUSER;" -U postgres
+  - psql -c "CREATE USER roadkill WITH PASSWORD 'roadkill';" -U postgres
+  - psql -c "ALTER USER roadkill WITH SUPERUSER;" -U postgres
   - docker run -d -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:6.2.4
   
 script:

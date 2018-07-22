@@ -1,12 +1,27 @@
+# https://docs.travis-ci.com/user/environment-variables/
 language: csharp
-solution: Roadkill.sln
+dotnet: 2.0.0
 
-install:
-  - nuget restore Roadkill.sln
-  - nuget install NUnit.Runners -Version 2.6.4 -OutputDirectory testrunner
-  - export PATH=$PATH:$PWD/lib
-  - echo $PATH
-  - echo $PWD
+branches:
+  only:
+  - master
+
+services:
+  - docker
+  - postgresql
+
+addons:
+  postgresql: "9.5"
+
+before_script:
+  - psql -c "create database roadkill;" -U postgres
+  - psql -c "CREATE USER roadkill-postgres WITH PASSWORD 'roadkill-postgres';" -U postgres
+  - psql -c "ALTER USER roadkill-postgres WITH SUPERUSER;" -U postgres
+  - docker run -d -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:6.2.4
+  
 script:
-  - xbuild /p:Configuration=Mono Roadkill.sln
-  - mono ./testrunner/NUnit.Runners.2.6.4/tools/nunit-console.exe ./src/Roadkill.Tests/bin/Mono/Roadkill.Tests.dll /include:Unit
+   - dotnet restore
+   - dotnet build -c Release  
+   - pushd src/Roadkill.Tests
+   - dotnet test
+   - popd

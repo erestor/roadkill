@@ -9,11 +9,11 @@ namespace Roadkill.Core.Adapters
 {
 	public interface IElasticSearchAdapter
 	{
-		Task Add(SearchablePage page);
+		Task<bool> Add(SearchablePage page);
 
-		Task Update(SearchablePage page);
+		Task<bool> Update(SearchablePage page);
 
-		Task DeleteAll();
+		Task RecreateIndex();
 
 		Task<IEnumerable<SearchablePage>> Find(string query);
 	}
@@ -26,34 +26,43 @@ namespace Roadkill.Core.Adapters
 		public ElasticSearchAdapter(IElasticClient elasticClient)
 		{
 			_elasticClient = elasticClient;
-			EnsureIndexesExist();
 		}
 
-		private void EnsureIndexesExist()
+		private async Task EnsureIndexesExist()
 		{
-			if (!_elasticClient.IndexExists(PagesIndexName).Exists)
+			var existsResponse = await _elasticClient.IndexExistsAsync(PagesIndexName);
+			if (!existsResponse.Exists)
 			{
-				_elasticClient.CreateIndexAsync(PagesIndexName);
+				await _elasticClient.CreateIndexAsync(PagesIndexName);
 			}
 		}
 
-		public async Task Add(SearchablePage page)
+		public async Task<bool> Add(SearchablePage page)
 		{
-			await _elasticClient.IndexAsync(page, idx => idx.Index(PagesIndexName));
+			await EnsureIndexesExist();
+			var response = await _elasticClient.IndexAsync(page, idx => idx.Index(PagesIndexName));
+
+			return (response.Result == Result.Created);
 		}
 
-		public async Task DeleteAll()
+		public async Task RecreateIndex()
 		{
 			await _elasticClient.DeleteIndexAsync(PagesIndexName);
+			await EnsureIndexesExist();
 		}
 
-		public Task Update(SearchablePage page)
+		public async Task<bool> Update(SearchablePage page)
 		{
-			throw new System.NotImplementedException();
+			await EnsureIndexesExist();
+			var response = await _elasticClient.IndexAsync(page, idx => idx.Index(PagesIndexName));
+
+			return (response.Result == Result.Updated);
 		}
 
 		public async Task<IEnumerable<SearchablePage>> Find(string query)
 		{
+			await EnsureIndexesExist();
+
 			SearchDescriptor<SearchablePage> searchDescriptor = CreateSearchDescriptor(query);
 			ISearchResponse<SearchablePage> response = await _elasticClient.SearchAsync<SearchablePage>(searchDescriptor);
 

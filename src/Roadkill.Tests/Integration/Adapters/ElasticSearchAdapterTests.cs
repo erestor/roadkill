@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture;
+using Elasticsearch.Net;
 using Nest;
 using Newtonsoft.Json;
 using Roadkill.Core.Adapters;
@@ -21,7 +22,9 @@ namespace Roadkill.Tests.Integration.Adapters
 		private readonly Fixture _fixture;
 		private readonly ITestOutputHelper _console;
 		private readonly ElasticSearchAdapterFixture _classFixture;
+
 		private ElasticSearchAdapter _elasticSearchAdapter;
+		private List<SearchablePage> _testPages;
 
 		// These tests need ElasticSearch installed locally, you can do this
 		// by running the ElasticSearch Docker image:
@@ -45,33 +48,65 @@ namespace Roadkill.Tests.Integration.Adapters
 		{
 			_fixture = new Fixture();
 			_console = console;
-			_classFixture = classFixture;
-			_elasticSearchAdapter = _classFixture.ElasticSearchAdapter;
-		}
 
-		private ElasticSearchAdapter GetAdapter()
-		{
-			return _elasticSearchAdapter;
+			var uri = new Uri("http://localhost:9200");
+			var connectionPool = new StaticConnectionPool(new List<Node>() { uri });
+			var connectionSettings = new ConnectionSettings(connectionPool);
+			var elasticClient = new ElasticClient(connectionSettings);
+			_elasticSearchAdapter = new ElasticSearchAdapter(elasticClient);
+			_testPages = classFixture.TestPages;
 		}
 
 		[Fact]
 		public async Task Add()
 		{
 			// given
-			ElasticSearchAdapter adapter = GetAdapter();
-			string title = "A long example title";
-			var page = new SearchablePage() { Id = int.MaxValue, Title = title };
+			string title = _fixture.Create<string>();
+			int id = (int)DateTime.Now.Ticks;
+			var page = new SearchablePage() { Id = id, Title = title };
 
 			// when
-			await adapter.Add(page);
-			Thread.Sleep(1000);
+			bool success = await _elasticSearchAdapter.Add(page);
 
 			// then
-			var results = await adapter.Find("A long");
+			success.ShouldBeTrue();
+			await Task.Delay(1000);
+
+			var results = await _elasticSearchAdapter.Find($"id:{id}");
 			var firstResult = results.FirstOrDefault();
 			firstResult.ShouldNotBeNull();
 			firstResult.Title.ShouldBe(title);
 			firstResult.Id.ShouldBe(page.Id);
+		}
+
+		[Fact]
+		public async Task Update()
+		{
+			// given
+			var existingPage = _testPages.First();
+
+			string newTitle = _fixture.Create<string>();
+			string newText = _fixture.Create<string>();
+			string newAuthor = _fixture.Create<string>();
+
+			existingPage.Title = newTitle;
+			existingPage.Author = newAuthor;
+			existingPage.Text = newText;
+
+			// when
+			bool success = await _elasticSearchAdapter.Update(existingPage);
+
+			// then
+			success.ShouldBeTrue();
+			await Task.Delay(1000);
+
+			var results = await _elasticSearchAdapter.Find($"id:{existingPage.Id}");
+
+			var firstResult = results.FirstOrDefault();
+			firstResult.ShouldNotBeNull();
+			firstResult.Title.ShouldBe(newTitle);
+			firstResult.Author.ShouldBe(newAuthor);
+			firstResult.Text.ShouldBe(newText);
 		}
 
 		[Theory]
@@ -83,23 +118,15 @@ namespace Roadkill.Tests.Integration.Adapters
 		public async Task Find(string property, string query)
 		{
 			// given
-			ElasticSearchAdapter adapter = GetAdapter();
-			var page = new SearchablePage()
-			{
-				Id = int.MaxValue,
-				Title = "A long title about something",
-				Author = "J.R. Hartley",
-				DateTime = DateTime.Today,
-				Tags = "fishing, yellow-pages, ebay",
-				Text = "This is the page text it's quite long"
-			};
-			await adapter.Add(page);
+			var page = _testPages.First();
 
-			var val = typeof(SearchablePage).GetProperty(property).GetValue(page, null);
-			query = string.Format(query, val);
+			var propertyValue = typeof(SearchablePage)
+									.GetProperty(property)
+									.GetValue(page, null);
+			query = string.Format(query, propertyValue);
 
 			// when
-			IEnumerable<SearchablePage> results = await adapter.Find(query);
+			IEnumerable<SearchablePage> results = await _elasticSearchAdapter.Find(query);
 
 			// then
 			var firstResult = results.FirstOrDefault();
@@ -110,27 +137,6 @@ namespace Roadkill.Tests.Integration.Adapters
 			firstResult.Tags.ShouldBe(page.Tags);
 			firstResult.Author.ShouldBe(page.Author);
 			firstResult.DateTime.ShouldBe(page.DateTime);
-		}
-
-		private async Task<string> GetDebugInfo(ElasticSearchAdapter adapter)
-		{
-			//var descriptor = new SearchDescriptor<SearchablePage>()
-			//					.From(0)
-			//					.Size(20)
-			//					.Index(ElasticSearchAdapter.PagesIndexName);
-
-			//ISearchResponse<SearchablePage> response = await _elasticClient.SearchAsync<SearchablePage>(descriptor);
-
-			//var stringBuilder = new StringBuilder();
-			//var count = _classFixture.ElasticClient.Count<SearchablePage>(x => x.Index("pages")).Count;
-			//var results2 = await adapter.Find("");
-			//foreach (SearchablePage searchablePage in response.Documents)
-			//{
-			//	stringBuilder.AppendLine(JsonConvert.SerializeObject(searchablePage, Formatting.Indented));
-			//}
-
-			//return stringBuilder.ToString();
-			return "";
 		}
 	}
 }

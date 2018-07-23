@@ -12,8 +12,8 @@ services:
 
 addons:
   postgresql: "10"
-    apt:
-      packages:
+  apt:
+    packages:
       - postgresql-10
       - postgresql-client-10
 

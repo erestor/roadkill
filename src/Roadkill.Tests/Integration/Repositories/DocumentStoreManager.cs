@@ -5,12 +5,12 @@ using Roadkill.Core.Models;
 
 namespace Roadkill.Tests.Integration.Repositories
 {
-	// docker run -d -p 5432:5432 --name roadkill-postgres -e POSTGRES_USER=roadkill -e POSTGRES_PASSWORD=roadkill postgres
+	// docker run -d -p 9000:5432 --name roadkill-postgres -e POSTGRES_USER=roadkill -e POSTGRES_PASSWORD=roadkill postgres
 
 	public class DocumentStoreManager
 	{
 		private static readonly ConcurrentDictionary<string, IDocumentStore> _documentStores = new ConcurrentDictionary<string, IDocumentStore>();
-		public static string ConnectionString => "host=localhost;port=5432;database=roadkill;username=roadkill;password=roadkill;";
+		public static string ConnectionString => "host=localhost;port=9000;database=roadkill;username=roadkill;password=roadkill;";
 
 		public static IDocumentStore GetMartenDocumentStore(Type testClassType)
 		{

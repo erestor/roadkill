@@ -27,7 +27,14 @@ namespace Roadkill.Tests.Integration.Repositories
 			_fixture = new Fixture();
 			IDocumentStore documentStore = DocumentStoreManager.GetMartenDocumentStore(typeof(PageRepositoryTests));
 
-			new PageRepository(documentStore).Wipe();
+			try
+			{
+				new PageRepository(documentStore).Wipe();
+			}
+			catch (Exception e)
+			{
+				outputHelper.WriteLine(GetType().Name + " caught: " + e.Message);
+			}
 		}
 
 		private void PrintPages()

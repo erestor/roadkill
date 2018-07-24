@@ -7,6 +7,7 @@ using Roadkill.Core.Models;
 using Roadkill.Core.Repositories;
 using Shouldly;
 using Xunit;
+using Xunit.Abstractions;
 
 // ReSharper disable PossibleMultipleEnumeration
 
@@ -16,11 +17,19 @@ namespace Roadkill.Tests.Integration.Repositories
 	{
 		private readonly Fixture _fixture;
 
-		public UserRepositoryTests()
+		public UserRepositoryTests(ITestOutputHelper outputHelper)
 		{
 			_fixture = new Fixture();
 			IDocumentStore documentStore = DocumentStoreManager.GetMartenDocumentStore(typeof(UserRepositoryTests));
-			new UserRepository(documentStore).Wipe();
+
+			try
+			{
+				new UserRepository(documentStore).Wipe();
+			}
+			catch (Exception e)
+			{
+				outputHelper.WriteLine(GetType().Name + " caught: " + e.Message);
+			}
 		}
 
 		public UserRepository CreateRepository()

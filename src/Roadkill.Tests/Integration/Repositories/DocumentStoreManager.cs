@@ -37,7 +37,7 @@ namespace Roadkill.Tests.Integration.Repositories
 				options.CreateDatabasesForTenants(c =>
 				{
 					c.MaintenanceDatabase(connectionString);
-					c.ForTenant()
+					c.ForTenant(schemaName)
 						.CheckAgainstPgDatabase()
 						.WithOwner("roadkill")
 						.WithEncoding("UTF-8")
@@ -50,7 +50,7 @@ namespace Roadkill.Tests.Integration.Repositories
 
 				if (!string.IsNullOrEmpty(schemaName))
 				{
-					options.DatabaseSchemaName = schemaName;
+					//options.DatabaseSchemaName = schemaName;
 				}
 
 				options.Connection(connectionString);

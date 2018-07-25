@@ -42,7 +42,7 @@ namespace Roadkill.Tests.Integration.Repositories
 					c.MaintenanceDatabase(connectionString);
 					c.ForTenant(schemaName)
 						.CheckAgainstPgDatabase()
-						.WithOwner("roadkill")
+						//.WithOwner("postgres")
 						.WithEncoding("UTF-8")
 						.ConnectionLimit(-1)
 						.OnDatabaseCreated(_ =>
@@ -51,13 +51,12 @@ namespace Roadkill.Tests.Integration.Repositories
 						});
 				});
 
-				if (!string.IsNullOrEmpty(schemaName))
-				{
-					options.DatabaseSchemaName = schemaName;
-				}
+				//if (!string.IsNullOrEmpty(schemaName))
+				schemaName = "roadkill";
 
 				outputHelper.WriteLine("Setup: using '{0}' for schema name", schemaName);
 
+				//options.DatabaseSchemaName = schemaName;
 				options.Connection(connectionString);
 				options.Schema.For<User>().Index(x => x.Id);
 				options.Schema.For<Page>().Identity(x => x.Id);

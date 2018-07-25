@@ -29,7 +29,7 @@ namespace Roadkill.Tests.Integration.Repositories
 
 			try
 			{
-				new PageRepository(documentStore).Wipe();
+				//new PageRepository(documentStore).Wipe();
 			}
 			catch (Exception e)
 			{

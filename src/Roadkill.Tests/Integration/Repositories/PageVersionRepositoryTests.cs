@@ -17,11 +17,13 @@ namespace Roadkill.Tests.Integration.Repositories
 	public class PageVersionRepositoryTests
 	{
 		private readonly Fixture _fixture;
+		private readonly ITestOutputHelper _outputHelper;
 
 		public PageVersionRepositoryTests(ITestOutputHelper outputHelper)
 		{
 			_fixture = new Fixture();
-			IDocumentStore documentStore = DocumentStoreManager.GetMartenDocumentStore(typeof(PageVersionRepository));
+			_outputHelper = outputHelper;
+			IDocumentStore documentStore = DocumentStoreManager.GetMartenDocumentStore(typeof(PageVersionRepository), outputHelper);
 
 			try
 			{
@@ -36,14 +38,14 @@ namespace Roadkill.Tests.Integration.Repositories
 
 		public PageVersionRepository CreateRepository()
 		{
-			IDocumentStore documentStore = DocumentStoreManager.GetMartenDocumentStore(typeof(PageVersionRepository));
+			IDocumentStore documentStore = DocumentStoreManager.GetMartenDocumentStore(typeof(PageVersionRepository), _outputHelper);
 
 			return new PageVersionRepository(documentStore);
 		}
 
 		private List<PageVersion> CreateTenPages(PageVersionRepository repository)
 		{
-			IDocumentStore documentStore = DocumentStoreManager.GetMartenDocumentStore(typeof(PageVersionRepository));
+			IDocumentStore documentStore = DocumentStoreManager.GetMartenDocumentStore(typeof(PageVersionRepository), _outputHelper);
 			var pageRepository = new PageRepository(documentStore);
 
 			List<Page> pages = _fixture.CreateMany<Page>(10).ToList();

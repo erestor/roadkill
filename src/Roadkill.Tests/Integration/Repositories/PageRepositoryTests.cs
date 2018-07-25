@@ -18,14 +18,14 @@ namespace Roadkill.Tests.Integration.Repositories
 {
 	public class PageRepositoryTests
 	{
-		private readonly ITestOutputHelper _output;
+		private readonly ITestOutputHelper _outputHelper;
 		private readonly Fixture _fixture;
 
-		public PageRepositoryTests(ITestOutputHelper outputHelper)
+		public PageRepositoryTests(ITestOutputHelper outputHelperHelper)
 		{
-			_output = outputHelper;
+			_outputHelper = outputHelperHelper;
 			_fixture = new Fixture();
-			IDocumentStore documentStore = DocumentStoreManager.GetMartenDocumentStore(typeof(PageRepositoryTests));
+			IDocumentStore documentStore = DocumentStoreManager.GetMartenDocumentStore(typeof(PageRepositoryTests), outputHelperHelper);
 
 			try
 			{
@@ -33,7 +33,7 @@ namespace Roadkill.Tests.Integration.Repositories
 			}
 			catch (Exception e)
 			{
-				outputHelper.WriteLine(GetType().Name + " caught: " + e.Message);
+				outputHelperHelper.WriteLine(GetType().Name + " caught: " + e.Message);
 			}
 		}
 
@@ -51,17 +51,17 @@ namespace Roadkill.Tests.Integration.Repositories
 
 				command.CommandText = "select count(*) from public.mt_doc_page";
 				long result = (long)command.ExecuteScalar();
-				_output.WriteLine("Pages: {0}", result);
+				_outputHelper.WriteLine("Pages: {0}", result);
 
 				command.CommandText = "select count(*) from public.mt_doc_pagecontent";
 				result = (long)command.ExecuteScalar();
-				_output.WriteLine("PageContents: {0}", result);
+				_outputHelper.WriteLine("PageContents: {0}", result);
 			}
 		}
 
 		public PageRepository CreateRepository()
 		{
-			IDocumentStore documentStore = DocumentStoreManager.GetMartenDocumentStore(typeof(PageRepositoryTests));
+			IDocumentStore documentStore = DocumentStoreManager.GetMartenDocumentStore(typeof(PageRepositoryTests), _outputHelper);
 
 			return new PageRepository(documentStore);
 		}

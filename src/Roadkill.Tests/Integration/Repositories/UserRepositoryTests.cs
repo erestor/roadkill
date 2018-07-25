@@ -16,11 +16,13 @@ namespace Roadkill.Tests.Integration.Repositories
 	public class UserRepositoryTests
 	{
 		private readonly Fixture _fixture;
+		private readonly ITestOutputHelper _outputHelper;
 
 		public UserRepositoryTests(ITestOutputHelper outputHelper)
 		{
 			_fixture = new Fixture();
-			IDocumentStore documentStore = DocumentStoreManager.GetMartenDocumentStore(typeof(UserRepositoryTests));
+			_outputHelper = outputHelper;
+			IDocumentStore documentStore = DocumentStoreManager.GetMartenDocumentStore(typeof(UserRepositoryTests), outputHelper);
 
 			try
 			{
@@ -34,7 +36,7 @@ namespace Roadkill.Tests.Integration.Repositories
 
 		public UserRepository CreateRepository()
 		{
-			IDocumentStore documentStore = DocumentStoreManager.GetMartenDocumentStore(typeof(UserRepositoryTests));
+			IDocumentStore documentStore = DocumentStoreManager.GetMartenDocumentStore(typeof(UserRepositoryTests), _outputHelper);
 			return new UserRepository(documentStore);
 		}
 

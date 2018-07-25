@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using Marten;
 using Roadkill.Core.Models;
+using Xunit.Abstractions;
 
 namespace Roadkill.Tests.Integration.Repositories
 {
@@ -12,7 +13,7 @@ namespace Roadkill.Tests.Integration.Repositories
 		private static readonly ConcurrentDictionary<string, IDocumentStore> _documentStores = new ConcurrentDictionary<string, IDocumentStore>();
 		public static string ConnectionString => "host=localhost;port=9000;database=roadkill;username=roadkill;password=roadkill;";
 
-		public static IDocumentStore GetMartenDocumentStore(Type testClassType)
+		public static IDocumentStore GetMartenDocumentStore(Type testClassType, ITestOutputHelper outputHelper)
 		{
 			string documentStoreSchemaName = "";
 
@@ -22,14 +23,15 @@ namespace Roadkill.Tests.Integration.Repositories
 
 			if (!_documentStores.ContainsKey(documentStoreSchemaName))
 			{
-				IDocumentStore docStore = CreateDocumentStore(ConnectionString, documentStoreSchemaName);
+				IDocumentStore docStore = CreateDocumentStore(ConnectionString, documentStoreSchemaName, outputHelper);
 				_documentStores.TryAdd(documentStoreSchemaName, docStore);
+				outputHelper.WriteLine("Setup: added {0} as a document store", documentStoreSchemaName);
 			}
 
 			return _documentStores[documentStoreSchemaName];
 		}
 
-		internal static IDocumentStore CreateDocumentStore(string connectionString, string schemaName)
+		internal static IDocumentStore CreateDocumentStore(string connectionString, string schemaName, ITestOutputHelper outputHelper)
 		{
 			var documentStore = DocumentStore.For(options =>
 			{
@@ -44,14 +46,16 @@ namespace Roadkill.Tests.Integration.Repositories
 						.ConnectionLimit(-1)
 						.OnDatabaseCreated(_ =>
 						{
-							Console.WriteLine("Postgres 'roadkill' database created");
+							outputHelper.WriteLine("Setup: Postgres 'roadkill' database created");
 						});
 				});
 
 				if (!string.IsNullOrEmpty(schemaName))
 				{
-					//options.DatabaseSchemaName = schemaName;
+					options.DatabaseSchemaName = schemaName;
 				}
+
+				outputHelper.WriteLine("Setup: using '{0}' for schema name", schemaName);
 
 				options.Connection(connectionString);
 				options.Schema.For<User>().Index(x => x.Id);

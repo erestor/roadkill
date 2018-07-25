@@ -5,21 +5,24 @@ using Marten;
 using Roadkill.Core.Models;
 using Roadkill.Core.Repositories;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace Roadkill.Tests.Integration.Repositories
 {
 	public class DummyDataMakerTests
 	{
 		private readonly Fixture _fixture;
+		private ITestOutputHelper _outputHelper;
 
-		public DummyDataMakerTests()
+		public DummyDataMakerTests(ITestOutputHelper outputHelper)
 		{
 			_fixture = new Fixture();
+			_outputHelper = outputHelper;
 		}
 
 		public PageRepository CreateRepository()
 		{
-			IDocumentStore documentStore = DocumentStoreManager.GetMartenDocumentStore(null);
+			IDocumentStore documentStore = DocumentStoreManager.GetMartenDocumentStore(null, _outputHelper);
 			return new PageRepository(documentStore);
 		}
 

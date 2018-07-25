@@ -16,6 +16,8 @@ namespace Roadkill.Tests.Integration.Repositories
 
 		public static IDocumentStore GetMartenDocumentStore(Type testClassType, ITestOutputHelper outputHelper)
 		{
+			outputHelper.WriteLine("GetMartenDocumentStore");
+
 			string documentStoreSchemaName = "";
 
 			// Use a different schema for each test class, so their data is isolated

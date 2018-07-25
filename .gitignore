@@ -101,3 +101,4 @@ bower_components/
 # Ignore Roadkill CSS/JS files as they're generated on build
 roadkill.min.js
 **/Assets/CSS/*.css
+.vscode/

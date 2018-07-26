@@ -5,7 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Integration\Adapters\ElasticSearchAdapterTests.cs" />
     <Compile Remove="Integration\Repositories\DummyDataMakerTests.cs" />
   </ItemGroup>
 
@@ -46,7 +45,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Integration\Adapters\ElasticSearchAdapterTests.cs" />
     <None Include="Integration\Repositories\DummyDataMakerTests.cs" />
   </ItemGroup>
 

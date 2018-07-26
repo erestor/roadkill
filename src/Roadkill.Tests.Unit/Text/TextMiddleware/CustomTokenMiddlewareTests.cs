@@ -37,7 +37,7 @@ here is some more content
 			var pagehtml = new PageHtml() { Html = markdown };
 
 			var settings = new TextSettings();
-			settings.CustomTokensPath = Path.Combine(Directory.GetCurrentDirectory(), "Unit", "Text", "CustomTokens", "customvariables.xml");
+			settings.CustomTokensPath = Path.Combine(Directory.GetCurrentDirectory(), "Text", "CustomTokens", "customvariables.xml");
 
 			var customTokenParser = new CustomTokenParser(settings, _logger);
 			var middleware = new CustomTokenMiddleware(customTokenParser);

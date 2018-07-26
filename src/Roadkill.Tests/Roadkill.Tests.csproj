@@ -7,8 +7,6 @@
   <ItemGroup>
     <Compile Remove="Integration\Adapters\ElasticSearchAdapterTests.cs" />
     <Compile Remove="Integration\Repositories\DummyDataMakerTests.cs" />
-    <Compile Remove="Integration\Repositories\PageRepositoryTests.cs" />
-    <Compile Remove="Integration\Repositories\PageVersionRepositoryTests.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -50,8 +48,6 @@
   <ItemGroup>
     <None Include="Integration\Adapters\ElasticSearchAdapterTests.cs" />
     <None Include="Integration\Repositories\DummyDataMakerTests.cs" />
-    <None Include="Integration\Repositories\PageRepositoryTests.cs" />
-    <None Include="Integration\Repositories\PageVersionRepositoryTests.cs" />
   </ItemGroup>
 
 

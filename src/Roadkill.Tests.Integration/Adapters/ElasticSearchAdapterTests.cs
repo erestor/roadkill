@@ -70,9 +70,10 @@ namespace Roadkill.Tests.Integration.Adapters
 
 			// then
 			success.ShouldBeTrue();
-			await Task.Delay(1000);
 
-			var results = await _elasticSearchAdapter.Find($"id:{id}");
+			long count = _classFixture.ElasticClient.Count<SearchablePage>().Count;
+			count.ShouldBe(11);
+			var results = await _elasticSearchAdapter.Find($"{title}");
 			var firstResult = results.FirstOrDefault();
 			firstResult.ShouldNotBeNull();
 			firstResult.Title.ShouldBe(title);
@@ -98,9 +99,8 @@ namespace Roadkill.Tests.Integration.Adapters
 
 			// then
 			success.ShouldBeTrue();
-			await Task.Delay(1000);
 
-			var results = await _elasticSearchAdapter.Find($"id:{existingPage.Id}");
+			var results = await _elasticSearchAdapter.Find($"{newTitle}");
 
 			var firstResult = results.FirstOrDefault();
 			firstResult.ShouldNotBeNull();
@@ -109,12 +109,12 @@ namespace Roadkill.Tests.Integration.Adapters
 			firstResult.Text.ShouldBe(newText);
 		}
 
-		[Theory]
-		[InlineData("Id", "id:{0}")]
-		[InlineData("Title", "title:{0}")]
-		[InlineData("Text", "text:{0}")]
-		[InlineData("Tags", "tags:{0}")]
-		[InlineData("Author", "author:{0}")]
+		//[Theory]
+		//[InlineData("Id", "id:{0}")]
+		//[InlineData("Title", "title:{0}")]
+		//[InlineData("Text", "text:{0}")]
+		//[InlineData("Tags", "tags:{0}")]
+		//[InlineData("Author", "author:{0}")]
 		public async Task Find(string property, string query)
 		{
 			// given

@@ -5,27 +5,23 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Integration\Repositories\DummyDataMakerTests.cs" />
+    <None Remove="Text\CustomTokens\badxml-file.json" />
+    <None Remove="Text\CustomTokens\customvariables.xml" />
+    <None Remove="Text\Sanitizer\dodgy-whitelist.json" />
+    <None Remove="Text\Sanitizer\whitelist.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Unit\Text\CustomTokens\badxml-file.json" />
-    <None Remove="Unit\Text\CustomTokens\customvariables.xml" />
-    <None Remove="Unit\Text\Sanitizer\dodgy-whitelist.json" />
-    <None Remove="Unit\Text\Sanitizer\whitelist.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="Unit\Text\CustomTokens\badxml-file.json">
+    <Content Include="Text\CustomTokens\badxml-file.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Unit\Text\CustomTokens\customvariables.xml">
+    <Content Include="Text\CustomTokens\customvariables.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Unit\Text\Sanitizer\dodgy-whitelist.json">
+    <Content Include="Text\Sanitizer\dodgy-whitelist.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Unit\Text\Sanitizer\whitelist.json">
+    <Content Include="Text\Sanitizer\whitelist.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -42,10 +38,6 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
     <PackageReference Include="Microsoft.AspNetCore.Routing.Abstractions" Version="2.1.1" />
     <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.0-beta4-build3742" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Integration\Repositories\DummyDataMakerTests.cs" />
   </ItemGroup>
 
 

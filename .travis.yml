@@ -15,11 +15,14 @@ addons:
 
 before_script:
   - psql -c 'create database roadkill;' -U postgres
+  - docker run -d -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:6.2.4
 
-script:
-   - docker run -d -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:6.2.4
+script: 
    - dotnet restore
    - dotnet build -c Release  
-   - pushd src/Roadkill.Tests
+   - pushd src/Roadkill.Tests.Unit
+   - dotnet test
+   - popd
+   - pushd src/Roadkill.Tests.Integration
    - dotnet test
    - popd

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27428.2037
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Roadkill.Tests", "src\Roadkill.Tests\Roadkill.Tests.csproj", "{2463E6E0-06FF-4D41-846A-4E06F31ABB75}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Roadkill.Tests.Unit", "src\Roadkill.Tests.Unit\Roadkill.Tests.Unit.csproj", "{2463E6E0-06FF-4D41-846A-4E06F31ABB75}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Roadkill.Api", "src\Roadkill.Api\Roadkill.Api.csproj", "{CDE9B310-A949-415C-BCE5-FE5113E37146}"
 EndProject
@@ -21,6 +21,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "travis", "travis", "{643C5E
 	ProjectSection(SolutionItems) = preProject
 		.travis.yml = .travis.yml
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Roadkill.Tests.Integration", "src\Roadkill.Tests.Integration\Roadkill.Tests.Integration.csproj", "{8458A499-A8C0-4964-B0CF-070C73C44B4A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -52,12 +54,17 @@ Global
 		{777138FF-9925-44D5-9C3A-F4CDD66D9D98}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{777138FF-9925-44D5-9C3A-F4CDD66D9D98}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{777138FF-9925-44D5-9C3A-F4CDD66D9D98}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8458A499-A8C0-4964-B0CF-070C73C44B4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8458A499-A8C0-4964-B0CF-070C73C44B4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8458A499-A8C0-4964-B0CF-070C73C44B4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8458A499-A8C0-4964-B0CF-070C73C44B4A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{2463E6E0-06FF-4D41-846A-4E06F31ABB75} = {A1396D86-0213-47A8-A930-CED61F9AF0D8}
+		{8458A499-A8C0-4964-B0CF-070C73C44B4A} = {A1396D86-0213-47A8-A930-CED61F9AF0D8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6C50A326-5289-4FDB-9AE2-7266B9D76650}

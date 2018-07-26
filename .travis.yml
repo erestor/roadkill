@@ -10,6 +10,9 @@ services:
   - docker
   - postgresql
 
+addons:
+  postgres: "10"
+
 before_script:
   - psql -c 'create database roadkill;' -U postgres
 

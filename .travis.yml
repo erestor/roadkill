@@ -11,7 +11,7 @@ services:
   - postgresql
 
 addons:
-  postgres: "9.5"
+  postgresql: "9.5"
 
 before_script:
   - psql -c 'create database roadkill;' -U postgres

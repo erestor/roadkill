@@ -12,7 +12,7 @@ using Xunit;
 using Xunit.Abstractions;
 
 // ReSharper disable PossibleMultipleEnumeration
-[assembly: CollectionBehavior(DisableTestParallelization = false)]
+[assembly: CollectionBehavior(DisableTestParallelization = true)]
 
 namespace Roadkill.Tests.Integration.Repositories
 {
@@ -29,11 +29,11 @@ namespace Roadkill.Tests.Integration.Repositories
 
 			try
 			{
-				//new PageRepository(documentStore).Wipe();
+				new PageRepository(documentStore).Wipe();
 			}
 			catch (Exception e)
 			{
-				outputHelperHelper.WriteLine(GetType().Name + " caught: " + e.Message);
+				outputHelperHelper.WriteLine(GetType().Name + " caught: " + e.ToString());
 			}
 		}
 

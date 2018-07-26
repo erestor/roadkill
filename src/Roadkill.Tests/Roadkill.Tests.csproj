@@ -5,6 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Integration\Adapters\ElasticSearchAdapterTests.cs" />
+    <Compile Remove="Integration\Repositories\DummyDataMakerTests.cs" />
+    <Compile Remove="Integration\Repositories\PageRepositoryTests.cs" />
+    <Compile Remove="Integration\Repositories\PageVersionRepositoryTests.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Unit\Text\CustomTokens\badxml-file.json" />
     <None Remove="Unit\Text\CustomTokens\customvariables.xml" />
     <None Remove="Unit\Text\Sanitizer\dodgy-whitelist.json" />
@@ -38,6 +45,13 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
     <PackageReference Include="Microsoft.AspNetCore.Routing.Abstractions" Version="2.1.1" />
     <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.0-beta4-build3742" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Integration\Adapters\ElasticSearchAdapterTests.cs" />
+    <None Include="Integration\Repositories\DummyDataMakerTests.cs" />
+    <None Include="Integration\Repositories\PageRepositoryTests.cs" />
+    <None Include="Integration\Repositories\PageVersionRepositoryTests.cs" />
   </ItemGroup>
 
 

@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 using Shouldly;
 using Xunit;
 
-namespace Roadkill.Tests
+namespace Roadkill.Tests.Unit
 {
 	[ShouldlyMethods]
 	public static class ShouldlyExtensions

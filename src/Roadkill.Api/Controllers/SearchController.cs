@@ -6,13 +6,17 @@ using Microsoft.AspNetCore.Mvc;
 using Nest;
 using Roadkill.Api.Interfaces;
 using Roadkill.Api.Models;
+using Roadkill.Core.Adapters;
 
 namespace Roadkill.Api.Controllers
 {
 	public class SearchController : Controller, ISearchService
 	{
-		public SearchController()
+		private readonly IElasticSearchAdapter _searchAdapter;
+
+		public SearchController(IElasticSearchAdapter searchAdapter)
 		{
+			_searchAdapter = searchAdapter;
 		}
 
 		public Task<IEnumerable<SearchResponseModel>> Search(string searchText)

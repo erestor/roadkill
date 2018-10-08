@@ -19,21 +19,29 @@ namespace Roadkill.Api.Controllers
 			_searchAdapter = searchAdapter;
 		}
 
+		[HttpGet]
+		[Route(nameof(Search))]
 		public Task<IEnumerable<SearchResponseModel>> Search(string searchText)
 		{
 			throw new NotImplementedException();
 		}
 
+		[HttpPost]
+		[Route(nameof(Add))]
 		public Task<string> Add(SearchRequestModel searchRequest)
 		{
 			throw new NotImplementedException();
 		}
 
+		[HttpDelete]
+		[Route(nameof(Delete))]
 		public int Delete(int id)
 		{
 			throw new NotImplementedException();
 		}
 
+		[HttpPut]
+		[Route(nameof(Update))]
 		public void Update(SearchRequestModel searchRequest)
 		{
 			throw new NotImplementedException();

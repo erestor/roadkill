@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
@@ -7,27 +9,59 @@ using Roadkill.Core.Models;
 
 namespace Roadkill.Api.Controllers
 {
-	[Route("files")]
+	[Route("users")]
 	public class UserController : Controller//, IUserService
 	{
-		private readonly AspNetUserManager<RoadkillUser> _userManager;
+		private readonly UserManager<RoadkillUser> _userManager;
+		private readonly SignInManager<RoadkillUser> _signInManager;
 
-		public UserController(AspNetUserManager<RoadkillUser> userManager)
+		public UserController(UserManager<RoadkillUser> userManager, SignInManager<RoadkillUser> signInManager)
 		{
 			_userManager = userManager;
+			_signInManager = signInManager;
+		}
+
+		[HttpGet]
+		[Route(nameof(GetAll))]
+		public async Task<IEnumerable<RoadkillUser>> GetAll()
+		{
+			return _userManager.Users.ToList();
+		}
+
+		[HttpPost]
+		[Route(nameof(SignIn))]
+		public async Task<Microsoft.AspNetCore.Identity.SignInResult> SignIn(string email, string password)
+		{
+			var user = await _userManager.FindByEmailAsync("chris@example.org");
+			return await _signInManager.PasswordSignInAsync(user, "password", true, false);
+		}
+
+		[HttpGet]
+		[Route(nameof(UsersWithClaim))]
+		public async Task<IEnumerable<RoadkillUser>> UsersWithClaim(string claimType, string claimValue)
+		{
+			return await _userManager.GetUsersForClaimAsync(new Claim(claimType, claimValue));
 		}
 
 		[HttpPost]
 		[Route(nameof(Add))]
-		public async Task<IdentityResult> Add(string email, string password)
+		public async Task<IdentityResult> Add()
 		{
 			var newUser = new RoadkillUser()
 			{
-				UserName = email,
-				Email = email,
+				UserName = "chris@example.org",
+				Email = "chris@example.org",
+				EmailConfirmed = true
 			};
 
-			return await _userManager.CreateAsync(newUser, password);
+			var user = await _userManager.FindByEmailAsync("chris@example.org");
+			await _userManager.DeleteAsync(newUser);
+
+			var result = await _userManager.CreateAsync(newUser, "password");
+
+			await _userManager.AddClaimAsync(newUser, new Claim("ApiUser", "CanAddPage"));
+
+			return result;
 		}
 	}
 }

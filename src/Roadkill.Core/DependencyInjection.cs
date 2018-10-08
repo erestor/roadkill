@@ -11,10 +11,10 @@ namespace Roadkill.Core
 		public static void ConfigureServices(IServiceCollection services, string postgresConnectionString)
 		{
 			// Postgres + Marten
-			IDocumentStore documentStore = CreateDocumentStore(postgresConnectionString);
-			services.AddSingleton(documentStore);
+			DocumentStore documentStore = CreateDocumentStore(postgresConnectionString);
+			services.AddSingleton<IDocumentStore>(documentStore);
 
-			// ElasticSearch
+			// ElasticSearch TODO
 
 			services.Scan(scan => scan
 			   .FromAssemblyOf<Roadkill.Core.DependencyInjection>()
@@ -27,7 +27,7 @@ namespace Roadkill.Core
 		   );
 		}
 
-		internal static IDocumentStore CreateDocumentStore(string connectionString)
+		internal static DocumentStore CreateDocumentStore(string connectionString)
 		{
 			var documentStore = DocumentStore.For(options =>
 			{

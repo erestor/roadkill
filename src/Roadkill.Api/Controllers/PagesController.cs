@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Roadkill.Api.Interfaces;
 using Roadkill.Api.Models;
@@ -22,7 +23,8 @@ namespace Roadkill.Api.Controllers
 		}
 
 		[HttpPost]
-		public async Task<PageModel> Add(PageModel model)
+		[Authorize(Policy = "ApiUser")]
+		public async Task<PageModel> Add([FromBody] PageModel model)
 		{
 			Page page = _pageModelConverter.ConvertToPage(model);
 			if (page == null)

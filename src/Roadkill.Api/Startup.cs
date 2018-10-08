@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using Marten.AspNetIdentity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -28,41 +31,73 @@ namespace Roadkill.Api
 			Configuration = builder.Build();
 		}
 
-		public void ConfigureServices(IServiceCollection services)
+		public IServiceProvider ConfigureServices(IServiceCollection services)
 		{
 			services.AddLogging();
 
 			string connectionString = Configuration["ConnectionString"];
-			services.AddIdentity<RoadkillUser, IdentityRole>(options =>
-				{
-					options.Password.RequireDigit = true;
-					options.Password.RequireNonAlphanumeric = false;
-					options.Password.RequireUppercase = false;
-				})
-				.AddMartenStores<RoadkillUser, IdentityRole>()
-				.AddDefaultTokenProviders();
-
 			Roadkill.Core.DependencyInjection.ConfigureServices(services, connectionString);
 			Roadkill.Api.DependencyInjection.ConfigureServices(services);
 
+			services.AddIdentity<RoadkillUser, IdentityRole>(options =>
+			{
+				options.Password.RequireDigit = false;
+				options.Password.RequiredUniqueChars = 0;
+				options.Password.RequireLowercase = false;
+				options.Password.RequiredLength = 0;
+				options.Password.RequireNonAlphanumeric = false;
+				options.Password.RequireUppercase = false;
+			})
+			.AddMartenStores<RoadkillUser, IdentityRole>()
+			.AddDefaultTokenProviders();
+
+			services.AddAuthorization(options =>
+			{
+				options.AddPolicy("ApiUser", policy => policy.RequireClaim("ApiUser", "CanAddPage"));
+			});
+
 			services.AddOptions();
 			services.Configure<SmtpSettings>(Configuration.GetSection("Smtp"));
+			services.AddSwagger();
 			services.AddMvc();
+
+			var provider = services.BuildServiceProvider();
+			return provider;
+		}
+
+		public async Task Add(UserManager<RoadkillUser> userManager)
+		{
+			var newUser = new RoadkillUser()
+			{
+				UserName = "chris@example.org",
+				Email = "chris@example.org",
+			};
+
+			await userManager.CreateAsync(newUser, "password");
+			await userManager.AddClaimAsync(newUser, new Claim("ApiUser", "CanAddPage"));
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
 		public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
 		{
 			app.UseExceptionHandler("/error");
-			app.UseSwagger(Assembly.GetEntryAssembly());
-			app.UseSwaggerUi(Assembly.GetEntryAssembly());
+			app.UseSwaggerUi3WithApiExplorer(settings =>
+			{
+				settings.PostProcess = document =>
+				{
+					document.Info.Version = "3.0";
+					document.Info.Title = "Roadkill API";
+					document.Info.Description = "Roadkill's RESTful API.";
+				};
+			});
 			app.UseStaticFiles();
 			app.UseAuthentication();
 			app.UseMvc();
 		}
 	}
 
-	public class RoadkillUser : IdentityUser
+	public class RoadkillUser : IdentityUser, IClaimsUser
 	{
+		public IList<byte[]> Claims { get; set; }
 	}
 }

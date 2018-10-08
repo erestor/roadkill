@@ -8,9 +8,6 @@ using Xunit.Abstractions;
 
 namespace Roadkill.Tests.Integration.Repositories
 {
-	// docker run -d -p 5432:5432 --name roadkill-postgres postgres
-	// docker exec roadkill-postgres psql -c 'create database roadkill;' -U postgres
-
 	public class DocumentStoreManager
 	{
 		private static readonly ConcurrentDictionary<string, IDocumentStore> _documentStores = new ConcurrentDictionary<string, IDocumentStore>();

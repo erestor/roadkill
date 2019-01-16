@@ -28397,7 +28397,7 @@ var Roadkill;
 (function (Roadkill) {
     var Web;
     (function (Web) {
-        var Dialogs = (function () {
+        var Dialogs = /** @class */ (function () {
             function Dialogs() {
             }
             Dialogs.alert = function (message) {
@@ -28454,7 +28454,7 @@ var Roadkill;
         /**
         Event bindings and handlers for all pages.
         */
-        var Setup = (function () {
+        var Setup = /** @class */ (function () {
             function Setup() {
             }
             Setup.configureBinds = function () {
@@ -28523,7 +28523,7 @@ var Roadkill;
 (function (Roadkill) {
     var Web;
     (function (Web) {
-        var Validation = (function () {
+        var Validation = /** @class */ (function () {
             function Validation() {
             }
             /* "rules" should be in the format:
@@ -28569,7 +28569,7 @@ var Roadkill;
 (function (Roadkill) {
     var Web;
     (function (Web) {
-        var EditPage = (function () {
+        var EditPage = /** @class */ (function () {
             function EditPage(tags) {
                 this._timeout = null;
                 this._tagBlackList = [
@@ -28751,7 +28751,7 @@ var Roadkill;
         /**
         Event bindings and handlers for the edit text area toolbar.
         */
-        var WysiwygEditor = (function () {
+        var WysiwygEditor = /** @class */ (function () {
             function WysiwygEditor() {
             }
             WysiwygEditor.prototype.bindEvents = function () {
@@ -28907,7 +28907,7 @@ var Roadkill;
     (function (Web) {
         var FileManager;
         (function (FileManager) {
-            var AjaxRequest = (function () {
+            var AjaxRequest = /** @class */ (function () {
                 function AjaxRequest() {
                 }
                 AjaxRequest.prototype.getFolderInfo = function (path, successFunction) {
@@ -28966,7 +28966,7 @@ var Roadkill;
     (function (Web) {
         var FileManager;
         (function (FileManager) {
-            var BreadCrumbTrail = (function () {
+            var BreadCrumbTrail = /** @class */ (function () {
                 function BreadCrumbTrail() {
                 }
                 BreadCrumbTrail.removeLastItem = function () {
@@ -28979,7 +28979,7 @@ var Roadkill;
                 };
                 BreadCrumbTrail.removePriorBreadcrumb = function () {
                     var count = $("ul.navigator li").length;
-                    if (count == 1)
+                    if (count == 1) // cannot delete base attachments directory
                         return;
                     var li = $("ul.navigator li:last-child").prev("li");
                     var level = li.attr("data-level");
@@ -29010,7 +29010,7 @@ var Roadkill;
     (function (Web) {
         var FileManager;
         (function (FileManager) {
-            var ButtonEvents = (function () {
+            var ButtonEvents = /** @class */ (function () {
                 function ButtonEvents() {
                     this._htmlBuilder = new FileManager.HtmlBuilder();
                     this._ajaxRequest = new FileManager.AjaxRequest();
@@ -29136,7 +29136,7 @@ var Roadkill;
     (function (Web) {
         var FileManager;
         (function (FileManager) {
-            var HtmlBuilder = (function () {
+            var HtmlBuilder = /** @class */ (function () {
                 function HtmlBuilder() {
                 }
                 HtmlBuilder.prototype.getNewFolder = function () {
@@ -29213,7 +29213,7 @@ var Roadkill;
             /**
              Event bindings and handlers for the file manager.
             */
-            var Setup = (function () {
+            var Setup = /** @class */ (function () {
                 function Setup() {
                 }
                 Setup.configure = function () {
@@ -29295,7 +29295,7 @@ var Roadkill;
     (function (Web) {
         var FileManager;
         (function (FileManager) {
-            var TableEvents = (function () {
+            var TableEvents = /** @class */ (function () {
                 function TableEvents() {
                 }
                 TableEvents.prototype.bind = function () {
@@ -29363,7 +29363,7 @@ var Roadkill;
     (function (Web) {
         var FileManager;
         (function (FileManager) {
-            var Util = (function () {
+            var Util = /** @class */ (function () {
                 function Util() {
                 }
                 Util.IsStringNullOrEmpty = function (text) {
@@ -29395,13 +29395,13 @@ var Roadkill;
     (function (Web) {
         var Admin;
         (function (Admin) {
-            var SettingsMessages = (function () {
+            var SettingsMessages = /** @class */ (function () {
                 function SettingsMessages() {
                 }
                 return SettingsMessages;
             }());
             Admin.SettingsMessages = SettingsMessages;
-            var Settings = (function () {
+            var Settings = /** @class */ (function () {
                 function Settings(messages) {
                     var _this = this;
                     // Test button messages

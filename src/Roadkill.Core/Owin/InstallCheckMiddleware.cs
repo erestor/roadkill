@@ -19,7 +19,11 @@ namespace Roadkill.Core.Owin
 			var appSettings = _appSettings;
 			if (appSettings.Installed == false && IsOnInstallPage(context) == false && IsHtmlRequest(context))
 			{
-				context.Response.Redirect("/Install/");
+#if DEBUG
+				context.Response.Redirect("/Roadkill.Web/Install/");
+#else
+				context.Response.Redirect("/wiki/Install/");
+#endif
 			}
 			else
 			{
@@ -34,7 +38,11 @@ namespace Roadkill.Core.Owin
 
 		private bool IsOnInstallPage(IOwinContext context)
 		{
-			return context.Request.Uri.PathAndQuery.StartsWith("/Install/", StringComparison.InvariantCultureIgnoreCase);
+#if DEBUG
+			return context.Request.Uri.PathAndQuery.StartsWith("/Roadkill.Web/Install/", StringComparison.InvariantCultureIgnoreCase);
+#else
+			return context.Request.Uri.PathAndQuery.StartsWith("/wiki/Install/", StringComparison.InvariantCultureIgnoreCase);
+#endif
 		}
 	}
 }

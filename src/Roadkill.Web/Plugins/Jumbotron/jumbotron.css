@@ -1,5 +1,49 @@
-﻿#roadkill-jumbotron { height: 700px; padding: 0px; margin: 0px; margin-bottom: 20px; border: 1px solid black; background-image: url(/Attachments/jumbotron.jpg); color: white; }
-#roadkill-jumbotron>#inner { text-align: center; margin-top: 50px; }
-#roadkill-jumbotron h1,
-#roadkill-jumbotron h2,
-#roadkill-jumbotron h3 { border:0px; }
+﻿#roadkill-jumbotron {
+	padding: 0;
+	margin: 0;
+	border: 1px rgba(0, 0, 0, 0) solid;
+	color: white;
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-image: url(../../Attachments/jumbotron.jpg);
+	height: 272px;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+}
+
+	#roadkill-jumbotron > #inner {
+		text-align: center;
+	}
+
+	#roadkill-jumbotron h1,
+	#roadkill-jumbotron h2,
+	#roadkill-jumbotron h3 {
+		border: 0px;
+	}
+
+@media only screen and (min-width: 801px) {
+	#roadkill-jumbotron {
+		height: 360px;
+	}
+}
+
+@media only screen and (min-width: 1024px) {
+	#roadkill-jumbotron {
+		height: 480px;
+	}
+}
+
+@media only screen and (min-width: 1201px) {
+	#roadkill-jumbotron {
+		height: 596px;
+	}
+}
+
+@media only screen and (min-width: 1601px) {
+	#roadkill-jumbotron {
+		height: 640px;
+	}
+}

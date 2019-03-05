@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
- <ShortName>Roadkill</ShortName>
- <Description>Search the Roadkill wiki site</Description>
- <Tags>Roadkill</Tags>
+ <ShortName>Skolaris help</ShortName>
+ <Description>Search the Skolaris help site</Description>
+ <Tags>Skolaris</Tags>
  <Url type="text/html" template="/home/search?q={searchTerms}"/>
 </OpenSearchDescription>

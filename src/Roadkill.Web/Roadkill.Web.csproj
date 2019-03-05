@@ -349,7 +349,7 @@
     <Content Include="Assets\CSS\roadkill.css.map" />
     <Content Include="Assets\CSS\roadkill.installer.css.map" />
     <Content Include="Roadkill.dev.config" />
-    <None Include="Properties\PublishProfiles\skolaris.net_docs.pubxml" />
+    <None Include="Properties\PublishProfiles\skolaris.net_help.pubxml" />
     <TypeScriptCompile Include="Assets\Scripts\roadkill\dialogs.ts" />
     <Content Include="Assets\Scripts\jquery\jquery.fileupload.js" />
     <Content Include="Assets\Scripts\jquery\jquery.iframe-transport.js" />

@@ -1,14 +1,13 @@
-﻿using System;
-using System.Web.Mvc;
-using System.Web.Security;
-using Roadkill.Core.Localization;
-using Roadkill.Core.Configuration;
-using RoadkillUser = Roadkill.Core.Database.User;
-using Roadkill.Core.Services;
-using Roadkill.Core.Security;
-using Roadkill.Core.Mvc.ViewModels;
-using Roadkill.Core.Mvc.Attributes;
+﻿using Roadkill.Core.Configuration;
 using Roadkill.Core.Email;
+using Roadkill.Core.Localization;
+using Roadkill.Core.Mvc.Attributes;
+using Roadkill.Core.Mvc.ViewModels;
+using Roadkill.Core.Security;
+using Roadkill.Core.Services;
+using System;
+using System.Web.Mvc;
+using RoadkillUser = Roadkill.Core.Database.User;
 
 namespace Roadkill.Core.Mvc.Controllers
 {
@@ -175,7 +174,7 @@ namespace Roadkill.Core.Mvc.Controllers
 		/// <summary>
 		/// Provides a page for editing the logged in user's profile details.
 		/// </summary>
-		public ActionResult Profile()
+		public new ActionResult Profile()
 		{
 			if (Context.IsLoggedIn)
 			{
@@ -198,7 +197,7 @@ namespace Roadkill.Core.Mvc.Controllers
 		/// Updates the POST'd user profile details.
 		/// </summary>
 		[HttpPost]
-		public ActionResult Profile(UserViewModel model)
+		public new ActionResult Profile(UserViewModel model)
 		{
 			if (!Context.IsLoggedIn)
 				return RedirectToAction("Login");

@@ -1,23 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using Lucene.Net.Analysis.Standard;
 using Lucene.Net.Documents;
-using System.IO;
 using Lucene.Net.Index;
-using Lucene.Net.Analysis.Standard;
-using Lucene.Net.Search;
 using Lucene.Net.QueryParsers;
-using Roadkill.Core.Converters;
-using System.Text.RegularExpressions;
-using Directory = System.IO.Directory;
-using LuceneVersion = Lucene.Net.Util.Version;
+using Lucene.Net.Search;
 using Lucene.Net.Store;
 using Roadkill.Core.Configuration;
+using Roadkill.Core.Converters;
 using Roadkill.Core.Database;
 using Roadkill.Core.Database.Repositories;
 using Roadkill.Core.Mvc.ViewModels;
 using Roadkill.Core.Plugins;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
+using Directory = System.IO.Directory;
+using LuceneVersion = Lucene.Net.Util.Version;
 
 namespace Roadkill.Core.Services
 {
@@ -29,7 +28,6 @@ namespace Roadkill.Core.Services
 		private static Regex _removeTagsRegex = new Regex("<(.|\n)*?>");
 		private MarkupConverter _markupConverter;
 		protected virtual string IndexPath { get; set; }
-		private IPluginFactory _pluginFactory;
 		private static readonly LuceneVersion LUCENEVERSION = LuceneVersion.LUCENE_29;
 
 		public ApplicationSettings ApplicationSettings { get; set; }

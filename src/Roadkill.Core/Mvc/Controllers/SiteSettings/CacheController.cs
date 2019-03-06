@@ -1,11 +1,10 @@
-﻿using System.Web.Mvc;
-using Roadkill.Core.Cache;
+﻿using Roadkill.Core.Cache;
 using Roadkill.Core.Configuration;
 using Roadkill.Core.Mvc.Attributes;
 using Roadkill.Core.Mvc.ViewModels;
-using Roadkill.Core.Plugins;
 using Roadkill.Core.Security;
 using Roadkill.Core.Services;
+using System.Web.Mvc;
 
 namespace Roadkill.Core.Mvc.Controllers
 {
@@ -19,7 +18,6 @@ namespace Roadkill.Core.Mvc.Controllers
 		private ListCache _listCache;
 		private PageViewModelCache _pageViewModelCache;
 		private SiteCache _siteCache;
-		private IPluginFactory _pluginFactory;
 
 		public CacheController(ApplicationSettings settings, UserServiceBase userService,
 			SettingsService settingsService, IUserContext context,

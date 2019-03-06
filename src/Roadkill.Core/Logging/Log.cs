@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using NLog;
+﻿using NLog;
 using NLog.Config;
-using NLog.Targets;
 using Roadkill.Core.Configuration;
+using System;
+using System.IO;
 
 namespace Roadkill.Core.Logging
 {
@@ -19,7 +12,6 @@ namespace Roadkill.Core.Logging
 	public class Log
 	{
 		private static readonly Logger _logger;
-		private static readonly string LOGGER_NAME = "Roadkill";
 
 		public static string NLogConfigPath { get; set; }
 

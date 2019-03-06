@@ -1,9 +1,9 @@
-using System.IO;
-using System.Linq;
-using System.Threading;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Interactions;
+using System.IO;
+using System.Linq;
+using System.Threading;
 
 namespace Roadkill.Tests.Acceptance.Webdriver
 {
@@ -12,7 +12,7 @@ namespace Roadkill.Tests.Acceptance.Webdriver
 	public class FileManagerTests : AcceptanceTestBase
 	{
 		[SetUp]
-		public void Setup()
+		public new void Setup()
 		{
 			// Re-create the attachments directory
 			string sitePath = TestConstants.WEB_PATH;

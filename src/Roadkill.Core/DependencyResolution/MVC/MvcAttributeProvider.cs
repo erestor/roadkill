@@ -52,7 +52,7 @@ namespace Roadkill.Core.DependencyResolution.MVC
 			return filters;
 		}
 
-		public IEnumerable<Filter> GetFilters(ControllerContext controllerContext, ActionDescriptor actionDescriptor)
+		public override IEnumerable<Filter> GetFilters(ControllerContext controllerContext, ActionDescriptor actionDescriptor)
 		{
 			IEnumerable<Filter> filters = base.GetFilters(controllerContext, actionDescriptor);
 

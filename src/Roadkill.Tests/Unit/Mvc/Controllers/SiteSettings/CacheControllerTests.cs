@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Caching;
-using System.Web.Mvc;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using Roadkill.Core;
 using Roadkill.Core.Cache;
 using Roadkill.Core.Configuration;
@@ -10,6 +6,10 @@ using Roadkill.Core.Mvc.Controllers;
 using Roadkill.Core.Mvc.ViewModels;
 using Roadkill.Core.Services;
 using Roadkill.Tests.Unit.StubsAndMocks;
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.Caching;
+using System.Web.Mvc;
 
 namespace Roadkill.Tests.Unit.Mvc.Controllers.Admin
 {
@@ -23,7 +23,6 @@ namespace Roadkill.Tests.Unit.Mvc.Controllers.Admin
 		private IUserContext _context;
 		private PageRepositoryMock _pageRepository;
 		private UserServiceMock _userService;
-		private PageService _pageService;
 		private SettingsService _settingsService;
 		private PageViewModelCache _pageCache;
 		private ListCache _listCache;

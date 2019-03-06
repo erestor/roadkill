@@ -1,18 +1,14 @@
-﻿using System;
-using System.Web.Mvc;
-using Roadkill.Core.Configuration;
+﻿using Roadkill.Core.Configuration;
 using Roadkill.Core.Database;
-using Roadkill.Core.Attachments;
-using Roadkill.Core.Services;
-using Roadkill.Core.Security;
 using Roadkill.Core.Mvc.ViewModels;
-using Roadkill.Core.Security.Windows;
-using System.IO;
+using Roadkill.Core.Security;
+using Roadkill.Core.Services;
+using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Globalization;
 using System.Linq;
-using Roadkill.Core.DependencyResolution;
+using System.Threading;
+using System.Web.Mvc;
 
 namespace Roadkill.Core.Mvc.Controllers
 {
@@ -26,7 +22,6 @@ namespace Roadkill.Core.Mvc.Controllers
 		private readonly ConfigReaderWriter _configReaderWriter;
 		private readonly IInstallationService _installationService;
 		private readonly IDatabaseTester _databaseTester;
-		private static string _uiLanguageCode = "en";
 
 		public ApplicationSettings ApplicationSettings { get; private set; }
 		public UserServiceBase UserService { get; private set; }

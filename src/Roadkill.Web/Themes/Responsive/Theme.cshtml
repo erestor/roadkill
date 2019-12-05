@@ -25,6 +25,9 @@
 			margin-left: 16px;
 			margin-right: 16px;
 		}
+		.skolaris-logo:hover {
+			text-decoration: none;
+		}
 		.skolaris-logo span {
 			color:rgb(0, 25, 112);
 			cursor:pointer;
@@ -51,10 +54,10 @@
 @using (Html.BeginForm("Search", "Home", FormMethod.Get))
 {
 	<div id="header-wrapper">
-		<div class="skolaris-logo">
+		<a class="skolaris-logo" href="https://skolaris.net">
 			<img src="~/Assets/Images/skolaris-s.svg" alt="Skolaris Logo" />
 			<span>Skolaris</span>
-		</div>
+		</a>
 		<div class="container">
 			@if (RoadkillContext.IsLoggedIn) {
 			<div id="login-status">

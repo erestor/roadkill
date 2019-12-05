@@ -8,6 +8,41 @@
 	@Html.Partial("HeadContent")
 	@RenderSection("PluginHead", false)
 	@RenderSection("SkolarisMetaTags", false)
+	<style>
+		#header-wrapper {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+		}
+		#header-wrapper .container {
+			margin-right: 0;
+		}
+		.skolaris-logo {
+			float: left;
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			margin-left: 16px;
+			margin-right: 16px;
+		}
+		.skolaris-logo span {
+			color:rgb(0, 25, 112);
+			cursor:pointer;
+			font-family:Roboto, Noto, sans-serif;
+			font-size:24px;
+			font-weight:100;
+			height:32px;
+			letter-spacing:-0.288px;
+			line-height:32px;
+			margin-left:8px;
+			text-overflow:ellipsis;
+			white-space:nowrap;
+		}
+		.skolaris-logo img {
+			width: 24px;
+			height: 24px;
+		}
+	</style>
 </head>
 <body>
 	@RenderSection("PageToolbar", false)
@@ -16,10 +51,16 @@
 @using (Html.BeginForm("Search", "Home", FormMethod.Get))
 {
 	<div id="header-wrapper">
+		<div class="skolaris-logo">
+			<img src="~/Assets/Images/skolaris-s.svg" alt="Skolaris Logo" />
+			<span>Skolaris</span>
+		</div>
 		<div class="container">
+			@if (RoadkillContext.IsLoggedIn) {
 			<div id="login-status">
 				@Html.Action("LoggedInAs", "User")
 			</div>
+			}
 			<div id="bootstrap-nav-menu">
 				@Html.Action("BootstrapNavMenu", "Home")
 			</div>

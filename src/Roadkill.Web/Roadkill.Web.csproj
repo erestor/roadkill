@@ -333,6 +333,7 @@
     <Content Include="Assets\Bootstrap\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Assets\Bootstrap\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="Assets\Images\roadkill.png" />
+    <Content Include="Assets\Images\skolaris-s.svg" />
     <Content Include="Assets\opensearch.xml">
       <SubType>Designer</SubType>
     </Content>

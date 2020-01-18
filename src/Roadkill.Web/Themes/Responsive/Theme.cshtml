@@ -8,44 +8,6 @@
 	@Html.Partial("HeadContent")
 	@RenderSection("PluginHead", false)
 	@RenderSection("SkolarisMetaTags", false)
-	<style>
-		#header-wrapper {
-			display: flex;
-			flex-direction: row;
-			align-items: center;
-		}
-		#header-wrapper .container {
-			margin-right: 0;
-		}
-		.skolaris-logo {
-			float: left;
-			display: flex;
-			flex-direction: row;
-			align-items: center;
-			margin-left: 16px;
-			margin-right: 16px;
-		}
-		.skolaris-logo:hover {
-			text-decoration: none;
-		}
-		.skolaris-logo span {
-			color:rgb(0, 25, 112);
-			cursor:pointer;
-			font-family:Roboto, Noto, sans-serif;
-			font-size:24px;
-			font-weight:100;
-			height:32px;
-			letter-spacing:-0.288px;
-			line-height:32px;
-			margin-left:8px;
-			text-overflow:ellipsis;
-			white-space:nowrap;
-		}
-		.skolaris-logo img {
-			width: 24px;
-			height: 24px;
-		}
-	</style>
 </head>
 <body>
 	@RenderSection("PageToolbar", false)
@@ -89,9 +51,11 @@
 	<!-- Content -->
 	<div id="content-wrapper">
 		@RenderSection("PluginPreContainer", false)
-
+		@{
+			string widthControl = RoadkillContext.IsLoggedIn ? string.Empty : "limit-width";
+		}
 		<div id="container" class="container">
-			<div id="content">
+			<div id="content" class="@widthControl">
 				@RenderBody()
 			</div>
 		</div>
@@ -114,6 +78,7 @@
 					</div>
 					<div id="top-link" class="col-md-1">
 						<h6><a href="#">Top</a></h6>
+						<h6><a href="@Url.Action("Login", "User")">Login</a></h6>
 					</div>
 				</div>
 

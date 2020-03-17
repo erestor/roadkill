@@ -9,7 +9,7 @@
 		]]>
 		</Description>
 		<SearchRegex>\(warningbox:(?'warningbox'.*?)\)</SearchRegex>
-		<HtmlReplacement><![CDATA[<div class="alert alert-warning">${warningbox}</div><br style="clear:both"/>]]></HtmlReplacement>
+		<HtmlReplacement><![CDATA[<div class="alert alert-warning">${warningbox}</div>]]></HtmlReplacement>
 	</TextToken>
 	<TextToken>
 		<Name>Alertbox</Name>
@@ -21,7 +21,7 @@
 		</Description>
 		<SearchRegex>\(alertbox:(?'alertbox'.*?)\)</SearchRegex>
 		<HtmlReplacement>
-			<![CDATA[<div class="alert alert-danger">${alertbox}</div><br style="clear:both"/>]]>
+			<![CDATA[<div class="alert alert-danger">${alertbox}</div>]]>
 		</HtmlReplacement>
 	</TextToken>
 	<TextToken>
@@ -34,7 +34,7 @@
 		</Description>
 		<SearchRegex>\(infobox:(?'infobox'.*?)\)</SearchRegex>
 		<HtmlReplacement>
-			<![CDATA[<div class="alert alert-info">${infobox}</div><br style="clear:both"/>]]>
+			<![CDATA[<div class="alert alert-info">${infobox}</div>]]>
 		</HtmlReplacement>
 	</TextToken>
 	<TextToken>
@@ -47,7 +47,7 @@
 		</Description>
 		<SearchRegex>\(successbox:(?'successbox'.*?)\)</SearchRegex>
 		<HtmlReplacement>
-			<![CDATA[<div class="alert alert-success">${successbox}</div><br style="clear:both"/>]]>
+			<![CDATA[<div class="alert alert-success">${successbox}</div>]]>
 		</HtmlReplacement>
 	</TextToken>
 	<TextToken>
@@ -72,7 +72,7 @@
 		]]>
 		</Description>
 		<SearchRegex>@@warningbox:(?'warningbox'.*?)@@</SearchRegex>
-		<HtmlReplacement><![CDATA[<div class="alert alert-warning">${warningbox}</div><br style="clear:both"/>]]></HtmlReplacement>
+		<HtmlReplacement><![CDATA[<div class="alert alert-warning">${warningbox}</div>]]></HtmlReplacement>
 	</TextToken>
 	<TextToken>
 		<Name>Alertbox</Name>
@@ -84,7 +84,7 @@
 		</Description>
 		<SearchRegex>@@alertbox:(?'alertbox'.*?)@@</SearchRegex>
 		<HtmlReplacement>
-			<![CDATA[<div class="alert alert-danger">${alertbox}</div><br style="clear:both"/>]]>
+			<![CDATA[<div class="alert alert-danger">${alertbox}</div>]]>
 		</HtmlReplacement>
 	</TextToken>
 	<TextToken>
@@ -97,7 +97,7 @@
 		</Description>
 		<SearchRegex>@@infobox:(?'infobox'.*?)@@</SearchRegex>
 		<HtmlReplacement>
-			<![CDATA[<div class="alert alert-info">${infobox}</div><br style="clear:both"/>]]>
+			<![CDATA[<div class="alert alert-info">${infobox}</div>]]>
 		</HtmlReplacement>
 	</TextToken>
 	<TextToken>
@@ -110,7 +110,7 @@
 		</Description>
 		<SearchRegex>@@successbox:(?'successbox'.*?)@@</SearchRegex>
 		<HtmlReplacement>
-			<![CDATA[<div class="alert alert-success">${successbox}</div><br style="clear:both"/>]]>
+			<![CDATA[<div class="alert alert-success">${successbox}</div>]]>
 		</HtmlReplacement>
 	</TextToken>
 </ArrayOfTextToken>

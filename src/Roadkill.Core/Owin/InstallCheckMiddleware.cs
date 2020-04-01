@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using System.Web.Configuration;
 using Microsoft.Owin;
 using Roadkill.Core.Configuration;
 
@@ -19,11 +20,7 @@ namespace Roadkill.Core.Owin
 			var appSettings = _appSettings;
 			if (appSettings.Installed == false && IsOnInstallPage(context) == false && IsHtmlRequest(context))
 			{
-#if DEBUG
-				context.Response.Redirect("/Roadkill.Web/Install/");
-#else
-				context.Response.Redirect("/wiki/Install/");
-#endif
+				context.Response.Redirect(_appBaseUri + "Install/");
 			}
 			else
 			{
@@ -38,11 +35,9 @@ namespace Roadkill.Core.Owin
 
 		private bool IsOnInstallPage(IOwinContext context)
 		{
-#if DEBUG
-			return context.Request.Uri.PathAndQuery.StartsWith("/Roadkill.Web/Install/", StringComparison.InvariantCultureIgnoreCase);
-#else
-			return context.Request.Uri.PathAndQuery.StartsWith("/wiki/Install/", StringComparison.InvariantCultureIgnoreCase);
-#endif
+			return context.Request.Uri.PathAndQuery.StartsWith(_appBaseUri + "Install/", StringComparison.InvariantCultureIgnoreCase);
 		}
+
+		readonly string _appBaseUri = WebConfigurationManager.AppSettings["AppBaseUri"];
 	}
 }

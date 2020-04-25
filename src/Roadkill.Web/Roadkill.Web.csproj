@@ -352,7 +352,7 @@
     <Content Include="Roadkill.dev.config" />
     <Content Include="connectionStrings.ReleaseCZ.config" />
     <None Include="Properties\PublishProfiles\skolaris.net_help.pubxml" />
-    <None Include="Properties\PublishProfiles\skolaris.net_helpcz.pubxml" />
+    <None Include="Properties\PublishProfiles\skolaris.net_napoveda.pubxml" />
     <None Include="Web.ReleaseCZ.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

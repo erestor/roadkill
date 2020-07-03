@@ -1,10 +1,9 @@
-﻿using System;
+﻿using AngleSharp.Dom;
+using AngleSharp.Dom.Html;
+using AngleSharp.Parser.Html;
 using System.Text;
 using System.Text.RegularExpressions;
-using AngleSharp.Dom;
-using AngleSharp.Dom.Html;
-using AngleSharp.Extensions;
-using AngleSharp.Parser.Html;
+using System.Web.Configuration;
 
 namespace Roadkill.Plugins.Text.BuiltIn.ToC
 {
@@ -65,7 +64,11 @@ namespace Roadkill.Plugins.Text.BuiltIn.ToC
 
 			StringBuilder builder = new StringBuilder();
 			builder.AppendLine("<div class=\"toc\">");
-			builder.AppendLine("<div class=\"toc-title\">Contents [<a class=\"toc-showhide\" href=\"javascript:;\">hide</a>]</div>");
+			if (_language == "cs")
+				builder.AppendLine("<div class=\"toc-title\">Obsah [<a class=\"toc-showhide\" href=\"javascript:;\">skrýt</a>]</div>");
+			else
+				builder.AppendLine("<div class=\"toc-title\">Contents [<a class=\"toc-showhide\" href=\"javascript:;\">hide</a>]</div>");
+
 			builder.AppendLine("<div class=\"toc-list\">");
 			builder.AppendLine("<ul>");
 			builder.AppendLine(treeHtml);
@@ -107,5 +110,7 @@ namespace Roadkill.Plugins.Text.BuiltIn.ToC
 				}
 			}
 		}
+
+		readonly static string _language = WebConfigurationManager.AppSettings["Language"];
 	}
 }

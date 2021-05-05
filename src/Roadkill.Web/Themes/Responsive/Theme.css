@@ -75,12 +75,26 @@ h1, h2, h3, h4, h5, h6 { padding: 5px 0px 5px 0px; }
 	}
 
 #content-wrapper {
-	min-height: calc(100vh - 146px);
+	min-height: calc(100vh - 194px);
 }
 
 #footer-wrapper {
-	min-height: 80px;
+	min-height: 128px;
+	background-color: var(--color-primary-dark);
+	color: white;
 }
+	#footer-wrapper a {
+		color: white;
+	}
+
+#footer-inner {
+	border: 0;
+	opacity: 0.87;
+}
+	#footer-inner .row.copyright {
+		text-align: center;
+		padding-bottom: 32px;
+	}
 
 .navbar-collapse {
 	border: 0;
@@ -88,6 +102,10 @@ h1, h2, h3, h4, h5, h6 { padding: 5px 0px 5px 0px; }
 
 .navbar-default {
 	background-color: unset;
+}
+
+.logo-suffix {
+	text-transform: uppercase;
 }
 
 .skolaris-logo {

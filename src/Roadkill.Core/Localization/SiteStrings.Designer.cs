@@ -916,6 +916,15 @@ namespace Roadkill.Core.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Help.
+        /// </summary>
+        public static string Navigation_Title {
+            get {
+                return ResourceManager.GetString("Navigation_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to View History.
         /// </summary>
         public static string Navigation_ViewHistory {

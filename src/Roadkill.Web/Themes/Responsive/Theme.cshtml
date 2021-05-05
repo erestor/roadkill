@@ -20,6 +20,7 @@
 			<img src="~/Assets/Images/skolaris-s.svg" alt="Skolaris Logo" />
 			<span>Skolaris</span>
 		</a>
+		<div class="logo-suffix">@SiteStrings.Navigation_Title</div>
 		<div class="container">
 			@if (RoadkillContext.IsLoggedIn) {
 			<div id="login-status">
@@ -81,7 +82,7 @@
 						<h6><a href="@Url.Action("Login", "User")">Login</a></h6>
 					</div>
 				</div>
-
+				<div class="row copyright">Skolaris Software &copy;2021</div>
 				@RenderSection("PluginFooter", false)
 			</div>
 		</div>

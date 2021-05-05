@@ -79,7 +79,9 @@
 					</div>
 					<div id="top-link" class="col-md-1">
 						<h6><a href="#">Top</a></h6>
-						<h6><a href="@Url.Action("Login", "User")">Login</a></h6>
+						@if (!RoadkillContext.IsLoggedIn) {
+							<h6><a href="@Url.Action("Login", "User")">Login</a></h6>
+						}
 					</div>
 				</div>
 				<div class="row copyright">Skolaris Software &copy;2021</div>

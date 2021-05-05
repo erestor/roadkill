@@ -11,7 +11,9 @@
 
 @section ViewHistoryLink
 {
-	<div id="viewhistory">@Html.ActionLink(SiteStrings.Navigation_ViewHistory, "History", "Pages", new { id = Model.Id }, null)</div>
+	@if (RoadkillContext.IsLoggedIn) {
+		<div id="viewhistory">@Html.ActionLink(SiteStrings.Navigation_ViewHistory, "History", "Pages", new { id = Model.Id }, null)</div>
+	}
 }
 
 <h1 class="pagetitle">@Model.Title</h1>

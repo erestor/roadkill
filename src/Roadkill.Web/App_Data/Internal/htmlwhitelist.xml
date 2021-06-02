@@ -200,5 +200,23 @@
 				<HtmlAttribute Name="class" />
 			</AllowedAttributes>
 		</HtmlElement>
+		<HtmlElement Name="video">
+			<AllowedAttributes>
+				<HtmlAttribute Name="poster" />
+				<HtmlAttribute Name="aria-label" />
+				<HtmlAttribute Name="autoplay" />
+				<HtmlAttribute Name="muted" />
+				<HtmlAttribute Name="loop" />
+				<HtmlAttribute Name="playsinline" />
+				<HtmlAttribute Name="width" />
+				<HtmlAttribute Name="height" />
+			</AllowedAttributes>
+		</HtmlElement>
+		<HtmlElement Name="source">
+			<AllowedAttributes>
+				<HtmlAttribute Name="src" />
+				<HtmlAttribute Name="type" />
+			</AllowedAttributes>
+		</HtmlElement>
 	</ElementWhiteList>
 </HtmlWhiteList>

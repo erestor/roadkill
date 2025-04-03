@@ -20,7 +20,9 @@
 			<img src="~/Assets/Images/skolaris-s.svg" alt="Skolaris Logo" />
 			<span>Skolaris</span>
 		</a>
-		<div class="logo-suffix">@SiteStrings.Navigation_Title</div>
+		<a href="https://skolaris.net/help">
+			<span class="logo-suffix">@SiteStrings.Navigation_Title</span>
+		</a>
 		<div class="container">
 			@if (RoadkillContext.IsLoggedIn) {
 			<div id="login-status">
@@ -71,20 +73,20 @@
 			<div class="container">
 				<div class="row">
 					<div class="col-md-11">
-						<h6 id="powered-by">@SiteStrings.Shared_PoweredBy (@ApplicationSettings.ProductVersion).</h6>
-						<h6>
+						<h5 id="powered-by">@SiteStrings.Shared_PoweredBy (@ApplicationSettings.ProductVersion).</h5>
+						<h5>
 							@RenderSection("PageDetailsFooter", false)
 							@RenderSection("ViewHistoryLink", false)
-						</h6>
+						</h5>
 					</div>
 					<div id="top-link" class="col-md-1">
-						<h6><a href="#">Top</a></h6>
+						<h5><a href="#">Top</a></h5>
 						@if (!RoadkillContext.IsLoggedIn) {
-							<h6><a href="@Url.Action("Login", "User")">Login</a></h6>
+							<h5><a href="@Url.Action("Login", "User")">Login</a></h5>
 						}
 					</div>
 				</div>
-				<div class="row copyright">Skolaris Software &copy;2023</div>
+				<div class="row copyright">Skolaris Software &copy;2025</div>
 				@RenderSection("PluginFooter", false)
 			</div>
 		</div>
